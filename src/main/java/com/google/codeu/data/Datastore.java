@@ -88,7 +88,6 @@ public class Datastore {
     Query query = new Query("Message");
     PreparedQuery results = datastore.prepare(query);
     return results.countEntities(FetchOptions.Builder.withLimit(1000));
-
   }
 
   public Set<String> getUsers() {
@@ -99,4 +98,5 @@ public class Datastore {
       users.add((String) entity.getProperty("user"));
     }
     return users;
+  }
 }
