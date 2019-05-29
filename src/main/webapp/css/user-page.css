@@ -16,7 +16,7 @@
 
 /* Set the size of the message input to be 100 pixels high
    and will fill the width of its parent element. */
-#message-input, #aboutme-input {
+#message-input {
   height: 100px;
   width: 100%;
 }
