@@ -20,12 +20,9 @@
  */
 
 function loadNavigationBar() {
-  // constructNavigationContent();
-  // addNavigationPage();
   $(function(){
-    $("#nav-bar-container").load("navigation-bar.html");
+    $("#nav-bar-container").load("navigation-bar.html", function(){addLoginOrLogoutLinkToNavigation()});
   });
-  addLoginOrLogoutLinkToNavigation();
 }
 
 function addLoginOrLogoutLinkToNavigation() {
