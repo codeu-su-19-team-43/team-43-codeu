@@ -18,6 +18,16 @@
  * Adds a login or logout link to the page, depending on whether the user is
  * already logged in.
  */
+
+function loadNavigationBar() {
+  // constructNavigationContent();
+  // addNavigationPage();
+  $(function(){
+    $("#nav-bar-container").load("navigation-bar.html");
+  });
+  addLoginOrLogoutLinkToNavigation();
+}
+
 function addLoginOrLogoutLinkToNavigation() {
   const navigationElement = document.getElementById('navigation');
   if (!navigationElement) {
