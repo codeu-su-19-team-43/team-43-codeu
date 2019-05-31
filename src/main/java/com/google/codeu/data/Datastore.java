@@ -124,10 +124,11 @@ public class Datastore {
     userEntity.setProperty("email", user.getEmail());
     userEntity.setProperty("aboutMe", user.getAboutMe());
     datastore.put(userEntity);
-   }
+  }
 
-  // Returns the User owned by the email address, 
-  // or null if no matching User was found.
+  /** Returns the User owned by the email address,
+   * or null if no matching User was found.
+  */
   public User getUser(String email) {
  
     Query query = new Query("User")
@@ -142,10 +143,9 @@ public class Datastore {
     User user = new User(email, aboutMe);
     
     return user;
-   }
+  }
 
-
-
+  /** Returns all users. */
   public Set<String> getUsers() {
     Set<String> users = new HashSet<>();
     Query query = new Query("Message");
