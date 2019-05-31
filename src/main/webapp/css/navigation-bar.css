@@ -1,0 +1,11 @@
+/* Remove bullet points from navigation bar. */
+nav ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+/* Keep navigation menu on one line. */
+nav li {
+  display: inline-block;
+  margin-right: 10px
+}
