@@ -40,8 +40,8 @@ function showMessageFormIfViewingSelf() {
       .then((loginStatus) => {
         if (loginStatus.isLoggedIn &&
             loginStatus.username == parameterUsername) {
-              document.getElementById('message-form').classList.remove('hidden');
-              document.getElementById('about-me-form').classList.remove('hidden');
+        document.getElementById('message-form').classList.remove('hidden');
+        document.getElementById('about-me-form').classList.remove('hidden');
         }
       });
 }
@@ -91,20 +91,19 @@ function buildMessageDiv(message) {
 }
 
 function fetchAboutMe() {
-  const url = '/about?user=${parameterUsername}';
+  const url = `/about?user=${parameterUsername}`;
   fetch(url).then((response) => response.text()).then((aboutMe) => {
     const aboutMeContainer = document.getElementById('about-me-container');
-    if (aboutMe === '') {
+    if (aboutMe === '')
       aboutMe = 'This user has not entered any information yet.';
-    }
 
     aboutMeContainer.innerHTML = aboutMe;
-    
   });
 }
 
 /** Fetches data and populates the UI of the page. */
 function buildUI() {
+  
   setPageTitle();
   showMessageFormIfViewingSelf();
   fetchMessages();

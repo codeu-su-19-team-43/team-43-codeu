@@ -83,6 +83,7 @@ public class Datastore {
     return messages;
   }
 
+  /** Returns all messages for all users. */
   public List<Message> getAllMessages() {
   List<Message> messages = new ArrayList<>();
 
