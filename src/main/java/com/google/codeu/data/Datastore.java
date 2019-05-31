@@ -83,7 +83,7 @@ public class Datastore {
     return messages;
   }
 
-  public List<Message> getAllMessages(){
+  public List<Message> getAllMessages() {
   List<Message> messages = new ArrayList<>();
 
   Query query = new Query("Message")
@@ -111,13 +111,13 @@ public class Datastore {
  }
 
   /** Returns the total number of messages for all users. */
-  public int getTotalMessageCount(){
+  public int getTotalMessageCount() {
     Query query = new Query("Message");
     PreparedQuery results = datastore.prepare(query);
     return results.countEntities(FetchOptions.Builder.withLimit(1000));
   }
 
-  // Stores the User in Datastore.
+  /** Stores the User in Datastore. */
   public void storeUser(User user) {
     Entity userEntity = new Entity("User", user.getEmail());
     userEntity.setProperty("email", user.getEmail());
@@ -127,15 +127,14 @@ public class Datastore {
 
   // Returns the User owned by the email address, 
   // or null if no matching User was found.
-
   public User getUser(String email) {
  
     Query query = new Query("User")
-      .setFilter(new Query.FilterPredicate("email", FilterOperator.EQUAL, email));
+        .setFilter(new Query.FilterPredicate("email", FilterOperator.EQUAL, email));
     PreparedQuery results = datastore.prepare(query);
     Entity userEntity = results.asSingleEntity();
-    if(userEntity == null) {
-     return null;
+    if (userEntity == null) {
+      return null;
     }
     
     String aboutMe = (String) userEntity.getProperty("aboutMe");

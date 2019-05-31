@@ -40,8 +40,8 @@ function showMessageFormIfViewingSelf() {
       .then((loginStatus) => {
         if (loginStatus.isLoggedIn &&
             loginStatus.username == parameterUsername) {
-          document.getElementById('message-form').classList.remove('hidden');
-          document.getElementById('about-me-form').classList.remove('hidden');
+              document.getElementById('message-form').classList.remove('hidden');
+              document.getElementById('about-me-form').classList.remove('hidden');
         }
       });
 }
@@ -90,18 +90,16 @@ function buildMessageDiv(message) {
   return messageDiv;
 }
 
-function fetchAboutMe(){
-  const url = '/about?user=' + parameterUsername;
-  fetch(url).then((response) => {
-    return response.text();
-  }).then((aboutMe) => {
+function fetchAboutMe() {
+  const url = '/about?user=${parameterUsername}';
+  fetch(url).then((response) => response.text()).then((aboutMe) => {
     const aboutMeContainer = document.getElementById('about-me-container');
-    if(aboutMe == ''){
+    if (aboutMe === '') {
       aboutMe = 'This user has not entered any information yet.';
     }
-    
-    aboutMeContainer.innerHTML = aboutMe;
 
+    aboutMeContainer.innerHTML = aboutMe;
+    
   });
 }
 

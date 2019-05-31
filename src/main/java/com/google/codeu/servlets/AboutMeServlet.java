@@ -1,5 +1,6 @@
 package com.google.codeu.servlets;
 
+
 import java.io.IOException;
 
 import javax.servlet.annotation.WebServlet;
@@ -47,7 +48,7 @@ public class AboutMeServlet extends HttpServlet{
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
-  throws IOException{
+        throws IOException {
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/index.html");
