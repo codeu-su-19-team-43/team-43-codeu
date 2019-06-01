@@ -20,8 +20,8 @@
  */
 
 function loadNavigationBar() {
-  $(function(){
-    $("#nav-bar-container").load("navigation-bar.html", function() {
+  $(() => {
+    $("#nav-bar-container").load("navigation-bar.html", () => {
       addLoginOrLogoutLinkToNavigation()
     });
   });
