@@ -40,17 +40,17 @@ function addLoginOrLogoutLinkToNavigation() {
       })
       .then((loginStatus) => {
         if (loginStatus.isLoggedIn) {
-          navigationElement.insertBefore(createListItem(createLink(
-            '/user-page.html?user=' + loginStatus.username, 'Your Page')),
-            navigationElement.childNodes[2]);
+        navigationElement.insertBefore(createListItem(createLink(
+          '/user-page.html?user=' + loginStatus.username, 'Your Page')),
+        navigationElement.childNodes[2]);
 
-          navigationElement.appendChild(
-            createListItem(createLink('/logout', 'Logout')));
-          } else {
-            navigationElement.appendChild(
-              createListItem(createLink('/login', 'Login')));
-            }
-          });
+        navigationElement.appendChild(
+          createListItem(createLink('/logout', 'Logout')));
+        } else {
+        navigationElement.appendChild(
+          createListItem(createLink('/login', 'Login')));
+        }
+      });
 }
 
 /**
