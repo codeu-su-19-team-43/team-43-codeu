@@ -29,6 +29,25 @@ limitations under the License.
     <div id="nav-bar-container"></div>
     <h1 id="page-title">User Page</h1>
 
+    <div id="about-me-container">Loading...</div>
+    <div id="about-me-form" class="hidden">
+      <form action="/about" method="POST">
+        <textarea
+          name="about-me"
+          id="aboutme-input"
+          placeholder="about me"
+          rows="4"
+          required
+        ></textarea>
+        <br />
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+
+    <br />
+    <br />
+    <br />
+
     <form id="message-form" action="/messages" method="POST" class="hidden">
       Enter a new message:
       <br />
