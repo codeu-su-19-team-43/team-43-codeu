@@ -15,6 +15,45 @@
  */
 
 /**
+ * Adds a login or logout link to the page, depending on whether the user is
+ * already logged in.
+ */
+
+function loadNavigationBar() {
+  $(() => {
+    $("#nav-bar-container").load("navigation-bar.html", () => {
+      addLoginOrLogoutLinkToNavigation()
+    });
+  });
+}
+
+function addLoginOrLogoutLinkToNavigation() {
+  const navigationElement = document.getElementById('navigation');
+  if (!navigationElement) {
+    console.warn('Navigation element not found!');
+    return;
+  }
+
+  fetch('/login-status')
+      .then((response) => {
+        return response.json();
+      })
+      .then((loginStatus) => {
+        if (loginStatus.isLoggedIn) {
+        navigationElement.insertBefore(createListItem(createLink(
+          '/user-page.html?user=' + loginStatus.username, 'Your Page')),
+        navigationElement.childNodes[2]);
+
+        navigationElement.appendChild(
+          createListItem(createLink('/logout', 'Logout')));
+        } else {
+        navigationElement.appendChild(
+          createListItem(createLink('/login', 'Login')));
+        }
+      });
+}
+
+/**
  * Creates an li element.
  * @param {Element} childElement
  * @return {Element} li element
