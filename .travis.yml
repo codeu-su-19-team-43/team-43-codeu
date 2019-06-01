@@ -7,4 +7,5 @@ deploy:
   provider: gae
   keyfile: client-secret.json
   project: su19-codeu-43-4269
+  config: src/main/webapp/WEB-INF/appengine-web.xml
   on: master
