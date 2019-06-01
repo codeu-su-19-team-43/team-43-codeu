@@ -94,8 +94,10 @@ function fetchAboutMe() {
   const url = `/about?user=${parameterUsername}`;
   fetch(url).then(response => response.text()).then((aboutMe) => {
     const aboutMeContainer = document.getElementById('about-me-container');
-    if (aboutMe === '') {
+    if (aboutMe == ''){
       aboutMeContainer.innerHTML = 'This user has not entered any information yet.';
+    } else {
+      aboutMeContainer.innerHTML = aboutMe;
     }
   });
 }
