@@ -21,7 +21,9 @@
 
 function loadNavigationBar() {
   $(function(){
-    $("#nav-bar-container").load("navigation-bar.html", function(){addLoginOrLogoutLinkToNavigation()});
+    $("#nav-bar-container").load("navigation-bar.html", function() {
+      addLoginOrLogoutLinkToNavigation()
+    });
   });
 }
 
@@ -39,16 +41,16 @@ function addLoginOrLogoutLinkToNavigation() {
       .then((loginStatus) => {
         if (loginStatus.isLoggedIn) {
           navigationElement.insertBefore(createListItem(createLink(
-              '/user-page.html?user=' + loginStatus.username, 'Your Page')),
-              navigationElement.childNodes[2]);
+            '/user-page.html?user=' + loginStatus.username, 'Your Page')),
+            navigationElement.childNodes[2]);
 
           navigationElement.appendChild(
-              createListItem(createLink('/logout', 'Logout')));
-        } else {
-          navigationElement.appendChild(
+            createListItem(createLink('/logout', 'Logout')));
+          } else {
+            navigationElement.appendChild(
               createListItem(createLink('/login', 'Login')));
-        }
-      });
+            }
+          });
 }
 
 /**
