@@ -76,3 +76,26 @@ function createLink(url, text) {
   linkElement.href = url;
   return linkElement;
 }
+
+/**
+ * Adds a login or logout link to the page, depending on whether the user is
+ * already logged in.
+ */
+// eslint-disable-next-line no-unused-vars
+function addLoginOrLogoutLinkToNavigation() {
+  const navigationElement = document.getElementById('navigation');
+
+  fetch('/login-status')
+    .then(response => response.json())
+    .then((loginStatus) => {
+      if (loginStatus.isLoggedIn) {
+        const userPageLink = createLink(`/user-page.html?user=${loginStatus.username}`, 'Your Page');
+        const logoutLink = createLink('/logout', 'Logout');
+        navigationElement.appendChild(createListItem(userPageLink));
+        navigationElement.appendChild(createListItem(logoutLink));
+      } else {
+        const loginLink = createLink('/login', 'Login');
+        navigationElement.appendChild(createListItem(loginLink));
+      }
+    });
+}
