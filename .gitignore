@@ -6,3 +6,6 @@ target
 *.iml
 .DS_Store
 client-secret.json
+node_modules
+
+\.factorypath

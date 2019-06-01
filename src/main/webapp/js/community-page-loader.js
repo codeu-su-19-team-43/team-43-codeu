@@ -1,9 +1,18 @@
+
+// Builds a list element that contains a link to a user page
+function buildUserListItem(user) {
+  const userLink = document.createElement('a');
+  userLink.setAttribute('href', `/user-page.html?user=${user}`);
+  userLink.appendChild(document.createTextNode(user));
+  const userListItem = document.createElement('li');
+  userListItem.appendChild(userLink);
+  return userListItem;
+}
+
 // Fetched users and adds them to the page
 function fetchUserList() {
-  const url = "/user-list";
-  fetch(url).then((response) => {
-    return response.json();
-  }).then((users) => {
+  const url = '/user-list';
+  fetch(url).then(response => response.json()).then((users) => {
     const list = document.getElementById('list');
     list.innerHTML = '';
 
@@ -14,17 +23,8 @@ function fetchUserList() {
   });
 }
 
-// Builds a list element that contains a link to a user page
-function buildUserListItem(user) {
-  const userLink = document.createElement('a');
-  userLink.setAttribute('href', '/user-page.html?user=' + user);
-  userLink.appendChild(document.createTextNode(user));
-  const userListItem = document.createElement('li');
-  userListItem.appendChild(userLink);
-  return userListItem;
-}
-
 // Fetches data and populates the UI of the page.
-function buildUI(){
+// eslint-disable-next-line no-unused-vars
+function buildUI() {
   fetchUserList();
 }
