@@ -21,6 +21,10 @@
   width: 100%;
 }
 
+#image-url {
+  width: 100%;
+}
+
 /* Give each message a rounded border. */
 .message-div {
   border: thin solid black;
