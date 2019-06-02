@@ -42,6 +42,9 @@ function createLink(url, text) {
 
 function createLinkListItem(url, text) {
   const link = createLink(url, text);
+  if (url === window.location.pathname) {
+    link.classList.add('active');
+  }
   return createListItem(link);
 }
 
@@ -59,7 +62,7 @@ function addLoginOrLogoutLinkToNavigation() {
       if (loginStatus.isLoggedIn) {
         const userPageLink = createLinkListItem(`/user-page.html?user=${loginStatus.username}`, 'Your Page');
         const logoutLink = createLinkListItem('/logout', 'Logout');
-        navigationElement.appendChild(userPageLink);
+        navigationElement.insertBefore(userPageLink, navigationElement.childNodes[1]);
         navigationElement.appendChild(logoutLink);
       } else {
         const loginLink = createLinkListItem('/login', 'Login');

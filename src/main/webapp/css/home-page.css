@@ -1,6 +1,6 @@
 .landing {
   height: 100vh;
-  background-image: url('../images/landing-image.jpg');
+  background-image: url('../images/home-landing-image.jpg');
   display: flex;
   align-items: center;
 }
