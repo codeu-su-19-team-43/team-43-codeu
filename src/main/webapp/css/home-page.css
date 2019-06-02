@@ -1,0 +1,26 @@
+.landing {
+  height: 100vh;
+  background-image: url('../images/landing-image.jpg');
+  display: flex;
+  align-items: center;
+}
+
+.landing > .landing-overlay {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.landing > .landing-tagline {
+  width: 80%;
+  margin: auto;
+  z-index: 2;
+}
+
+.landing-tagline > h1 {
+  color: whitesmoke;
+}

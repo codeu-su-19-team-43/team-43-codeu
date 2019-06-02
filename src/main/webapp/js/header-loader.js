@@ -18,8 +18,12 @@ function loadScript(source) {
 // eslint-disable-next-line no-unused-vars
 function loadHeader(title, loadNavigation = true) {
   loadScript(JQUERY_URL).then(() => {
-    $('head').load('header.html', () => {
-      document.getElementById('title').innerHTML = title;
+    $.ajax({
+      type: 'GET',
+      url: 'header.html',
+      success: (response) => {
+        $('head').prepend(response);
+      },
     });
 
     if (loadNavigation) {

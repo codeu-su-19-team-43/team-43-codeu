@@ -21,7 +21,7 @@
  */
 function createListItem(childElement) {
   const listItemElement = document.createElement('li');
-  listItemElement.class = 'nav-item';
+  listItemElement.className = 'nav-item';
   listItemElement.appendChild(childElement);
   return listItemElement;
 }
@@ -34,7 +34,7 @@ function createListItem(childElement) {
  */
 function createLink(url, text) {
   const linkElement = document.createElement('a');
-  linkElement.class = 'nav-link';
+  linkElement.className = 'nav-link';
   linkElement.href = url;
   linkElement.appendChild(document.createTextNode(text));
   return linkElement;
@@ -86,7 +86,6 @@ function buildNavigationLinks() {
 
 // eslint-disable-next-line no-unused-vars
 function loadNavigationBar() {
-  console.log('test');
   const navElement = document.createElement('div');
   $(navElement).load('navigation-bar.html', () => buildNavigationLinks());
   document.body.insertBefore(navElement, document.body.firstChild);
