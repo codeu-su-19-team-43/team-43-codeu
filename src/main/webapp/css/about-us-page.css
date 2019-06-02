@@ -1,9 +1,9 @@
 .card {
-  width: 24rem;
+  width: 30%;
 }
 
 body > .page-header {
-  margin: 5em 0em 4em 0em;
+  margin: 8em 0em 4em 0em;
 }
 
 .card-body > .avatar-holder {

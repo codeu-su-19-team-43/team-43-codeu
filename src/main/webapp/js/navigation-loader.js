@@ -73,6 +73,7 @@ function addLoginOrLogoutLinkToNavigation() {
 
 function buildNavigationLinks() {
   const navigationElement = document.getElementById('navigation');
+  console.log(navigationElement);
 
   const links = [
     createLinkListItem('/', 'Home'),
@@ -87,10 +88,21 @@ function buildNavigationLinks() {
   addLoginOrLogoutLinkToNavigation();
 }
 
+// Set transparency of navigationbar
+function setTransparency() {
+  console.log(window.location.pathname);
+  if (window.location.pathname === '/') {
+    console.log('equal');
+    const navBar = document.getElementById('navigationBar');
+    console.log(navBar);
+    navBar.classList.add('transparent');
+  }
+}
+
 // eslint-disable-next-line no-unused-vars
 function loadNavigationBar() {
   const navElement = document.createElement('div');
-  $(navElement).load('navigation-bar.html', () => buildNavigationLinks());
+  $(navElement).load('navigation-bar.html', () => { buildNavigationLinks(); setTransparency(); });
   document.body.insertBefore(navElement, document.body.firstChild);
 }
 

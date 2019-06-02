@@ -22,92 +22,10 @@ limitations under the License.
       src="js/header-loader.js"
       onload="loadHeader('About Our Team')"
     ></script>
+    <script src="js/aboutus-loader.js"></script>
   </head>
-  <body>
+  <body onload="buildUI()">
     <div class="text-center page-header"><h1>Meet the Team</h1></div>
-    <div class="card-list d-flex justify-content-around">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Aadyaa Maddi</h5>
-          <div class="avatar-holder">
-            <img
-              src="../images/aboutus-anqi.jpg"
-              alt="Avatar-Aadyaa"
-              class="rounded-circle avatar"
-            />
-          </div>
-          <h6 class="card-subtitle mb-2 text-muted">
-            Summer Feelz: Exciting | Happy | Active
-          </h6>
-          <p class="card-text">
-            Aspirational Hobby: If I had all the time and money in the world, I
-            would want to become certified at kayaking. I find it really fun and
-            exciting - it's a great workout as well! I've gone kayaking in
-            Singapore and Indonesia before, but I would love to go kayaking at
-            some of the
-            <a href="https://www.redbull.com/sg-en/best-kayaking-holidays">
-              best paddling locations</a
-            >
-            in the world.
-          </p>
-          <p class="card-text">
-            Ask me About: Books! I've been reading books ever since I can
-            remember. My favourite books while growing up were Anne of Green
-            Gables and The Hobbit. I love getting lost in new worlds. I'm
-            currently reading a lot of science fiction and fantasy. I also enjoy
-            classics, mystery, and graphic novels. Recommendations are welcome!
-          </p>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Aditi Saini</h5>
-          <h6 class="card-subtitle mb-2 text-muted">
-            Summer Feelz: Contempt | Happy | Adventurous
-          </h6>
-          <p class="card-text">
-            Aspirational Hobby: If given all the time and money in the world, I
-            would like to travel to different places of the world. <br />I have
-            always liked to explore different cultures. It gives me a distinct
-            perspective of how life is in different places and communities. It
-            gives me a completely new angle to think about possibilities that
-            could exist. And hence, an opportunity like this would be like a
-            dream come alive for me.
-          </p>
-          <p class="card-text">
-            Ask me About: I love painting and going on nature walks. Anything
-            that is natural in the environment has always fascinated me. I love
-            colors and different shades that the sky makes at different time of
-            the day. I feel that painting is a form of self expression that has
-            the potential to convey a very deep meaning. Moreover, I enjoy
-            nature walks because it calms me down and refreshes me to a whole
-            new level.
-          </p>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">Anqi Tu</h5>
-          <h6 class="card-subtitle mb-2 text-muted">
-            Summer Feelz: Lucky | Enjoyable | Fulfilling
-          </h6>
-          <p class="card-text">
-            Aspirational Hobby: If I had all the time and money in the world, I
-            would want to open a dog cafe where dog-lovers can enjoy moments
-            playing with dogs, especially for people who do not own a dog
-            themselves. Dogs are my favourite animal and they are known to have
-            a magic mood-boosting power that can help people cope with
-            depression, anxiety and stress. Such a cafe
-          </p>
-          <p class="card-text">
-            Ask me About: I enjoy doing yoga as it helps me reduce body pain and
-            relieve mental stress. I enjoy stretching my muscle which takes away
-            my back pain and shoulder pain due to sitting in front of the screen
-            for almost entire day. Doing yoga also reminds me of focusing on and
-            enjoy the current moment.
-          </p>
-        </div>
-      </div>
-    </div>
+    <div class="card-list d-flex justify-content-around px-5 flex-wrap" id="team-list"></div>
   </body>
 </html>
