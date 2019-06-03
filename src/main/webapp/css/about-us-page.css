@@ -1,9 +1,10 @@
 .card {
   width: 30%;
+  background-color: rgba(0, 0, 0, 0.01);
 }
 
 body > .page-header {
-  margin: 8em 0em 4em 0em;
+  margin: 7em 0em 4em 0em;
 }
 
 .card-body > .avatar-holder {

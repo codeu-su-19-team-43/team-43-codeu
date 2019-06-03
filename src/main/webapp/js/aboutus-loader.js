@@ -110,7 +110,7 @@ function populateTeamCards() {
 
   teams.forEach((teammate) => {
     const teamCard = document.createElement('div');
-    teamCard.className = 'card';
+    teamCard.className = 'card border-0 mb-5 shadow';
 
     const cardBody = document.createElement('div');
     cardBody.className = 'card-body text-center';
@@ -139,7 +139,7 @@ function populateTeamCards() {
       if (detail.text.length <= 30) {
         cardDetailText.className = 'card-text';
       } else {
-        cardDetailText.className = 'card-text text-justify';
+        cardDetailText.className = 'card-text text-justify font-weight-light';
       }
       cardDetailText.innerHTML = detail.text;
       cardBody.appendChild(cardDetailText);
