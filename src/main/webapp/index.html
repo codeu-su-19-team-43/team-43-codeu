@@ -21,16 +21,10 @@ limitations under the License.
     <title>CodeU 2019 Starter Project</title>
     <link rel="stylesheet" href="/css/main.css">
     <script src="/js/navigation-loader.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
   </head>
-  <body onload="addLoginOrLogoutLinkToNavigation();">
-    <nav>
-      <ul id="navigation">
-        <li><a href="/">Home</a></li>
-        <li><a href="/stats.html">Statistics</a></li>
-        <li><a href="/community.html">Community</a></li>
-        <li><a href="/aboutus.html">About Our Team</a></li>
-      </ul>
-    </nav>
+  <body onload="loadNavigationBar();">
+    <div id="nav-bar-container"></div>
     <h1>CodeU Starter Project</h1>
     <p>This is the CodeU starter project. Click the links above to login and visit your page.
     You can post messages on your page, and you can visit other user pages if you have

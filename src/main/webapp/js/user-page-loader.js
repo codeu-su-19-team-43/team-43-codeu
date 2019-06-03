@@ -90,6 +90,8 @@ function fetchAboutMe() {
     const aboutMeContainer = document.getElementById('about-me-container');
     if (aboutMe === '') {
       aboutMeContainer.innerHTML = 'This user has not entered any information yet.';
+    } else {
+      aboutMeContainer.innerHTML = aboutMe;
     }
   });
 }
