@@ -22,5 +22,9 @@
 }
 
 .landing-tagline > h1 {
-  color: whitesmoke;
+  color: rgba(245, 245, 245, 1);
+}
+
+.landing-tagline > .font-weight-lightest {
+  font-weight: 100;
 }
