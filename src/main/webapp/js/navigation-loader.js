@@ -34,7 +34,7 @@ function createListItem(childElement) {
  */
 function createLink(url, text) {
   const linkElement = document.createElement('a');
-  linkElement.className = 'nav-link';
+  linkElement.className = 'nav-link font-weight-light';
   linkElement.href = url;
   linkElement.appendChild(document.createTextNode(text));
   return linkElement;
@@ -90,12 +90,9 @@ function buildNavigationLinks() {
 
 // Set transparency of navigationbar
 function setTransparency() {
-  console.log(window.location.pathname);
   if (window.location.pathname === '/') {
-    console.log('equal');
     const navBar = document.getElementById('navigationBar');
-    console.log(navBar);
-    navBar.classList.add('transparent');
+    navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent navBarTransparent';
   }
 }
 
