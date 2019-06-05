@@ -13,7 +13,7 @@
 
 /* Give the message body a margin so the text
    isn't too close to the border. */
-.message-body {
+.message-text {
   margin: 5px;
 }
 
