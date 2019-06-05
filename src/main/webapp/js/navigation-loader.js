@@ -73,7 +73,6 @@ function addLoginOrLogoutLinkToNavigation() {
 
 function buildNavigationLinks() {
   const navigationElement = document.getElementById('navigation');
-  console.log(navigationElement);
 
   const links = [
     createLinkListItem('/', 'Home'),
