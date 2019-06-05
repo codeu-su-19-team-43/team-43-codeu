@@ -11,8 +11,8 @@ env: PATH=${HOME}/appengine-java-sdk-1.9.74/bin:${PATH} VERSION="$(date +%Y%m%dt
 
 script: 
 - mvn clean verify &&
-  appcfg.sh --service_account_json_key_file=client-secret.json --version=$VERSION update target/su19-codeu-43-4269-0.0.1-SNAPSHOT &&
-  appcfg.sh --service_account_json_key_file=client-secret.json --version=$VERSION set_default_version target/su19-codeu-43-4269-0.0.1-SNAPSHOT
+  appcfg.sh --service_account_json_key_file=client-secret.json --version=$VERSION update target/codeu-starter-project-0.0.1-SNAPSHOT &&
+  appcfg.sh --service_account_json_key_file=client-secret.json --version=$VERSION set_default_version target/codeu-starter-project-0.0.1-SNAPSHOT
 
 deploy:
   provider: gae
