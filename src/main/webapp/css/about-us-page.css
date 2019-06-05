@@ -1,0 +1,23 @@
+.card {
+  width: 30%;
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+body > .page-header {
+  margin: 7em 0em 4em 0em;
+}
+
+.card-body > .avatar-holder {
+  width: 10em;
+  height: 10em;
+}
+
+.avatar-holder > .avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+p.card-text {
+  color: rgba(0, 0, 0, 0.75);
+}

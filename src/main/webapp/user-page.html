@@ -17,16 +17,11 @@ limitations under the License.
 <!DOCTYPE html>
 <html>
   <head>
-    <title>User Page</title>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="/css/main.css" />
-    <link rel="stylesheet" href="/css/user-page.css" />
     <script src="/js/user-page-loader.js"></script>
-    <script src="/js/navigation-loader.js"></script>
-    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="js/header-loader.js" onload="loadHeader('User Page')"></script>
+    <link rel="stylesheet" href="/css/user-page.css" />
   </head>
-  <body onload="loadNavigationBar();buildUI();">
-    <div id="nav-bar-container"></div>
+  <body onload="buildUI();">
     <h1 id="page-title">User Page</h1>
 
     <div id="about-me-container">Loading...</div>
