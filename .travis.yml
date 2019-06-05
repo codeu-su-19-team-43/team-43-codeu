@@ -11,3 +11,9 @@ env: PATH=${HOME}/appengine-java-sdk-1.9.74/bin:${PATH} VERSION="$(date +%Y%m%dt
 
 script: 
 - mvn clean verify
+
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on: 
+    branch: master
