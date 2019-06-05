@@ -3,10 +3,6 @@ nav.navBarTransparent {
   border-bottom: 1px solid rgba(207, 203, 203, 0.4);
 }
 
-nav.navbar {
-  /* background-color: rgba(95, 103, 112, 1); */
-}
-
 .nav-link {
   margin: 0em 2em;
 }
