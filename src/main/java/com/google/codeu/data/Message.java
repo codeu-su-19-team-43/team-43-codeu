@@ -28,13 +28,17 @@ public class Message {
   private String imageUrl;
 
   /**
-   * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
-   * random ID and uses the current system time for the creation time.
+   * Constructs a new {@link Message} posted by {@code user} with {@code text} and 
+   * {@code imageUrl} content. Generates a random ID and uses the current system 
+   * time for the creation time.
    */
   public Message(String user, String text, String imageUrl) {
     this(UUID.randomUUID(), user, System.currentTimeMillis(), text, imageUrl);
   }
 
+  /**
+   * Constructs a new {@link Message}.
+   */
   public Message(UUID id, String user, long timestamp, String text, String imageUrl) {
     this.id = id;
     this.user = user;
@@ -43,10 +47,18 @@ public class Message {
     this.imageUrl = imageUrl;
   }
 
+  /**
+   * Constructs a new {@link Message} posted by {@code user} with {@code text}. 
+   * Generates a random ID and uses the current system 
+   * time for the creation time.
+   */
   public Message(String user, String text) {
     this(UUID.randomUUID(), user, System.currentTimeMillis(), text);
   }
 
+  /**
+   * Constructs a new {@link Message}.
+   */
   public Message(UUID id, String user, long timestamp, String text) {
     this.id = id;
     this.user = user;

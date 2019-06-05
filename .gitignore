@@ -11,3 +11,5 @@ node_modules
 \.factorypath
 
 team-43-codeu\.code-workspace
+
+\.vscode/settings\.json
