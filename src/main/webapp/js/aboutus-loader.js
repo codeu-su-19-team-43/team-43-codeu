@@ -10,19 +10,19 @@ const teams = [
       },
       {
         subTitle: 'Aspirational Hobby',
-        text: 'If I had all the time and money in the world, I would want to become'
-        + 'certified at kayaking. I find it really fun and exciting - it\'s a'
-        + 'great workout as well! I\'ve gone kayaking in Singapore and Indonesia'
+        text: 'If I had all the time and money in the world, I would become '
+        + 'certified at kayaking. I find it really fun and exciting - it\'s a '
+        + 'great workout as well! I\'ve gone kayaking in Singapore and Indonesia '
         + 'before, but I would love to go kayaking at some of the'
         + ' <a href="https://www.redbull.com/sg-en/best-kayaking-holidays">'
         + 'best paddling locations</a> in the world.',
       },
       {
         subTitle: 'Ask Me About',
-        text: 'Books! I\'ve been reading books ever since I can'
-        + 'remember. My favourite books while growing up were Anne of Green'
-        + 'Gables and The Hobbit. I love getting lost in new worlds. I\'m'
-        + 'currently reading a lot of science fiction and fantasy. I also enjoy'
+        text: 'Books! I\'ve been reading books ever since I can '
+        + 'remember. My favourite books while growing up were Anne of Green '
+        + 'Gables and The Hobbit. I love getting lost in new worlds. I\'m '
+        + 'currently reading a lot of science fiction and fantasy. I also enjoy '
         + 'classics, mystery, and graphic novels. Recommendations are welcome!',
       },
     ],
@@ -37,22 +37,20 @@ const teams = [
       },
       {
         subTitle: 'Aspirational Hobby',
-        text: 'If given all the time and money in the world, I'
-        + 'would like to travel to different places of the world. <br />I have'
-        + 'always liked to explore different cultures. It gives me a distinct'
-        + 'perspective of how life is in different places and communities. It'
-        + 'gives me a completely new angle to think about possibilities that'
-        + 'could exist. And hence, an opportunity like this would be like a'
-        + 'dream come alive for me.',
+        text: 'If I had all the time and money in the world, I '
+        + 'would travel to different places of the world. I have '
+        + 'always liked to explore different cultures. It gives me a distinct '
+        + 'perspective of how life is in different places and communities and '
+        + 'a completely new angle to think about possibilities that could exist.',
       },
       {
         subTitle: 'Ask Me About',
-        text: 'I love painting and going on nature walks. Anything'
-        + 'that is natural in the environment has always fascinated me. I love'
-        + 'colors and different shades that the sky makes at different time of'
-        + 'the day. I feel that painting is a form of self expression that has'
-        + 'the potential to convey a very deep meaning. Moreover, I enjoy'
-        + 'nature walks because it calms me down and refreshes me to a whole'
+        text: 'I love painting and going on nature walks. Anything '
+        + 'natural in the environment always fascinates me. I love '
+        + 'colors and different shades that the sky makes at different times of '
+        + 'the day. I feel painting is a form of self-expression that '
+        + 'can convey a very deep meaning. I also enjoy '
+        + 'nature walks because it calms me down and refreshes me to a whole '
         + 'new level.',
       },
     ],
@@ -67,20 +65,19 @@ const teams = [
       },
       {
         subTitle: 'Aspirational Hobby',
-        text: 'If I had all the time and money in the world, I'
-        + 'would want to open a dog cafe where dog-lovers can enjoy moments'
-        + 'playing with dogs, especially for people who do not own a dog'
-        + 'themselves. Dogs are my favourite animal and they are known to have'
-        + 'a magic mood-boosting power that can help people cope with'
-        + 'depression, anxiety and stress. I have also always dreamt of'
-        + 'opening a cafe that provides a relaxing space for everyone',
+        text: 'If I had all the time and money in the world, I '
+        + 'would open a dog cafe for dog-lovers to enjoy moments '
+        + 'with dogs, especially for those not owning a dog. '
+        + 'Dogs are my favourite animal and are known to have '
+        + 'a magic mood-boosting power to help people cope with '
+        + 'depression, anxiety and stress.',
       },
       {
         subTitle: 'Ask Me About',
-        text: 'I enjoy doing yoga as it helps me reduce body pain and'
-        + 'relieve mental stress. I enjoy stretching my muscle which takes away'
-        + 'my back pain and shoulder pain due to sitting in front of the screen'
-        + 'for almost entire day. Doing yoga also reminds me of focusing on and'
+        text: 'I enjoy doing yoga as it helps me reduce body pain and '
+        + 'relieve mental stress. I enjoy stretching my muscle which takes away '
+        + 'my back pain and shoulder pain due to sitting in front of the screen '
+        + 'for almost entire day. Doing yoga also reminds me of focusing on and '
         + 'enjoy the current moment.',
       },
     ],
@@ -91,15 +88,17 @@ const teams = [
     details: [
       {
         subTitle: 'Summer Feelz',
-        text: 'xx | xx | xx',
+        text: 'Happy | Adventurous | Active',
       },
       {
         subTitle: 'Aspirational Hobby',
-        text: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
+        text: 'If I had all the time and money in the world and I got bored enjoying '
+        + 'the life and traveling around the world, I would put them to make high-quality '
+        + 'modern education available to people who are stuck without proper skills to succeed in live. ',
       },
       {
         subTitle: 'Ask Me About',
-        text: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
+        text: 'Board games, fantasy, travel, immigration, obstacle races, martial arts, volleyball, being a parent of twins, chocolate, tea.',
       },
     ],
   },
@@ -137,7 +136,7 @@ function populateTeamCards() {
 
       const cardDetailText = document.createElement('p');
       if (detail.text.length <= 30) {
-        cardDetailText.className = 'card-text';
+        cardDetailText.className = 'card-text font-weight-light';
       } else {
         cardDetailText.className = 'card-text text-justify font-weight-light';
       }
