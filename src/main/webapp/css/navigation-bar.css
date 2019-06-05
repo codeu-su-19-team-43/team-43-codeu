@@ -1,11 +1,8 @@
-/* Remove bullet points from navigation bar. */
-nav ul {
-  list-style-type: none;
-  padding-left: 0;
+nav.navBarTransparent {
+  background-color: rgba(255, 255, 255, 0) !important;
+  border-bottom: 1px solid rgba(207, 203, 203, 0.4);
 }
 
-/* Keep navigation menu on one line. */
-nav li {
-  display: inline-block;
-  margin-right: 10px
+.nav-link {
+  margin: 0em 2em;
 }

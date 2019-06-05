@@ -15,51 +15,13 @@
  */
 
 /**
- * Adds a login or logout link to the page, depending on whether the user is
- * already logged in.
- */
-
-function loadNavigationBar() {
-  $(() => {
-    $("#nav-bar-container").load("navigation-bar.html", () => {
-      addLoginOrLogoutLinkToNavigation()
-    });
-  });
-}
-
-function addLoginOrLogoutLinkToNavigation() {
-  const navigationElement = document.getElementById('navigation');
-  if (!navigationElement) {
-    console.warn('Navigation element not found!');
-    return;
-  }
-
-  fetch('/login-status')
-      .then((response) => {
-        return response.json();
-      })
-      .then((loginStatus) => {
-        if (loginStatus.isLoggedIn) {
-        navigationElement.insertBefore(createListItem(createLink(
-          '/user-page.html?user=' + loginStatus.username, 'Your Page')),
-        navigationElement.childNodes[2]);
-
-        navigationElement.appendChild(
-          createListItem(createLink('/logout', 'Logout')));
-        } else {
-        navigationElement.appendChild(
-          createListItem(createLink('/login', 'Login')));
-        }
-      });
-}
-
-/**
  * Creates an li element.
  * @param {Element} childElement
  * @return {Element} li element
  */
 function createListItem(childElement) {
   const listItemElement = document.createElement('li');
+  listItemElement.className = 'nav-item';
   listItemElement.appendChild(childElement);
   return listItemElement;
 }
@@ -72,9 +34,18 @@ function createListItem(childElement) {
  */
 function createLink(url, text) {
   const linkElement = document.createElement('a');
-  linkElement.appendChild(document.createTextNode(text));
+  linkElement.className = 'nav-link font-weight-light';
   linkElement.href = url;
+  linkElement.appendChild(document.createTextNode(text));
   return linkElement;
+}
+
+function createLinkListItem(url, text) {
+  const link = createLink(url, text);
+  if (url === window.location.pathname) {
+    link.classList.add('active');
+  }
+  return createListItem(link);
 }
 
 /**
@@ -89,13 +60,46 @@ function addLoginOrLogoutLinkToNavigation() {
     .then(response => response.json())
     .then((loginStatus) => {
       if (loginStatus.isLoggedIn) {
-        const userPageLink = createLink(`/user-page.html?user=${loginStatus.username}`, 'Your Page');
-        const logoutLink = createLink('/logout', 'Logout');
-        navigationElement.appendChild(createListItem(userPageLink));
-        navigationElement.appendChild(createListItem(logoutLink));
+        const userPageLink = createLinkListItem(`/user-page.html?user=${loginStatus.username}`, 'Your Page');
+        const logoutLink = createLinkListItem('/logout', 'Logout');
+        navigationElement.insertBefore(userPageLink, navigationElement.childNodes[1]);
+        navigationElement.appendChild(logoutLink);
       } else {
-        const loginLink = createLink('/login', 'Login');
-        navigationElement.appendChild(createListItem(loginLink));
+        const loginLink = createLinkListItem('/login', 'Login');
+        navigationElement.appendChild(loginLink);
       }
     });
 }
+
+function buildNavigationLinks() {
+  const navigationElement = document.getElementById('navigation');
+
+  const links = [
+    createLinkListItem('/', 'Home'),
+    createLinkListItem('/feed.html', 'Feed'),
+    createLinkListItem('/community.html', 'Community'),
+    createLinkListItem('/stats.html', 'Statistics'),
+    createLinkListItem('/aboutus.html', 'About'),
+  ];
+
+  links.forEach(link => navigationElement.appendChild(link));
+
+  addLoginOrLogoutLinkToNavigation();
+}
+
+// Set transparency of navigationbar
+function setTransparency() {
+  if (window.location.pathname === '/') {
+    const navBar = document.getElementById('navigationBar');
+    navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent navBarTransparent';
+  }
+}
+
+// eslint-disable-next-line no-unused-vars
+function loadNavigationBar() {
+  const navElement = document.createElement('div');
+  $(navElement).load('navigation-bar.html', () => { buildNavigationLinks(); setTransparency(); });
+  document.body.insertBefore(navElement, document.body.firstChild);
+}
+
+loadNavigationBar();
