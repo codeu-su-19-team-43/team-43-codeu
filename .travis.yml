@@ -10,13 +10,7 @@ before_install:
 env: PATH=${HOME}/appengine-java-sdk-1.9.74/bin:${PATH} VERSION="$(date +%Y%m%dt%H%M%S)g$(git rev-parse --short HEAD)"
 
 script: 
-- mvn clean verify &&
-  appcfg.sh --service_account_json_key_file=client-secret.json --version=$VERSION update target/codeu-starter-project-0.0.1-SNAPSHOT &&
+- mvn clean verify
+- $TRAVIS_BRANCH == "master" && appcfg.sh --service_account_json_key_file=client-secret.json --version=$VERSION update target/codeu-starter-project-0.0.1-SNAPSHOT &&
   appcfg.sh --service_account_json_key_file=client-secret.json --version=$VERSION set_default_version target/codeu-starter-project-0.0.1-SNAPSHOT
-
-deploy:
-  provider: gae
-  keyfile: client-secret.json
-  project: su19-codeu-43-4269
-  config: src/main/webapp/WEB-INF/appengine-web.xml
-  on: master
+  
