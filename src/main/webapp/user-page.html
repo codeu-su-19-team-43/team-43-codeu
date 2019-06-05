@@ -24,8 +24,22 @@ limitations under the License.
     <script src="/js/user-page-loader.js"></script>
     <script src="/js/navigation-loader.js"></script>
     <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+    <script>
+      function fetchBlobstoreUrlAndShowForm() {
+        fetch('/blobstore-upload-url')
+          .then((response) => {
+            return response.text();
+          })
+          .then((imageUploadUrl) => {
+            const messageForm = document.getElementById('message-form');
+            messageForm.action = imageUploadUrl;
+            console.log(imageUploadUrl);
+            messageForm.classList.remove('hidden');
+          });
+      }
+    </script>
   </head>
-  <body onload="loadNavigationBar();buildUI();">
+  <body onload="loadNavigationBar();buildUI();fetchBlobstoreUrlAndShowForm();">
     <div id="nav-bar-container"></div>
     <h1 id="page-title">User Page</h1>
 
@@ -48,15 +62,15 @@ limitations under the License.
     <br />
     <br />
 
-    <form id="message-form" action="/messages" method="POST" class="hidden">
+    <form id="message-form" method="POST" class="hidden" enctype="multipart/form-data">
       Enter a new message:
       <br />
-      <textarea name="text" id="message-input"></textarea>
+      <textarea name="message" id="message-input"></textarea>
       <br />
       Add an image to yout message:
       <br />
       <span>Upload an image</span>
-      <input type="file" name="pic" accept="image/*" />
+      <input type="file" name="image" accept="image/*" />
       <br />
       <span>Paste image URL</span>
       <input type="text" name="imageUrl" id="image-url"/>
