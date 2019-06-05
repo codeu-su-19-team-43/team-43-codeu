@@ -1,0 +1,8 @@
+body > .page-header {
+  margin: 7em 0em 4em 0em;
+}
+
+body > .message-container {
+  width: 70%;
+  margin: auto;
+}
