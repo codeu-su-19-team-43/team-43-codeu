@@ -47,7 +47,12 @@ limitations under the License.
     <br />
     <br />
 
-    <form id="message-form" method="POST" class="hidden" enctype="multipart/form-data">
+    <form
+      id="message-form"
+      method="POST"
+      class="hidden"
+      enctype="multipart/form-data"
+    >
       Enter a new message:
       <br />
       <textarea name="message" id="message-input"></textarea>
@@ -58,12 +63,11 @@ limitations under the License.
       <input type="file" name="image" accept="image/*" />
       <br />
       <span>Paste image URL</span>
-      <input type="text" name="imageUrl" id="image-url"/>
+      <input type="text" name="imageUrl" id="image-url" />
       <br />
       <input type="submit" value="Submit" />
     </form>
     <hr />
-
     <div id="message-container">Loading...</div>
   </body>
 </html>

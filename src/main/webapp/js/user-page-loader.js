@@ -29,6 +29,17 @@ function setPageTitle() {
   document.title = `${parameterUsername} - User Page`;
 }
 
+// eslint-disable-next-line no-unused-vars
+function fetchBlobstoreUrlAndShowForm() {
+  fetch('/blobstore-upload-url')
+    .then(response => response.text())
+    .then((imageUploadUrl) => {
+      const messageForm = document.getElementById('message-form');
+      messageForm.action = imageUploadUrl;
+      messageForm.classList.remove('hidden');
+    });
+}
+
 /**
  * Shows the message form if the user is logged in and viewing their own page.
  */
@@ -37,7 +48,7 @@ function showMessageFormIfViewingSelf() {
     .then(response => response.json())
     .then((loginStatus) => {
       if (loginStatus.isLoggedIn && loginStatus.username === parameterUsername) {
-        document.getElementById('message-form').classList.remove('hidden');
+        fetchBlobstoreUrlAndShowForm();
         document.getElementById('about-me-form').classList.remove('hidden');
       }
     });
@@ -83,6 +94,7 @@ function fetchMessages() {
       });
     });
 }
+
 
 function fetchAboutMe() {
   const url = `/about?user=${parameterUsername}`;
