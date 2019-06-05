@@ -21,6 +21,10 @@
   width: 100%;
 }
 
+#image-url {
+  width: 100%;
+}
+
 /* Give each message a rounded border. */
 .message-div {
   border: thin solid black;
@@ -38,6 +42,13 @@
    isn't too close to the border. */
 .message-body {
   margin: 5px;
+}
+
+/* Display the rendered image properly. */
+.message-body img {
+  display: block;
+  margin-top: 25px;
+  max-width: 75%;
 }
 
 /* Use this to hide certain elements like forms if the
