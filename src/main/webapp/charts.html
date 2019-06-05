@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Charts</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="js/header-loader.js" onload="loadHeader('Charts')"></script>
+    <script>
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            const locationVotesData = new google.visualization.DataTable();
+
+            // Define columns for the DataTable instance
+            locationVotesData.addColumn('string', 'Location');
+            locationVotesData.addColumn('number', 'Votes');
+
+            // Add data to locationVotesData
+            locationVotesData.addRows([
+                ['Chinatown', 6],
+                ['Botanic Gardens', 10],
+                ['Marina Barrage', 7],
+                ['Tiong Bahru', 4],
+                ['Little India', 8],
+            ]);
+
+            // Create chart options
+            const locationVotesBarChartOptions = {
+                'title': 'Top Locations of the Week',
+                'width': 'auto'
+            };
+
+            // Create bar chart
+            const locationVotesBarChart = new google.visualization.BarChart(
+                document.getElementById('location-votes-chart'),
+            );
+
+            locationVotesBarChart.draw(locationVotesData, locationVotesBarChartOptions);
+        }
+    </script>
+</head>
+<body>
+    <div id="nav-bar-container"></div>
+    <div id="content">
+        <h1>Charts</h1>
+        <hr />
+        <div id="location-votes-chart"></div>
+    </div>
+</body>
+</html>
