@@ -96,6 +96,10 @@ function fetchAboutMe() {
   });
 }
 
+function inputTextEditor(){
+  const config = {removePlugins: [ 'ImageUpload' ]};
+  ClassicEditor.create(document.getElementById('message-input'), config );
+}
 
 /** Fetches data and populates the UI of the page. */
 // eslint-disable-next-line no-unused-vars
@@ -104,4 +108,5 @@ function buildUI() {
   showMessageFormIfViewingSelf();
   fetchMessages();
   fetchAboutMe();
+  inputTextEditor();
 }
