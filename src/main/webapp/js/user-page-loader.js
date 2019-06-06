@@ -96,6 +96,7 @@ function fetchAboutMe() {
   });
 }
 
+
 /** Fetches data and populates the UI of the page. */
 // eslint-disable-next-line no-unused-vars
 function buildUI() {

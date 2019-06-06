@@ -76,17 +76,19 @@ public class MessageServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
-    String userText = Jsoup.clean(request.getParameter("text"), Whitelist.none());
 
-    String imageUrl = Jsoup.clean(request.getParameter("imageUrl"), Whitelist.none());
+    //Jsoup used to santise user input 
+    String userText = Jsoup.clean(request.getParameter("text"), Whitelist.simpleText());
+
+    String imageUrl = Jsoup.clean(request.getParameter("imageUrl"), Whitelist.simpleText());
     
     String regex = "(https?://\\S+\\.(png|jpg))";
     String replacement = "<img src=\"$1\" />";
     String imageUrlWithImagesReplaced = imageUrl.replaceAll(regex, replacement);
-    
+
     Message message = new Message(user, userText + imageUrlWithImagesReplaced);
     datastore.storeMessage(message);
-
+    
     response.sendRedirect("/user-page.html?user=" + user);
   }
 }
