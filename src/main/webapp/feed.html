@@ -3,12 +3,19 @@
   <head>
     <script src="js/header-loader.js" onload="loadHeader('Message Feed')"></script>
     <script src="js/feed-page-loader.js"></script>
-    <link rel="stylesheet" href="/css/user-page.css" />
+    <link rel="stylesheet" href="/css/feed.css" />
+    <link rel="stylesheet" href="/css/feed-page.css" />
   </head>
   <body onload="buildUI()">
-    <div id="content">
-      <h1>Message Feed</h1>
-      <hr />
+    <div class="text-center page-header">
+      <h1 class="display-4">Message Feed</h1>
+      <p class="font-weight-lighter"
+        >It's such a coincidence that all our names start with an <bold class="font-weight-bold">A</bold>.
+        <br />We are team - <bold class="font-weight-bold">THE ACES</bold>.</lead
+      >
+      <div class="title-hr"></div>  
+    </div>
+    <div id="content-container">
       <div id="message-container">Loading...</div>
     </div>
   </body>
