@@ -17,15 +17,20 @@ limitations under the License.
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="/js/user-page-loader.js"></script>
     <script src="js/header-loader.js" onload="loadHeader('User Page')"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/11.2.0/classic/ckeditor.js"></script>
+    <script src="js/user-page-loader.js"></script>
     <link rel="stylesheet" href="/css/user-page.css" />
+    <link rel="stylesheet" href="/css/feed.css" />
   </head>
   <body onload="buildUI();">
-    <h1 id="page-title">User Page</h1>
-
-    <div id="about-me-container">Loading...</div>
+    <div class="text-center page-header">
+      <h1 class="display-4" id="page-title">My Page</h1>
+      <p class="font-weight-lighter" id="about-me-container">
+          Loading...
+      </p>
+      <div class="title-hr"></div>  
+    </div>
     <div id="about-me-form" class="hidden">
       <form action="/about" method="POST">
         <textarea
@@ -44,23 +49,27 @@ limitations under the License.
     <br />
     <br />
 
-    <form id="message-form" action="/messages" method="POST" class="hidden">
+    <form
+      id="message-form"
+      method="POST"
+      class="hidden"
+      enctype="multipart/form-data"
+    >
       Enter a new message:
       <br />
-      <textarea name="text" id="message-input"></textarea>
+      <textarea name="message" id="message-input"></textarea>
       <br />
       Add an image to your message:
       <br />
       <span>Upload an image</span>
-      <input type="file" name="pic" accept="image/*" />
+      <input type="file" name="image" accept="image/*" />
       <br />
       <span>Paste image URL</span>
-      <input type="text" name="imageUrl" id="image-url"/>
+      <input type="text" name="imageUrl" id="image-url" />
       <br />
       <input type="submit" value="Submit" />
     </form>
     <hr />
-
     <div id="message-container">Loading...</div>
   </body>
 </html>
