@@ -97,7 +97,11 @@ function fetchAboutMe() {
 }
 
 function inputTextEditor(){
-  const config = {removePlugins: [ 'ImageUpload' ]};
+  const config = { 
+  removePlugins: [ 'ImageUpload', 'Heading'], 
+  toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|']
+};
+
   ClassicEditor.create(document.getElementById('message-input'), config );
 }
 
