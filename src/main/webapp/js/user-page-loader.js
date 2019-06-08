@@ -52,13 +52,9 @@ function fetchAboutMe() {
 
 function inputTextEditor() {
   const config = {
-    removePlugins: ['ImageUpload', 'Heading'], 
-    toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|'],
+    removePlugins: ['ImageUpload', 'Heading'], toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|'],
   };
-  ClassicEditor.create(document.getElementById('message-input'), config)
-    .catch((err) => {
-      console.error(err.stack);
-    });
+  ClassicEditor.create(document.getElementById('message-input'), config);
 }
 /** Fetches data and populates the UI of the page. */
 // eslint-disable-next-line no-unused-vars

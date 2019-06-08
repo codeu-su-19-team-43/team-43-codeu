@@ -27,6 +27,7 @@ function buildMessageDiv(message) {
 }
 
 // Fetch messages and add them to the page.
+/*
 function fetchMessages() {
   const url = '/feed';
   fetch(url)
@@ -44,8 +45,8 @@ function fetchMessages() {
         const messageDiv = buildMessageDiv(message);
         messageContainer.appendChild(messageDiv);
       });
-    });
-}
+    }); 
+}*/
 // Fetch data and populate the UI of the page.
 // eslint-disable-next-line no-unused-vars
 function buildUI() {
