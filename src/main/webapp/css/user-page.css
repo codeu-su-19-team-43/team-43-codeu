@@ -2,6 +2,16 @@ body > .page-header {
   margin: 7em 0em 4em 0em;
 }
 
+.page-header > .title-hr {
+  border: 0;
+  width: 50%;
+  margin: auto;
+  height: 1px;
+  background-image: -webkit-linear-gradient(left, rgb(253, 253, 253), rgba(0, 0, 0, 0.3), rgb(253, 253, 253));
+  margin-top: 2em;
+  margin-bottom: 1em;
+}
+
 /* Set the size of the message input to be 100 pixels high
    and will fill the width of its parent element. */
 #message-input, #aboutme-input {
