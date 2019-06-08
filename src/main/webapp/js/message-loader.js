@@ -3,43 +3,46 @@
  * @param {Message} message
  * @return {Element}
  */
-function buildMessageDiv(message) {
-  const usernameDiv = document.createElement('div');
-  usernameDiv.classList.add('left-align');
-  usernameDiv.appendChild(document.createTextNode(message.user));
 
-  const timeDiv = document.createElement('div');
-  timeDiv.classList.add('right-align');
-  timeDiv.appendChild(
+function buildMessageDiv(message) {
+  const cardBody = document.createElement('div');
+  cardBody.classList.add('card-body');
+
+  const usernameDiv = document.createElement('h5');
+  usernameDiv.classList.add('card-title');
+  usernameDiv.appendChild(document.createTextNode(message.user));
+  cardBody.appendChild(usernameDiv);
+
+  const timeDiv = document.createElement('p');
+  timeDiv.classList.add('card-text');
+
+  const timeText = document.createElement('small');
+  timeText.classList.add('text-muted');
+  timeText.appendChild(
     document.createTextNode(new Date(message.timestamp)),
   );
 
-  const headerDiv = document.createElement('div');
-  headerDiv.classList.add('message-header');
-  headerDiv.appendChild(usernameDiv);
-  headerDiv.appendChild(timeDiv);
+  timeDiv.appendChild(timeText);
+  cardBody.appendChild(timeDiv);
 
   const textDiv = document.createElement('p');
-  textDiv.classList.add('message-text');
-  textDiv.innerHTML = message.text;
-
-  const BodyDiv = document.createElement('div');
-  BodyDiv.classList.add('message-body');
-  BodyDiv.appendChild(textDiv);
+  textDiv.classList.add('card-text');
+  textDiv.appendChild(document.createTextNode(message.text));
+  cardBody.appendChild(textDiv);
 
   if (message.imageUrl != null) {
     const imageDiv = document.createElement('img');
-    imageDiv.classList.add('message-img');
+    imageDiv.classList.add('card-img-top');
     imageDiv.src = message.imageUrl;
-    BodyDiv.appendChild(imageDiv);
+    cardBody.appendChild(imageDiv);
   }
 
-  const messageDiv = document.createElement('div');
-  messageDiv.classList.add('message-div');
-  messageDiv.appendChild(headerDiv);
-  messageDiv.appendChild(BodyDiv);
+  const card = document.createElement('div');
+  card.classList.add('card');
 
-  return messageDiv;
+  card.appendChild(cardBody);
+
+  return card;
 }
 
 
@@ -47,7 +50,7 @@ function fetchMessagesFromUrl(url) {
   fetch(url)
     .then(response => response.json())
     .then((messages) => {
-      const messagesContainer = document.getElementById('message-container');
+      const messagesContainer = document.getElementById('message-cards-container');
       if (messages.length === 0) {
         messagesContainer.innerHTML = '<p>This user has no posts yet.</p>';
       } else {
