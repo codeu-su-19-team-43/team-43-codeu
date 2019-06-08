@@ -26,26 +26,8 @@ public class Message {
   private long timestamp;
   private String text;
   private String imageUrl;
+  private String imageLabels;
 
-  /**
-   * Constructs a new {@link Message} posted by {@code user} with {@code text} and 
-   * {@code imageUrl} content. Generates a random ID and uses the current system 
-   * time for the creation time.
-   */
-  public Message(String user, String text, String imageUrl) {
-    this(UUID.randomUUID(), user, System.currentTimeMillis(), text, imageUrl);
-  }
-
-  /**
-   * Constructs a new {@link Message}.
-   */
-  public Message(UUID id, String user, long timestamp, String text, String imageUrl) {
-    this.id = id;
-    this.user = user;
-    this.timestamp = timestamp;
-    this.text = text;
-    this.imageUrl = imageUrl;
-  }
 
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text}. 
@@ -66,23 +48,64 @@ public class Message {
     this.text = text;
   }
 
+  /**
+   * Constructs a new {@link Message}.
+   */
+  public Message(UUID id, String user, long timestamp, String text, String imageUrl, 
+                 String imageLabels) {
+    this.id = id;
+    this.user = user;
+    this.timestamp = timestamp;
+    this.text = text;
+    this.imageUrl = imageUrl;
+    this.imageLabels = imageLabels;
+  }
+
   public UUID getId() {
     return id;
+  }
+
+  public void setId(UUID id) {
+    this.id = id;
   }
 
   public String getUser() {
     return user;
   }
 
+  public void setUser(String user) {
+    this.user = user;
+  }
+
   public long getTimestamp() {
     return timestamp;
+  }
+
+  public void setTimestamp(long timestamp) {
+    this.timestamp = timestamp;
   }
 
   public String getText() {
     return text;
   }
 
+  public void setText(String text) {
+    this.text = text;
+  }
+
   public String getImageUrl() {
     return imageUrl;
+  }
+
+  public void setImageUrl(String imageUrl) {
+    this.imageUrl = imageUrl;
+  }
+
+  public String getImageLabels() {
+    return imageLabels;
+  }
+
+  public void setImageLabels(String imageLabels) {
+    this.imageLabels = imageLabels;
   }
 }
