@@ -34,7 +34,14 @@ function buildMessageDiv(message) {
     const imageDiv = document.createElement('img');
     imageDiv.classList.add('card-img-top');
     imageDiv.src = message.imageUrl;
+
     cardBody.appendChild(imageDiv);
+
+    const labelDiv = document.createElement('p');
+    labelDiv.classList.add('card-text');
+    labelDiv.innerHTML = `Tags: ${message.imageLabels}`;
+    cardBody.appendChild(labelDiv);
+
   }
 
   const card = document.createElement('div');

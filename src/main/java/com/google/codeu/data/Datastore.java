@@ -46,6 +46,7 @@ public class Datastore {
     messageEntity.setProperty("text", message.getText());
     messageEntity.setProperty("timestamp", message.getTimestamp());
     messageEntity.setProperty("imageUrl", message.getImageUrl());
+    messageEntity.setProperty("imageLabels", message.getImageLabels());
 
     datastore.put(messageEntity);
   }
@@ -57,7 +58,6 @@ public class Datastore {
    *     message. List is sorted by time descending.
    */
   public List<Message> getMessages(String user) {
-    List<Message> messages = new ArrayList<>();
 
     Query query =
         new Query("Message")
@@ -65,32 +65,21 @@ public class Datastore {
             .addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
 
-    for (Entity entity : results.asIterable()) {
-      try {
-        String idString = entity.getKey().getName();
-        UUID id = UUID.fromString(idString);
-        long timestamp = (long) entity.getProperty("timestamp");
-        String text = (String) entity.getProperty("text");
-        String imageUrl = (String) entity.getProperty("imageUrl");
-
-        Message message = new Message(id, user, timestamp, text, imageUrl);
-        messages.add(message);
-      } catch (Exception e) {
-        System.err.println("Error reading message.");
-        System.err.println(entity.toString());
-        e.printStackTrace();
-      }
-    }
-
-    return messages;
+    return convertMessagesFromQuery(results);
   }
 
   /** Returns all messages for all users. */
   public List<Message> getAllMessages() {
-    List<Message> messages = new ArrayList<>();
     Query query = new Query("Message")
         .addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
+
+    return convertMessagesFromQuery(results);
+  }
+
+  /** Convert query to messages. */
+  public List<Message> convertMessagesFromQuery(PreparedQuery results) {
+    List<Message> messages = new ArrayList<>();
 
     for (Entity entity : results.asIterable()) {
       try {
@@ -100,9 +89,9 @@ public class Datastore {
         long timestamp = (long) entity.getProperty("timestamp");
         String text = (String) entity.getProperty("text");
         String imageUrl = (String) entity.getProperty("imageUrl");
+        String imageLabels = (String) entity.getProperty("imageLabels");
 
-        Message message = new Message(id, user, timestamp, text, imageUrl);
-
+        Message message = new Message(id, user, timestamp, text, imageUrl, imageLabels);
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
@@ -112,6 +101,7 @@ public class Datastore {
     }
 
     return messages;
+
   }
 
   /** Returns the total number of messages for all users. */
