@@ -42,7 +42,7 @@ function createLink(url, text) {
 
 function createLinkListItem(url, text) {
   const link = createLink(url, text);
-  if (url === window.location.pathname) {
+  if (url.split('.')[0] === window.location.pathname.split('.')[0]) {
     link.classList.add('active');
   }
   return createListItem(link);
