@@ -117,7 +117,7 @@ public class MessageServlet extends HttpServlet {
    * Returns the BlobKey that points to the file uploaded by the user, or 
    * null if the user didn't upload a file.
    */
-  private BlobKey getBlobKey(HttpServletRequest request, String formInputElementName){
+  private BlobKey getBlobKey(HttpServletRequest request, String formInputElementName) {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get("image");
@@ -143,7 +143,7 @@ public class MessageServlet extends HttpServlet {
   /**
    * Returns a URL that points to the uploaded file.
    */
-  private String getUploadedFileUrl(BlobKey blobKey){
+  private String getUploadedFileUrl(BlobKey blobKey) {
     ImagesService imagesService = ImagesServiceFactory.getImagesService();
     ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
     return imagesService.getServingUrl(options);
