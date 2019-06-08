@@ -9,5 +9,5 @@ client-secret.json
 node_modules
 \.factorypath
 \.vscode/settings\.json
-google-vision-api\.json
 *.code-workspace
+cudeu-team43-google-application-credentials\.json
