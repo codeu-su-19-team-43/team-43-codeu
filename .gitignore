@@ -7,9 +7,7 @@ target
 .DS_Store
 client-secret.json
 node_modules
-
 \.factorypath
-
-team-43-codeu\.code-workspace
-
 \.vscode/settings\.json
+*.code-workspace
+cudeu-team43-google-application-credentials\.json

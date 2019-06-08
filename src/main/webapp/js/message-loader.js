@@ -32,6 +32,11 @@ function buildMessageDiv(message) {
     imageDiv.classList.add('message-img');
     imageDiv.src = message.imageUrl;
     BodyDiv.appendChild(imageDiv);
+
+    const labelDiv = document.createElement('p');
+    // labelDiv.classList.add('message-text');
+    labelDiv.innerHTML = `Tags: ${message.imageLabels}`;
+    BodyDiv.appendChild(labelDiv);
   }
 
   const messageDiv = document.createElement('div');
