@@ -13,3 +13,5 @@ node_modules
 team-43-codeu\.code-workspace
 
 \.vscode/settings\.json
+
+google-vision-api\.json
