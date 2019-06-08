@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/codeu-su-19-team-43/team-43-codeu/issues"
   },
-  "homepage": "https://github.com/codeu-su-19-team-43/team-43-codeu#readme"
+  "homepage": "https://github.com/codeu-su-19-team-43/team-43-codeu#readme",
+  "dependencies": {
+    "moment": "^2.24.0"
+  }
 }

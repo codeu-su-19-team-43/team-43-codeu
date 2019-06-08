@@ -33,7 +33,7 @@ function showMessageFormIfViewingSelf() {
     .then((loginStatus) => {
       if (loginStatus.isLoggedIn && loginStatus.username === parameterUsername) {
         fetchBlobstoreUrlAndShowMessageForm();
-        document.getElementById('about-me-form').classList.remove('hidden');
+        document.getElementById('edit-about-me-button').classList.remove('hidden');
       }
     });
 }

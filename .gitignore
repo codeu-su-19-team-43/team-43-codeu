@@ -11,3 +11,5 @@ node_modules
 \.vscode/settings\.json
 *.code-workspace
 cudeu-team43-google-application-credentials\.json
+
+package\.json
