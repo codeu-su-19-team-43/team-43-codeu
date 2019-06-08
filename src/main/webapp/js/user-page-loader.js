@@ -53,9 +53,12 @@ function fetchAboutMe() {
 function inputTextEditor(){
   const config = { 
   removePlugins: [ 'ImageUpload', 'Heading'], 
-  toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|',  'undo', '|', 'redo', '|']
+  toolbar: ['bold', '|', 'italic',  '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|',  'undo', '|', 'redo', '|']
 };
-  ClassicEditor.create(document.getElementById('message-input'), config );
+  ClassicEditor.create(document.getElementById('message-input'), config )
+  .catch(err =>{
+    console.error( err.stack );
+  });
 }
 
 /** Fetches data and populates the UI of the page. */
