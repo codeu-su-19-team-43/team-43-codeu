@@ -6,7 +6,7 @@
       onload="loadHeader('Message Feed')"
     ></script>
     <script src="js/feed-page-loader.js"></script>
-    <link rel="stylesheet" href="/css/feed.css" />
+    <link rel="stylesheet" href="/css/message.css" />
     <link rel="stylesheet" href="/css/feed-page.css" />
   </head>
   <body onload="buildUI()">
@@ -18,6 +18,19 @@
     </div>
 
     <div id="content-container">
+      
+      <form class="form-inline">
+        <input
+          class="form-control mr-sm-2"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
+          Search
+        </button>
+      </form>
+
       <div class="message-container">
         <div id="message-cards-container" class="card-columns">
           Loading...

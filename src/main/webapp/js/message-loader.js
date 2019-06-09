@@ -5,6 +5,9 @@
  */
 
 function buildMessageDiv(message) {
+  const card = document.createElement('div');
+  card.classList.add('card');
+
   const cardBody = document.createElement('div');
   cardBody.classList.add('card-body');
 
@@ -30,24 +33,24 @@ function buildMessageDiv(message) {
   textDiv.appendChild(document.createTextNode(message.text));
   cardBody.appendChild(textDiv);
 
+  card.appendChild(cardBody);
+
   if (message.imageUrl != null) {
     const imageDiv = document.createElement('img');
     imageDiv.classList.add('card-img-top');
     imageDiv.src = message.imageUrl;
 
-    cardBody.appendChild(imageDiv);
+    card.insertBefore(imageDiv, card.childNodes[0]);
 
-    const labelDiv = document.createElement('p');
-    labelDiv.classList.add('card-text');
-    labelDiv.innerHTML = `Tags: ${message.imageLabels}`;
-    cardBody.appendChild(labelDiv);
+    const labelDiv = document.createElement('div');
+    labelDiv.classList.add('card-footer');
+    labelDiv.classList.add('p-1');
+    labelDiv.innerHTML = '<p class="text-muted d-inline px-1">Tags:</p>';
+    // eslint-disable-next-line no-return-assign
+    message.imageLabels.map(imageLabel => labelDiv.innerHTML += `<button type="button" class="btn btn-outline-info m-1 p-1 font-weight-lighter tag-button">${imageLabel}</button>`);
 
+    card.appendChild(labelDiv);
   }
-
-  const card = document.createElement('div');
-  card.classList.add('card');
-
-  card.appendChild(cardBody);
 
   return card;
 }

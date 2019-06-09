@@ -16,8 +16,8 @@
 
 package com.google.codeu.data;
 
+import java.util.List;
 import java.util.UUID;
-
 /** A single message posted by a user. */
 public class Message {
 
@@ -26,7 +26,8 @@ public class Message {
   private long timestamp;
   private String text;
   private String imageUrl;
-  private String imageLabels;
+  // private String imageLabels;
+  private List<String> imageLabels;
 
 
   /**
@@ -52,7 +53,7 @@ public class Message {
    * Constructs a new {@link Message}.
    */
   public Message(UUID id, String user, long timestamp, String text, String imageUrl, 
-                 String imageLabels) {
+                 List<String> imageLabels) {
     this.id = id;
     this.user = user;
     this.timestamp = timestamp;
@@ -101,11 +102,11 @@ public class Message {
     this.imageUrl = imageUrl;
   }
 
-  public String getImageLabels() {
+  public List<String> getImageLabels() {
     return imageLabels;
   }
 
-  public void setImageLabels(String imageLabels) {
+  public void setImageLabels(List<String> imageLabels) {
     this.imageLabels = imageLabels;
   }
 }

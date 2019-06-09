@@ -1,0 +1,9 @@
+.message-container {
+  width: 85%;
+  margin: auto;
+}
+
+.card-footer > .tag-button {
+  line-height: normal;
+  font-size: small;
+}
