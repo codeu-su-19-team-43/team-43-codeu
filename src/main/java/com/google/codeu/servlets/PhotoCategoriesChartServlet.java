@@ -3,12 +3,13 @@ package com.google.codeu.servlets;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
+import java.io.IOException;
+import java.util.Scanner;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Scanner;
 
 /**
  * Handles fetching resources for displaying the photo categories chart.
@@ -21,7 +22,8 @@ public class PhotoCategoriesChartServlet extends HttpServlet {
   public void init() {
     photoCategoriesArray = new JsonArray();
     Gson gson = new Gson();
-    Scanner scanner = new Scanner(getServletContext().getResourceAsStream("/WEB-INF/photo-categories.csv"));
+    Scanner scanner = new Scanner(getServletContext()
+            .getResourceAsStream("/WEB-INF/photo-categories.csv"));
     scanner.nextLine(); // skips column names
     while (scanner.hasNextLine()) {
       String line = scanner.nextLine();
@@ -30,7 +32,9 @@ public class PhotoCategoriesChartServlet extends HttpServlet {
       String currCategoryName = cells[1];
       int currPhotoCount = Integer.parseInt(cells[2]);
 
-      photoCategoriesArray.add(gson.toJsonTree(new photoCategory(currCategoryName, currPhotoCount)));
+      photoCategoriesArray.add(gson.toJsonTree(
+              new PhotoCategory(currCategoryName, currPhotoCount)
+      ));
     }
     scanner.close();
   }
@@ -44,11 +48,11 @@ public class PhotoCategoriesChartServlet extends HttpServlet {
     response.getOutputStream().println(photoCategoriesArray.toString());
   }
 
-  private static class photoCategory {
+  private static class PhotoCategory {
     String categoryName;
     int photoCount;
 
-    private photoCategory(String categoryName, int photoCount) {
+    private PhotoCategory(String categoryName, int photoCount) {
       this.categoryName = categoryName;
       this.photoCount = photoCount;
     }
