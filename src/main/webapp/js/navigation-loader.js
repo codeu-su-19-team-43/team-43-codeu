@@ -99,7 +99,13 @@ function setTransparency() {
 // eslint-disable-next-line no-unused-vars
 function loadNavigationBar() {
   const navElement = document.createElement('div');
-  $(navElement).load('navigation-bar.html', () => { document.body.insertBefore(navElement, document.body.firstChild); buildNavigationLinks(); setTransparency(); });
+  $(navElement).load('navigation-bar.html', () => {
+    $(window).load(() => {
+      document.body.insertBefore(navElement, document.body.childNodes[0]);
+      buildNavigationLinks();
+      setTransparency();
+    });
+  });
 }
 
 loadNavigationBar();
