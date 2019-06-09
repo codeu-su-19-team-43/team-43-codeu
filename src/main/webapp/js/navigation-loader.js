@@ -83,6 +83,7 @@ function buildNavigationLinks() {
     createLinkListItem('/aboutus.html', 'About'),
   ];
 
+  console.log(navigationElement);
   links.forEach(link => navigationElement.appendChild(link));
 
   addLoginOrLogoutLinkToNavigation();
@@ -99,8 +100,7 @@ function setTransparency() {
 // eslint-disable-next-line no-unused-vars
 function loadNavigationBar() {
   const navElement = document.createElement('div');
-  $(navElement).load('navigation-bar.html', () => { buildNavigationLinks(); setTransparency(); });
-  document.body.insertBefore(navElement, document.body.firstChild);
+  $(navElement).load('navigation-bar.html', () => { document.body.insertBefore(navElement, document.body.firstChild); buildNavigationLinks(); setTransparency(); });
 }
 
 loadNavigationBar();
