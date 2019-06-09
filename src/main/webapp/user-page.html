@@ -61,30 +61,47 @@ limitations under the License.
       </div>
     </div>
 
-    <form
-      id="message-form"
-      method="POST"
-      class="hidden"
-      enctype="multipart/form-data"
-    >
-      Enter a new message:
-      <br />
-      <textarea name="message" id="message-input"></textarea>
-      <br />
-      Add an image to yout message:
-      <br />
-      <span>Upload an image</span>
-      <input type="file" name="image" accept="image/*" />
-      <br />
-      <span>Paste image URL</span>
-      <input type="text" name="imageUrl" id="image-url" />
-      <br />
-      <input type="submit" value="Submit" />
-    </form>
+    <div class="content-container">
+      <div class="left-container">
+        <div class="card" style="width: 24rem;">
+          <img src="./images/aboutus-avatar-anqi.jpg" class="card-img-top" alt="..." />
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+          </div>
+        </div>
+      </div>
+      <div class="right-container">
+        <form
+          id="message-form"
+          method="POST"
+          class="hidden"
+          enctype="multipart/form-data"
+        >
+          Enter a new message:
+          <br />
+          <textarea name="message" id="message-input"></textarea>
+          <br />
+          Add an image to yout message:
+          <br />
+          <span>Upload an image</span>
+          <input type="file" name="image" accept="image/*" />
+          <br />
+          <span>Paste image URL</span>
+          <input type="text" name="imageUrl" id="image-url" />
+          <br />
+          <input type="submit" value="Submit" />
+        </form>
 
-    <div class="message-container">
-      <div id="message-cards-container" class="card-columns">
-        Loading...
+        <div class="message-container">
+          <div id="message-cards-container" class="card-columns">
+            Loading...
+          </div>
+        </div>
       </div>
     </div>
   </body>

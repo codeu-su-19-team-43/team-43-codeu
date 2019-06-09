@@ -2,30 +2,71 @@ body > .page-header {
   margin: 7em 0em 4em 0em;
 }
 
+.content-container {
+  width: 80%;
+  margin: auto;
+  display: flex;
+}
 
-/* Use this to hide certain elements like forms if the
-   user is not logged in or viewing their own page. */
+.left-container {
+  flex: 40%;
+}
+
+.right-container {
+  flex: 60%;
+}
+
+.message-container {
+  width: 70%;
+  margin: auto;
+}
+
+.card-columns {
+  -webkit-column-count: 1;
+  -moz-column-count: 1;
+  column-count: 1;
+}
+
 .hidden {
   display: none;
+}
+
+#message-form {
+  width: 70%;
+  margin: auto;
+}
+
+#aboutme-input {
+  height: 100px;
+  width: 100%;
+}
+
+#message-input {
+  height: 100px;
+  width: 100%;
+}
+
+#image-url {
+  width: 100%;
 }
 
 .popup_trigger {
   cursor: pointer;
 }
 
-.hover_bkgr{
-  background:rgba(0,0,0,.35);
-  cursor:pointer;
-  height:100%;
-  position:fixed;
-  text-align:center;
-  top:0;
-  width:100%;
-  z-index:10000;
+.hover_bkgr {
+  background: rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  height: 100%;
+  position: fixed;
+  text-align: center;
+  top: 0;
+  width: 100%;
+  z-index: 10000;
 }
-.hover_bkgr > .helper{
-  display:inline-block;
-  height:30%;
+.hover_bkgr > .helper {
+  display: inline-block;
+  height: 30%;
 }
 .hover_bkgr > div {
   background-color: #fff;
@@ -39,25 +80,4 @@ body > .page-header {
   position: relative;
   border-radius: 8px;
   padding: 15px 5%;
-}
-
-#aboutme-input {
-  height: 100px;
-  width: 100%;
-}
-
-#message-form {
-  width: 85%;
-  margin: auto;
-}
-
-/* Set the size of the message input to be 100 pixels high
-   and will fill the width of its parent element. */
-#message-input {
-  height: 100px;
-  width: 100%;
-}
-
-#image-url {
-  width: 100%;
 }
