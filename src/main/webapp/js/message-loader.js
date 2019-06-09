@@ -47,7 +47,13 @@ function buildMessageDiv(message) {
     labelDiv.classList.add('p-1');
     labelDiv.innerHTML = '<p class="text-muted d-inline px-1">Tags:</p>';
     // eslint-disable-next-line no-return-assign
-    message.imageLabels.map(imageLabel => labelDiv.innerHTML += `<button type="button" class="btn btn-outline-info m-1 p-1 font-weight-lighter tag-button">${imageLabel}</button>`);
+    message.imageLabels.map(imageLabel => labelDiv.innerHTML
+      += `<a href="/feed.html">
+            <button type="button" 
+                    class="btn btn-outline-info m-1 p-1 font-weight-lighter tag-button"
+            >${imageLabel}
+            </button>
+          </a>`);
 
     card.appendChild(labelDiv);
   }
