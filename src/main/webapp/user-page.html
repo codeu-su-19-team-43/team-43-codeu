@@ -35,16 +35,6 @@ limitations under the License.
     </script>
   </head>
   <body onload="buildUI();">
-    <div class="text-center page-header">
-      <h1 class="display-4" id="page-title">My Page</h1>
-      <p class="font-weight-lighter popup_trigger" id="about-me-container">
-        Loading...
-      </p>
-      <button class="hidden" onclick="showPopup();" id="edit-about-me-button">
-        Edit
-      </button>
-    </div>
-
     <div class="hover_bkgr hidden" id="popup">
       <span class="helper"></span>
       <div>
@@ -62,21 +52,25 @@ limitations under the License.
       </div>
     </div>
 
-    <div class="content-container">
-      <div class="left-container">
-        <div class="card" style="width: 24rem;">
-          <img src="./images/aboutus-avatar-anqi.jpg" class="card-img-top" alt="..." />
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the
-              bulk of the card's content.
-            </p>
-            <a href="#" class="btn btn-primary">Go somewhere</a>
-          </div>
-        </div>
+    <div class="content-container mt-7 pt-4">
+      <div class="left-container pr-5">
+        <img
+          src="./images/aboutus-avatar-anqi.jpg"
+          id="user-profile"
+          alt="..."
+          class="rounded border"
+        />
+        <h5 class="card-title" id="username"></h5>
+
+        <p class="font-weight-lighter" id="about-me-container">
+          Loading...
+        </p>
+        <button class="hidden" onclick="showPopup();" id="edit-about-me-button">
+          Edit
+        </button>
       </div>
-      <div class="right-container">
+
+      <div class="right-container pl-5">
         <form
           id="message-form"
           method="POST"

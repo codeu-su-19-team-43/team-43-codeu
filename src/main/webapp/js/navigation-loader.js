@@ -83,7 +83,6 @@ function buildNavigationLinks() {
     createLinkListItem('/aboutus.html', 'About'),
   ];
 
-  console.log(navigationElement);
   links.forEach(link => navigationElement.appendChild(link));
 
   addLoginOrLogoutLinkToNavigation();
