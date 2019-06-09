@@ -100,8 +100,8 @@ function setTransparency() {
 function loadNavigationBar() {
   const navElement = document.createElement('div');
   $(navElement).load('navigation-bar.html', () => {
-    $(window).load(() => {
-      document.body.insertBefore(navElement, document.body.childNodes[0]);
+    $(document).ready(() => {
+      document.body.insertBefore(navElement, document.body.firstChild);
       buildNavigationLinks();
       setTransparency();
     });
