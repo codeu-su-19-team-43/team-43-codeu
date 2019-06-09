@@ -7,9 +7,10 @@
     <script src="js/header-loader.js" onload="loadHeader('Charts')"></script>
     <script>
         google.charts.load('current', { packages: ['corechart'] });
-        google.charts.setOnLoadCallback(drawChart);
+    google.charts.setOnLoadCallback(drawLocationVotesChart);
+    google.charts.setOnLoadCallback(drawPhotoCategoriesChart);
 
-        function drawChart() {
+    function drawLocationVotesChart() {
             const locationVotesData = new google.visualization.DataTable();
 
             // Define columns for the DataTable instance
@@ -38,6 +39,36 @@
 
             locationVotesBarChart.draw(locationVotesData, locationVotesBarChartOptions);
         }
+
+    function drawPhotoCategoriesChart() {
+        fetch("/photo-categories-chart")
+            .then((response) => {
+                return response.json();
+            })
+            .then((photoCategoriesJson) => {
+                const photoCategoriesData = new google.visualization.DataTable();
+                photoCategoriesData.addColumn('string', 'Category Name');
+                photoCategoriesData.addColumn('number', 'Photo Count');
+
+                for (let i = 0; i < photoCategoriesJson.length; i++) {
+                    let photoCategoriesRow = [];
+                    const categoryName = photoCategoriesJson[i].categoryName;
+                    const photoCount = photoCategoriesJson[i].photoCount;
+                    photoCategoriesRow.push(categoryName, photoCount);
+
+                    photoCategoriesData.addRow(photoCategoriesRow);
+                }
+
+                const photoCategoriesChartOptions = {
+                    'title': 'Number of Photos According to Categories',
+                    'height': 'auto',
+                    'width': 'auto'
+                };
+
+                var bookChart = new google.visualization.BarChart(document.getElementById('photo-categories-chart'));
+                bookChart.draw(photoCategoriesData, photoCategoriesChartOptions);
+            })
+    }
     </script>
     <link rel="stylesheet" href="/css/charts-page.css" />
 </head>
@@ -48,6 +79,7 @@
     </div>
     <div id="content">
         <div id="location-votes-chart"></div>
+        <div id="photo-categories-chart"></div>
     </div>
 </body>
 </html>
