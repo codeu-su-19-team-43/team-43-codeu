@@ -2,15 +2,6 @@ body > .page-header {
   margin: 7em 0em 4em 0em;
 }
 
-.page-header > .title-hr {
-  border: 0;
-  width: 50%;
-  margin: auto;
-  height: 1px;
-  background-image: -webkit-linear-gradient(left, rgb(253, 253, 253), rgba(0, 0, 0, 0.3), rgb(253, 253, 253));
-  margin-top: 2em;
-  margin-bottom: 1em;
-}
 
 .card {
   width: 30%;

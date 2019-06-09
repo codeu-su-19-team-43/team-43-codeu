@@ -14,8 +14,8 @@ function setPageTitle() {
 }
 
 // eslint-disable-next-line no-unused-vars
-function fetchBlobstoreUrlAndShowForm() {
-  fetch('/blobstore-upload-url')
+function fetchBlobstoreUrlAndShowMessageForm() {
+  fetch('/blobstore-upload-url?form=messages')
     .then(response => response.text())
     .then((imageUploadUrl) => {
       const messageForm = document.getElementById('message-form');
@@ -32,8 +32,8 @@ function showMessageFormIfViewingSelf() {
     .then(response => response.json())
     .then((loginStatus) => {
       if (loginStatus.isLoggedIn && loginStatus.username === parameterUsername) {
-        fetchBlobstoreUrlAndShowForm();
-        document.getElementById('about-me-form').classList.remove('hidden');
+        fetchBlobstoreUrlAndShowMessageForm();
+        document.getElementById('edit-about-me-button').classList.remove('hidden');
       }
     });
 }
