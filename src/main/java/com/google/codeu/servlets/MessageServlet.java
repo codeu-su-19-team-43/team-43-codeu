@@ -85,6 +85,7 @@ public class MessageServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
+
     String userText = Jsoup.clean(request.getParameter("message"), Whitelist.none());
     
     // Get the BlobKey that points to the image uploaded by the user.
@@ -108,8 +109,9 @@ public class MessageServlet extends HttpServlet {
       message.setImageLabels(imageLabelsStr);
 
     }
+    
     datastore.storeMessage(message);
-
+    
     response.sendRedirect("/user-page.html?user=" + user);
   }
 
