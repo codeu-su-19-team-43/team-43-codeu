@@ -35,7 +35,7 @@ limitations under the License.
     </script>
   </head>
   <body onload="buildUI();">
-    <div class="hover_bkgr hidden" id="popup">
+    <!-- <div class="hover_bkgr hidden" id="popup">
       <span class="helper"></span>
       <div>
         <form action="/about" method="POST">
@@ -50,27 +50,32 @@ limitations under the License.
           <input type="submit" value="Submit" />
         </form>
       </div>
-    </div>
+    </div> -->
 
     <div class="content-container mt-7 pt-4">
-      <div class="left-container pr-3">
+      <div class="left-container pr-4 position-sticky">
         <img
           src="./images/aboutus-avatar-anqi.jpg"
-          id="user-profile"
+          id="user-profile-image"
           alt="..."
           class="rounded border"
         />
-        <h5 class="card-title" id="username"></h5>
-
-        <p class="font-weight-lighter" id="about-me-container">
-          Loading...
-        </p>
-        <button class="hidden" onclick="showPopup();" id="edit-about-me-button">
-          Edit
-        </button>
+        <div class="profile-container">
+          <h5 id="username"></h5>
+          <p class="font-weight-lighter" id="about-me-container">
+            Loading...
+          </p>
+          <button
+            class="hidden"
+            onclick="showPopup();"
+            id="edit-about-me-button"
+          >
+            Edit
+          </button>
+        </div>
       </div>
 
-      <div class="right-container pl-3">
+      <div class="right-container pl-4">
         <form
           id="message-form"
           method="POST"
@@ -93,7 +98,7 @@ limitations under the License.
         </form>
 
         <div class="message-container">
-          <div id="message-cards-container" class="card-columns">
+          <div id="message-cards-container" class="card-columns mt-5">
             Loading...
           </div>
         </div>

@@ -10,22 +10,23 @@ body > .page-header {
 
 .left-container {
   flex: 30%;
+  top: 7em;
+  height: 90vh;
 }
 
-#user-profile {
+#user-profile-image {
   object-fit: cover;
-  width: 300px;
-  height: 300px;
+  width: 290px;
+  height: 290px;
+}
+
+profile-container {
+  width: 290px;
 }
 
 .right-container {
   flex: 70%;
 }
-
-/* .message-container {
-  width: 80%;
-  margin: auto;
-} */
 
 @media (min-width: 40em) {
   .card-columns {
@@ -46,11 +47,6 @@ body > .page-header {
 .hidden {
   display: none;
 }
-
-/* #message-form {
-  width: 70%;
-  margin: auto;
-} */
 
 #aboutme-input {
   height: 100px;

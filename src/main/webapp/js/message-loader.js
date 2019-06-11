@@ -57,7 +57,6 @@ function buildMessageDiv(message) {
 
     card.appendChild(labelDiv);
   }
-
   return card;
 }
 
