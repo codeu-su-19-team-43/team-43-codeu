@@ -30,7 +30,7 @@ function buildMessageDiv(message) {
 
   const textDiv = document.createElement('p');
   textDiv.classList.add('card-text');
-  textDiv.appendChild(document.createTextNode(message.text));
+  textDiv.innerHTML = message.text;
   cardBody.appendChild(textDiv);
 
   card.appendChild(cardBody);
