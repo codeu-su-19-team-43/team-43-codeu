@@ -10,6 +10,9 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
@@ -22,8 +25,8 @@ import com.google.codeu.data.Datastore;
 import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
-import java.io.ByteArrayOutputStream;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +37,14 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
-/** Handles fetching and saving {@link Message} 
- * instances. */
+/**
+ * Handles fetching and saving {@link Message}
+ * instances.
+ */
 @WebServlet("/messages")
 public class MessageServlet extends HttpServlet {
 
@@ -73,8 +79,9 @@ public class MessageServlet extends HttpServlet {
     response.getWriter().println(json);
   }
 
-  /** Stores a new 
-   * {@link Message}. */
+  /**
+   * Stores a new {@link Message}.
+   */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -85,9 +92,10 @@ public class MessageServlet extends HttpServlet {
     }
 
     String user = userService.getCurrentUser().getEmail();
+    String rawUserText = request.getParameter("message");
 
-    String userText = Jsoup.clean(request.getParameter("message"), Whitelist.basic());
-    
+    String userText = Jsoup.clean(rawUserText, Whitelist.basic());
+
     // Get the BlobKey that points to the image uploaded by the user.
     BlobKey blobKey = getBlobKey(request, "image");
 
@@ -103,20 +111,33 @@ public class MessageServlet extends HttpServlet {
       List<EntityAnnotation> imageLabels = getImageLabels(blobBytes);
 
       message.setImageUrl(imageUrl);
-      
+
       String imageLabelsStr = imageLabels.stream()
-            .map(label -> label.getDescription()).collect(Collectors.joining(", "));
+              .map(label -> label.getDescription()).collect(Collectors.joining(", "));
       message.setImageLabels(imageLabelsStr);
 
     }
-    
+
+    // Set text for sentiment analysis.
+    Document doc = Document.newBuilder().setContent(rawUserText)
+            .setType(Document.Type.HTML).build();
+
+    // Perform sentiment analysis.
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    double sentimentScore = sentiment.getScore();
+    languageService.close();
+
+    // Store sentiment score in message.
+    message.setSentimentScore(sentimentScore);
+
     datastore.storeMessage(message);
-    
+
     response.sendRedirect("/user-page.html?user=" + user);
   }
 
   /**
-   * Returns the BlobKey that points to the file uploaded by the user, or 
+   * Returns the BlobKey that points to the file uploaded by the user, or
    * null if the user didn't upload a file.
    */
   private BlobKey getBlobKey(HttpServletRequest request, String formInputElementName) {
@@ -165,8 +186,8 @@ public class MessageServlet extends HttpServlet {
     while (continueReading) {
 
       // end index is inclusive, so we have to subtract 1 to get fetchSize bytes
-      byte[] b = blobstoreService.fetchData(blobKey, 
-        currentByteIndex, currentByteIndex + fetchSize - 1);
+      byte[] b = blobstoreService.fetchData(blobKey,
+              currentByteIndex, currentByteIndex + fetchSize - 1);
       outputBytes.write(b);
 
       // if we read fewer bytes than we requested, then we reached the end
@@ -190,7 +211,7 @@ public class MessageServlet extends HttpServlet {
 
     Feature feature = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
     AnnotateImageRequest request =
-        AnnotateImageRequest.newBuilder().addFeatures(feature).setImage(image).build();
+            AnnotateImageRequest.newBuilder().addFeatures(feature).setImage(image).build();
     List<AnnotateImageRequest> requests = new ArrayList<>();
     requests.add(request);
 
