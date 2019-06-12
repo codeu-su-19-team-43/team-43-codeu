@@ -27,6 +27,7 @@ public class Message {
   private String text;
   private String imageUrl;
   private String imageLabels;
+  private double sentimentScore;
 
 
   /**
@@ -46,19 +47,6 @@ public class Message {
     this.user = user;
     this.timestamp = timestamp;
     this.text = text;
-  }
-
-  /**
-   * Constructs a new {@link Message}.
-   */
-  public Message(UUID id, String user, long timestamp, String text, String imageUrl, 
-                 String imageLabels) {
-    this.id = id;
-    this.user = user;
-    this.timestamp = timestamp;
-    this.text = text;
-    this.imageUrl = imageUrl;
-    this.imageLabels = imageLabels;
   }
 
   public UUID getId() {
@@ -107,5 +95,13 @@ public class Message {
 
   public void setImageLabels(String imageLabels) {
     this.imageLabels = imageLabels;
+  }
+
+  public double getSentimentScore() {
+    return sentimentScore;
+  }
+
+  public void setSentimentScore(double sentimentScore) {
+    this.sentimentScore = sentimentScore;
   }
 }
