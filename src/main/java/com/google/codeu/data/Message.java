@@ -26,9 +26,7 @@ public class Message {
   private long timestamp;
   private String text;
   private String imageUrl;
-  // private String imageLabels;
   private List<String> imageLabels;
-
 
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text}. 

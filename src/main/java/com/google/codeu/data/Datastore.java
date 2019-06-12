@@ -89,9 +89,7 @@ public class Datastore {
         long timestamp = (long) entity.getProperty("timestamp");
         String text = (String) entity.getProperty("text");
         String imageUrl = (String) entity.getProperty("imageUrl");
-        
-        @SuppressWarnings("unchecked")
-        List<String> imageLabels = (List<String>) entity.getProperty("imageLabels");
+        List<String> imageLabels = (List<String>) (Object) entity.getProperty("imageLabels");
 
         Message message = new Message(id, user, timestamp, text, imageUrl, imageLabels);
         messages.add(message);
