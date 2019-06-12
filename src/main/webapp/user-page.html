@@ -21,7 +21,7 @@ limitations under the License.
     <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
     <script src="js/user-page-loader.js"></script>
     <link rel="stylesheet" href="/css/user-page.css" />
-    <link rel="stylesheet" href="/css/feed.css" />
+    <link rel="stylesheet" href="/css/message.css" />
     <script>
       function showPopup() {
         const popup = document.getElementById("popup");
@@ -35,17 +35,7 @@ limitations under the License.
     </script>
   </head>
   <body onload="buildUI();">
-    <div class="text-center page-header">
-      <h1 class="display-4" id="page-title">My Page</h1>
-      <p class="font-weight-lighter popup_trigger" id="about-me-container">
-        Loading...
-      </p>
-      <button class="hidden" onclick="showPopup();" id="edit-about-me-button">
-        Edit
-      </button>
-    </div>
-
-    <div class="hover_bkgr hidden" id="popup">
+    <!-- <div class="hover_bkgr hidden" id="popup">
       <span class="helper"></span>
       <div>
         <form action="/about" method="POST">
@@ -60,32 +50,58 @@ limitations under the License.
           <input type="submit" value="Submit" />
         </form>
       </div>
-    </div>
+    </div> -->
 
-    <form
-      id="message-form"
-      method="POST"
-      class="hidden"
-      enctype="multipart/form-data"
-    >
-      Enter a new message:
-      <br />
-      <textarea name="message" id="message-input"></textarea>
-      <br />
-      Add an image to your message:
-      <br />
-      <span>Upload an image</span>
-      <input type="file" name="image" accept="image/*" />
-      <br />
-      <span>Paste image URL</span>
-      <input type="text" name="imageUrl" id="image-url" />
-      <br />
-      <input type="submit" value="Submit" />
-    </form>
+    <div class="content-container mt-7 pt-4">
+      <div class="left-container pr-4 position-sticky">
+        <img
+          src="./images/aboutus-avatar-anqi.jpg"
+          id="user-profile-image"
+          alt="..."
+          class="rounded border"
+        />
+        <div class="profile-container">
+          <h5 id="username"></h5>
+          <p class="font-weight-lighter" id="about-me-container">
+            Loading...
+          </p>
+          <button
+            class="hidden"
+            onclick="showPopup();"
+            id="edit-about-me-button"
+          >
+            Edit
+          </button>
+        </div>
+      </div>
 
-    <div class="message-container">
-      <div id="message-cards-container" class="card-columns">
-        Loading...
+      <div class="right-container pl-4">
+        <form
+          id="message-form"
+          method="POST"
+          class="hidden"
+          enctype="multipart/form-data"
+        >
+          Enter a new message:
+          <br />
+          <textarea name="message" id="message-input"></textarea>
+          <br />
+          Add an image to yout message:
+          <br />
+          <span>Upload an image</span>
+          <input type="file" name="image" accept="image/*" />
+          <br />
+          <span>Paste image URL</span>
+          <input type="text" name="imageUrl" id="image-url" />
+          <br />
+          <input type="submit" value="Submit" />
+        </form>
+
+        <div class="message-container">
+          <div id="message-cards-container" class="card-columns mt-5">
+            Loading...
+          </div>
+        </div>
       </div>
     </div>
   </body>

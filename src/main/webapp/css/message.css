@@ -1,0 +1,8 @@
+.card-footer > a > .tag-button {
+  line-height: normal;
+  font-size: small;
+}
+
+.card-footer > a:hover {
+  text-decoration: none;
+}

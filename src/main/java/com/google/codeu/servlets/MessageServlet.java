@@ -112,9 +112,9 @@ public class MessageServlet extends HttpServlet {
 
       message.setImageUrl(imageUrl);
 
-      String imageLabelsStr = imageLabels.stream()
-              .map(label -> label.getDescription()).collect(Collectors.joining(", "));
-      message.setImageLabels(imageLabelsStr);
+      List<String> imageLabelsList = imageLabels.stream()
+            .map(label -> label.getDescription()).collect(Collectors.toList());
+      message.setImageLabels(imageLabelsList);
 
     }
 
