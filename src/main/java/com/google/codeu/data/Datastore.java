@@ -89,9 +89,6 @@ public class Datastore {
         String user = (String) entity.getProperty("user");
         long timestamp = (long) entity.getProperty("timestamp");
         String text = (String) entity.getProperty("text");
-        String imageUrl = (String) entity.getProperty("imageUrl");
-        List<String> imageLabels = (List<String>) (Object) entity.getProperty("imageLabels");
-
         Message message = new Message(id, user, timestamp, text);
 
         if (entity.hasProperty("imageUrl")) {
@@ -99,7 +96,7 @@ public class Datastore {
         }
 
         if (entity.hasProperty("imageLabels")) {
-          message.setImageLabels((String) entity.getProperty("imageLabels"));
+          message.setImageLabels((List<String>) entity.getProperty("imageLabels"));
         }
 
         if (entity.hasProperty("sentimentScore")) {
