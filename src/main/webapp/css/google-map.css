@@ -1,11 +1,11 @@
 #map {
-		width: 500px;
-		height: 500px;
-		border: thin solid black;
-		margin-left: 25em;
-		margin-right: 25em;
-	}
+    width: 500px;
+    height: 500px;
+    border: thin solid black;
+    margin-left: 25em;
+    margin-right: 25em;
+}
 
 .page-header {
-  	margin: 7em 0em 4em 0em;
+    margin: 7em 0 4em 0;
 }
