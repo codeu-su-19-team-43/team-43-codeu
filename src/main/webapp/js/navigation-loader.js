@@ -81,6 +81,7 @@ function buildNavigationLinks() {
     createLinkListItem('/stats.html', 'Statistics'),
     createLinkListItem('/charts.html', 'Charts'),
     createLinkListItem('/aboutus.html', 'About'),
+    createLinkListItem('/google-map.html', 'Map'),
   ];
 
   links.forEach(link => navigationElement.appendChild(link));
