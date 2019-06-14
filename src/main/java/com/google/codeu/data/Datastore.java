@@ -144,8 +144,13 @@ public class Datastore {
     }
     
     String aboutMe = (String) userEntity.getProperty("aboutMe");
-    User user = new User(email, aboutMe);
-    
+    String username = (String) userEntity.getProperty("username");
+    String profileImageUrl = (String) userEntity.getProperty("profileImageUrl");
+    String location = (String) userEntity.getProperty("location");
+    String organization = (String) userEntity.getProperty("organization");
+    String websiteLink = (String) userEntity.getProperty("websiteLink");
+
+    User user = new User(email, aboutMe, username, profileImageUrl, location, organization, websiteLink);
     return user;
   }
 
