@@ -6,3 +6,7 @@
 .card-footer > a:hover {
   text-decoration: none;
 }
+
+.sentiment-score-icon {
+  padding-right: 0.5em;
+}

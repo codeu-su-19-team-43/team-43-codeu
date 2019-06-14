@@ -1,3 +1,15 @@
+function getIconTypeUsingSentimentScore(sentimentScore) {
+  const iconClassNames = ['sentiment-score-icon', 'fas'];
+  if (sentimentScore > 0.5) {
+    iconClassNames.push('fa-laugh-beam');
+  } else if (sentimentScore < -0.5) {
+    iconClassNames.push('fa-frown');
+  } else {
+    iconClassNames.push('fa-meh-blank');
+  }
+  return iconClassNames;
+}
+
 /**
  * Builds an element that displays the message.
  * @param {Message} message
@@ -33,6 +45,17 @@ function buildMessageDiv(message) {
   textDiv.innerHTML = message.text;
   cardBody.appendChild(textDiv);
 
+  const sentimentScore = Math.trunc(message.sentimentScore * 100) / 100;
+
+  const sentimentScoreDiv = document.createElement('div');
+
+  const sentimentScoreIcon = document.createElement('i');
+  sentimentScoreIcon.classList.add(...getIconTypeUsingSentimentScore(message.sentimentScore));
+  sentimentScoreDiv.appendChild(sentimentScoreIcon);
+
+  sentimentScoreDiv.appendChild(document.createTextNode(sentimentScore));
+  cardBody.appendChild(sentimentScoreDiv);
+
   card.appendChild(cardBody);
 
   if (message.imageUrl != null) {
@@ -57,6 +80,7 @@ function buildMessageDiv(message) {
 
     card.appendChild(labelDiv);
   }
+
   return card;
 }
 
