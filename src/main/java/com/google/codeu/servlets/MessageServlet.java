@@ -93,18 +93,15 @@ public class MessageServlet extends HttpServlet {
 
     String user = userService.getCurrentUser().getEmail();
     String rawUserText = request.getParameter("message");
-
     String userText = Jsoup.clean(rawUserText, Whitelist.basic());
+    Message message = new Message(user, userText);
 
     // Get the BlobKey that points to the image uploaded by the user.
     BlobKey blobKey = getBlobKey(request, "image");
 
-    // Get the URL of the image that the user uploaded.
-    String imageUrl = getUploadedFileUrl(blobKey);
-
-    Message message = new Message(user, userText);
-
-    if (imageUrl != null) {
+    if (blobKey != null) {
+      // Get the URL of the image that the user uploaded.
+      String imageUrl = getUploadedFileUrl(blobKey);
 
       // Get the labels of the image that the user uploaded.
       byte[] blobBytes = getBlobBytes(blobKey);
@@ -115,7 +112,6 @@ public class MessageServlet extends HttpServlet {
       List<String> imageLabelsList = imageLabels.stream()
             .map(label -> label.getDescription()).collect(Collectors.toList());
       message.setImageLabels(imageLabelsList);
-
     }
 
     // Set text for sentiment analysis.
@@ -143,7 +139,8 @@ public class MessageServlet extends HttpServlet {
   private BlobKey getBlobKey(HttpServletRequest request, String formInputElementName) {
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-    List<BlobKey> blobKeys = blobs.get("image");
+
+    List<BlobKey> blobKeys = blobs.get(formInputElementName);
 
     // User submitted form without selecting a file, so we can't get a BlobKey. (devserver)
     if (blobKeys == null || blobKeys.isEmpty()) {
