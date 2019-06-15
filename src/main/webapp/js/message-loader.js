@@ -10,6 +10,40 @@ function getIconTypeUsingSentimentScore(sentimentScore) {
   return iconClassNames;
 }
 
+
+function getText(message) {
+  const { user, text } = message;
+  const date = new Date(message.timestamp).toDateString();
+  const finalText = [];
+
+  finalText.push(
+    'On ', date, ', ',
+    user, ' said: ',
+    text,
+  );
+
+  return finalText.join('');
+}
+
+function playTextToSpeechAudio(text) {
+  fetch('/a11y/tts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ text }),
+  })
+    .then(response => response.blob())
+    .then((audioBlob) => {
+      const audioUrl = window.URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      audio.play()
+        .catch((error) => {
+          throw error.message;
+        });
+    });
+}
+
 /**
  * Builds an element that displays the message.
  * @param {Message} message
@@ -45,16 +79,24 @@ function buildMessageDiv(message) {
   textDiv.innerHTML = message.text;
   cardBody.appendChild(textDiv);
 
-  const sentimentScore = Math.trunc(message.sentimentScore * 100) / 100;
-
-  const sentimentScoreDiv = document.createElement('div');
+  const infoDiv = document.createElement('div');
 
   const sentimentScoreIcon = document.createElement('i');
   sentimentScoreIcon.classList.add(...getIconTypeUsingSentimentScore(message.sentimentScore));
-  sentimentScoreDiv.appendChild(sentimentScoreIcon);
+  infoDiv.appendChild(sentimentScoreIcon);
 
-  sentimentScoreDiv.appendChild(document.createTextNode(sentimentScore));
-  cardBody.appendChild(sentimentScoreDiv);
+  const sentimentScore = Math.trunc(message.sentimentScore * 100) / 100;
+  infoDiv.appendChild(document.createTextNode(sentimentScore));
+
+  const textToSpeechIcon = document.createElement('i');
+  textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon');
+  textToSpeechIcon.addEventListener('click', () => {
+    playTextToSpeechAudio(getText(message));
+  });
+
+  infoDiv.appendChild(textToSpeechIcon);
+
+  cardBody.appendChild(infoDiv);
 
   card.appendChild(cardBody);
 
@@ -71,7 +113,7 @@ function buildMessageDiv(message) {
     labelDiv.innerHTML = '<p class="text-muted d-inline px-1">Tags:</p>';
     // eslint-disable-next-line no-return-assign
     message.imageLabels.map(imageLabel => labelDiv.innerHTML
-      += `<a href="/feed.html">
+            += `<a href="/feed.html">
             <button type="button" 
                     class="btn btn-outline-info m-1 p-1 font-weight-lighter tag-button"
             >${imageLabel}
