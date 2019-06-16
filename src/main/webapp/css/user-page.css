@@ -58,6 +58,9 @@ body > .page-header {
   position: absolute;
   right: 0;
   bottom: 0;
+}
+
+.display-block {
   display: block;
 }
 

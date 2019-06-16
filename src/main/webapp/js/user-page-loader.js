@@ -82,12 +82,25 @@ function loadProfileForm() {
 }
 
 function fetchBlobstoreUrlAndShowEditProfileImageLabel() {
-  fetch('/blobstore-upload-url?form=profile-image-form')
+  fetch('/blobstore-upload-url?form=profile-image')
     .then(response => response.text())
     .then((imageUploadUrl) => {
       const messageForm = document.getElementById('profile-image-form');
       messageForm.action = imageUploadUrl;
-      document.getElementById('edit-profile-image').classList.remove('hidden');
+      document.getElementById('edit-profile-image').classList.add('display-block');
+      document.getElementById('profile-image-upload-input').onchange = () => {
+        document.getElementById('profile-image-form').submit();
+      };
+    });
+}
+
+function fetchProfileImage() {
+  fetch(`/profile-image?user=${parameterUsername}`)
+    .then(response => response.text())
+    .then((imageUrl) => {
+      if (imageUrl != null && imageUrl !== '') {
+        document.getElementById('user-profile-image').src = imageUrl;
+      }
     });
 }
 
@@ -111,6 +124,7 @@ function showMessageFormAndEditProfileButtonIfViewingSelf() {
     .then((loginStatus) => {
       if (loginStatus.isLoggedIn && loginStatus.username === parameterUsername) {
         fetchBlobstoreUrlAndShowMessageForm();
+        fetchBlobstoreUrlAndShowEditProfileImageLabel();
         document.getElementById('edit-profile-button').classList.remove('hidden');
       }
     });
@@ -168,12 +182,12 @@ function inputTextEditor() {
 // eslint-disable-next-line no-unused-vars
 function buildUI() {
   setPageTitle();
-  fetchBlobstoreUrlAndShowEditProfileImageLabel();
   showMessageFormAndEditProfileButtonIfViewingSelf();
   $.getScript('/js/message-loader.js', () => {
     // eslint-disable-next-line no-undef
     fetchCurrentUserMessages(parameterUsername);
   });
+  fetchProfileImage();
   fetchUserProfile();
   inputTextEditor();
   loadProfileForm();
