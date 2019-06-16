@@ -14,10 +14,10 @@ import lombok.ToString;
 public class User {
   
   private String email;
-  private String aboutMe;
   private String username;
-  private String profileImageUrl;
   private String location;
   private String organization;
-  private String websiteLink;
+  private String website;
+  private String aboutMe;
+  private String profileImageUrl;
 }

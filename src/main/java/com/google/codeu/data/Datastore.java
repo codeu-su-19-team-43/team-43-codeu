@@ -126,7 +126,12 @@ public class Datastore {
   public void storeUser(User user) {
     Entity userEntity = new Entity("User", user.getEmail());
     userEntity.setProperty("email", user.getEmail());
+    userEntity.setProperty("username", user.getUsername());
+    userEntity.setProperty("location", user.getLocation());
+    userEntity.setProperty("organization", user.getOrganization());
+    userEntity.setProperty("website", user.getWebsite());
     userEntity.setProperty("aboutMe", user.getAboutMe());
+    userEntity.setProperty("profileImageUrl", user.getProfileImageUrl());
     datastore.put(userEntity);
   }
 
@@ -148,9 +153,9 @@ public class Datastore {
     String profileImageUrl = (String) userEntity.getProperty("profileImageUrl");
     String location = (String) userEntity.getProperty("location");
     String organization = (String) userEntity.getProperty("organization");
-    String websiteLink = (String) userEntity.getProperty("websiteLink");
+    String website = (String) userEntity.getProperty("website");
 
-    User user = new User(email, aboutMe, username, profileImageUrl, location, organization, websiteLink);
+    User user = new User(email, username, location, organization, website, aboutMe, profileImageUrl);
     return user;
   }
 
