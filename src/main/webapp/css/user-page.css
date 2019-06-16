@@ -48,9 +48,25 @@ body > .page-header {
   display: none;
 }
 
-#aboutme-input {
-  height: 100px;
+.profile-element > *{
+  line-height: 1.8em;
+}
+
+.icon-container > .detail-icon {
+  line-height: 1.8em;
+}
+
+#edit-profile-button {
   width: 100%;
+}
+
+.icon-container {
+  width: 2.5em;
+}
+
+::placeholder {
+  color: rgba(128, 128, 128, 0.5);
+  font-weight: 200;
 }
 
 #message-input {
@@ -60,36 +76,4 @@ body > .page-header {
 
 #image-url {
   width: 100%;
-}
-
-.popup_trigger {
-  cursor: pointer;
-}
-
-.hover_bkgr {
-  background: rgba(0, 0, 0, 0.35);
-  cursor: pointer;
-  height: 100%;
-  position: fixed;
-  text-align: center;
-  top: 0;
-  width: 100%;
-  z-index: 10000;
-}
-.hover_bkgr > .helper {
-  display: inline-block;
-  height: 30%;
-}
-.hover_bkgr > div {
-  background-color: #fff;
-  box-shadow: 10px 10px 60px #555;
-  display: inline-block;
-  height: auto;
-  max-width: 551px;
-  min-height: 100px;
-  vertical-align: middle;
-  width: 60%;
-  position: relative;
-  border-radius: 8px;
-  padding: 15px 5%;
 }

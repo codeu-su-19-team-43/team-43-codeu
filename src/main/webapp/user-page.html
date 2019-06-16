@@ -20,39 +20,37 @@ limitations under the License.
     <script src="js/header-loader.js" onload="loadHeader('User Page')"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
     <script src="js/user-page-loader.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.9.0/css/all.css"
+    />
     <link rel="stylesheet" href="/css/user-page.css" />
     <link rel="stylesheet" href="/css/message.css" />
     <script>
-      function showPopup() {
-        const popup = document.getElementById("popup");
-        popup.classList.remove("hidden");
+      function onClickEditProfileButton() {
+        document.getElementById("edit-profile-button").classList.add("hidden");
+        document
+          .getElementById("profile-info-container")
+          .classList.add("hidden");
+        document
+          .getElementById("profile-form-container")
+          .classList.remove("hidden");
       }
 
-      function closePopup() {
-        const popup = document.getElementById("popup");
-        popup.classList.add("hidden");
+      function onCancelEditProfileButton() {
+        document
+          .getElementById("profile-form-container")
+          .classList.add("hidden");
+        document
+          .getElementById("edit-profile-button")
+          .classList.remove("hidden");
+        document
+          .getElementById("profile-info-container")
+          .classList.remove("hidden");
       }
     </script>
   </head>
   <body onload="buildUI();">
-    <!-- <div class="hover_bkgr hidden" id="popup">
-      <span class="helper"></span>
-      <div>
-        <form action="/about" method="POST">
-          <textarea
-            name="about-me"
-            id="aboutme-input"
-            placeholder="about me"
-            rows="4"
-            required
-          ></textarea>
-          <br />
-          <input type="submit" value="Submit" />
-        </form>
-      </div>
-    </div> -->
-
     <div class="content-container mt-7 pt-4">
       <div class="left-container pr-4 position-sticky">
         <img
@@ -61,18 +59,44 @@ limitations under the License.
           alt="..."
           class="rounded border"
         />
-        <div class="profile-container">
-          <h5 id="username"></h5>
-          <p class="font-weight-lighter" id="about-me-container">
-            Loading...
-          </p>
+        <div class="profile-container mt-5" id="profile-container">
+          <div id="profile-info-container">
+            <div class="border-bottom pb-3 pl-1">
+              <h4 class="card-title" id="username"></h4>
+              <h6 class="font-weight-lighter text-muted" id="aboutme"></h6>
+            </div>
+
+            <div
+              class="font-weight-lighter mt-3"
+              id="profile-detail-container"
+            ></div>
+          </div>
+
           <button
-            class="hidden"
-            onclick="showPopup();"
-            id="edit-about-me-button"
+            class="btn btn-outline-info btn-sm hidden mt-3"
+            type="button"
+            id="edit-profile-button"
+            onclick="onClickEditProfileButton();"
           >
-            Edit
+            Edit Profile
           </button>
+
+          <div id="profile-form-container" class="profileForm hidden">
+            <form action="/user-profile" method="POST" id="profile-form">
+              <div class="button-container d-flex justify-content-center">
+                <button type="submit" class="btn btn-sm btn-info mr-4">
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-sm btn-outline-info"
+                  onclick="onCancelEditProfileButton();"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -80,7 +104,7 @@ limitations under the License.
         <form
           id="message-form"
           method="POST"
-          class="hidden"
+          class="hidden mb-5"
           enctype="multipart/form-data"
         >
           Enter a new message:
@@ -99,7 +123,7 @@ limitations under the License.
         </form>
 
         <div class="message-container">
-          <div id="message-cards-container" class="card-columns mt-5">
+          <div id="message-cards-container" class="card-columns">
             Loading...
           </div>
         </div>
