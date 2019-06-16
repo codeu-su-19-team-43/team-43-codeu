@@ -53,12 +53,29 @@ limitations under the License.
   <body onload="buildUI();">
     <div class="content-container mt-7 pt-4">
       <div class="left-container pr-4 position-sticky">
-        <img
-          src="./images/aboutus-avatar-anqi.jpg"
-          id="user-profile-image"
-          alt="..."
-          class="rounded border"
-        />
+        <form
+          id="profile-image-form"
+          method="POST"
+          class="mb-5"
+          enctype="multipart/form-data"
+        >
+          <div class="profile-image-container">
+            <img
+              src="./images/home-landing-image.jpg"
+              id="user-profile-image"
+              alt="User Profile Image"
+              class="rounded border"
+            />
+            <label
+              class="edit-profile-image p-1 m-0 border-0 btn btn-default btn-file hidden"
+              id="edit-profile-image"
+            >
+            <i class="fas fa-pencil-alt fa-2x"></i>
+            <input type="file" style="display: none;" />
+          </label>
+          </div>
+        </form>
+
         <div class="profile-container mt-5" id="profile-container">
           <div id="profile-info-container">
             <div class="border-bottom pb-3 pl-1">

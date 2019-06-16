@@ -81,6 +81,16 @@ function loadProfileForm() {
   });
 }
 
+function fetchBlobstoreUrlAndShowEditProfileImageLabel() {
+  fetch('/blobstore-upload-url?form=profile-image-form')
+    .then(response => response.text())
+    .then((imageUploadUrl) => {
+      const messageForm = document.getElementById('profile-image-form');
+      messageForm.action = imageUploadUrl;
+      document.getElementById('edit-profile-image').classList.remove('hidden');
+    });
+}
+
 // eslint-disable-next-line no-unused-vars
 function fetchBlobstoreUrlAndShowMessageForm() {
   fetch('/blobstore-upload-url?form=messages')
@@ -158,6 +168,7 @@ function inputTextEditor() {
 // eslint-disable-next-line no-unused-vars
 function buildUI() {
   setPageTitle();
+  fetchBlobstoreUrlAndShowEditProfileImageLabel();
   showMessageFormAndEditProfileButtonIfViewingSelf();
   $.getScript('/js/message-loader.js', () => {
     // eslint-disable-next-line no-undef
