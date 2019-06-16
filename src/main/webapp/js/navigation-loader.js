@@ -91,7 +91,7 @@ function buildNavigationLinks() {
 
 // Set transparency of navigationbar
 function setTransparency() {
-  if (window.location.pathname === '/') {
+  if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
     const navBar = document.getElementById('navigationBar');
     navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent navBarTransparent';
   }
