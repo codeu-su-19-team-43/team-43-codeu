@@ -2,6 +2,7 @@ package com.google.codeu.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.repackaged.com.google.gson.Gson;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.User;
 
@@ -15,8 +16,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 // Handles fetching and saving user data.
-@WebServlet("/about")
-public class AboutMeServlet extends HttpServlet {
+@WebServlet("/user-profile")
+public class UserProfileServlet extends HttpServlet {
   
   private Datastore datastore;
   
@@ -29,7 +30,7 @@ public class AboutMeServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    response.setContentType("text/html");
+    response.setContentType("application/json;charset=UTF-8");
 
     String user = request.getParameter("user");
     if (user == null || user.equals("")) {
@@ -38,11 +39,8 @@ public class AboutMeServlet extends HttpServlet {
     }
 
     User userData = datastore.getUser(user);
-    if (userData == null || userData.getAboutMe() == null) {
-      return;
-    }
-
-    response.getOutputStream().println(userData.getAboutMe());
+    response.getOutputStream().print(new Gson().toJson(userData));
+//    response.getOutputStream().print(userData.toString());
   }
 
   @Override
@@ -56,8 +54,18 @@ public class AboutMeServlet extends HttpServlet {
     }
 
     String userEmail = userService.getCurrentUser().getEmail();
-    String aboutMe = Jsoup.clean(request.getParameter("about-me"), Whitelist.basic());
-    User user = new User(userEmail, aboutMe);
+
+    User user = datastore.getUser(userEmail);
+    if (user == null) {
+      user = new User();
+      user.setEmail(userEmail);
+    }
+    user.setUsername(Jsoup.clean(request.getParameter("username"), Whitelist.basic()));
+    user.setLocation(Jsoup.clean(request.getParameter("location"), Whitelist.basic()));
+    user.setOrganization(Jsoup.clean(request.getParameter("organization"), Whitelist.basic()));
+    user.setWebsite(Jsoup.clean(request.getParameter("website"), Whitelist.basic()));
+    user.setAboutMe(Jsoup.clean(request.getParameter("aboutme"), Whitelist.basic()));
+
     datastore.storeUser(user);
     
     response.sendRedirect("/user-page.html?user=" + userEmail);
