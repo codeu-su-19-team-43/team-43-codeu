@@ -10,8 +10,7 @@ function getIconTypeUsingSentimentScore(sentimentScore) {
   return iconClassNames;
 }
 
-
-function getText(message) {
+function getTextForTts(message) {
   const { user, text } = message;
   const date = new Date(message.timestamp).toDateString();
   const finalText = [];
@@ -25,7 +24,7 @@ function getText(message) {
   return finalText.join('');
 }
 
-function playTextToSpeechAudio(text) {
+function playTtsAudio(text) {
   fetch('/a11y/tts', {
     method: 'POST',
     headers: {
@@ -44,12 +43,62 @@ function playTextToSpeechAudio(text) {
     });
 }
 
+function getTranslatedText(text, languageCode) {
+  return fetch('/translate', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      text,
+      languageCode,
+    }),
+  }).then(response => response.text());
+}
+
+function buildInfoDiv(message) {
+  const infoDiv = document.createElement('div');
+  infoDiv.classList.add('d-flex', 'justify-content-between', 'align-items-center');
+
+  const sentimentScoreDiv = document.createElement('div');
+  const sentimentScoreIcon = document.createElement('i');
+  sentimentScoreIcon.classList.add(...getIconTypeUsingSentimentScore(message.sentimentScore));
+  sentimentScoreDiv.appendChild(sentimentScoreIcon);
+  const sentimentScore = Math.trunc(message.sentimentScore * 100) / 100;
+  sentimentScoreDiv.appendChild(document.createTextNode(sentimentScore));
+
+  infoDiv.appendChild(sentimentScoreDiv);
+
+  const textToSpeechIcon = document.createElement('i');
+  textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon');
+  textToSpeechIcon.addEventListener('click', () => {
+    playTtsAudio(getTextForTts(message));
+  });
+  infoDiv.appendChild(textToSpeechIcon);
+
+  const translateIcon = document.createElement('i');
+  translateIcon.classList.add('fas', 'fa-language', 'translate-icon');
+
+  const translateResultDivId = `translateCollapseDiv-${message.id}`;
+  translateIcon.setAttribute('data-toggle', 'collapse');
+  translateIcon.setAttribute('data-target', `#${translateResultDivId}`);
+  infoDiv.appendChild(translateIcon);
+
+  const translateResult = document.createElement('div');
+  translateResult.classList.add('collapse');
+  translateResult.setAttribute('id', translateResultDivId);
+  getTranslatedText(message.text, 'es').then((translatedText) => {
+    translateResult.innerHTML = translatedText;
+  });
+
+  return { infoDiv, translateResult };
+}
+
 /**
  * Builds an element that displays the message.
  * @param {Message} message
  * @return {Element}
  */
-
 function buildMessageDiv(message) {
   const card = document.createElement('div');
   card.classList.add('card');
@@ -79,24 +128,9 @@ function buildMessageDiv(message) {
   textDiv.innerHTML = message.text;
   cardBody.appendChild(textDiv);
 
-  const infoDiv = document.createElement('div');
-
-  const sentimentScoreIcon = document.createElement('i');
-  sentimentScoreIcon.classList.add(...getIconTypeUsingSentimentScore(message.sentimentScore));
-  infoDiv.appendChild(sentimentScoreIcon);
-
-  const sentimentScore = Math.trunc(message.sentimentScore * 100) / 100;
-  infoDiv.appendChild(document.createTextNode(sentimentScore));
-
-  const textToSpeechIcon = document.createElement('i');
-  textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon');
-  textToSpeechIcon.addEventListener('click', () => {
-    playTextToSpeechAudio(getText(message));
-  });
-
-  infoDiv.appendChild(textToSpeechIcon);
-
+  const { infoDiv, translateResult } = buildInfoDiv(message);
   cardBody.appendChild(infoDiv);
+  cardBody.appendChild(translateResult);
 
   card.appendChild(cardBody);
 
@@ -125,7 +159,6 @@ function buildMessageDiv(message) {
 
   return card;
 }
-
 
 function fetchMessagesFromUrl(url) {
   fetch(url)
