@@ -18,7 +18,19 @@ package com.google.codeu.data;
 
 import java.util.List;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
 /** A single message posted by a user. */
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Message {
 
   private UUID id;
@@ -47,61 +59,5 @@ public class Message {
     this.user = user;
     this.timestamp = timestamp;
     this.text = text;
-  }
-
-  public UUID getId() {
-    return id;
-  }
-
-  public void setId(UUID id) {
-    this.id = id;
-  }
-
-  public String getUser() {
-    return user;
-  }
-
-  public void setUser(String user) {
-    this.user = user;
-  }
-
-  public long getTimestamp() {
-    return timestamp;
-  }
-
-  public void setTimestamp(long timestamp) {
-    this.timestamp = timestamp;
-  }
-
-  public String getText() {
-    return text;
-  }
-
-  public void setText(String text) {
-    this.text = text;
-  }
-
-  public String getImageUrl() {
-    return imageUrl;
-  }
-
-  public void setImageUrl(String imageUrl) {
-    this.imageUrl = imageUrl;
-  }
-
-  public List<String> getImageLabels() {
-    return imageLabels;
-  }
-
-  public void setImageLabels(List<String> imageLabels) {
-    this.imageLabels = imageLabels;
-  }
-
-  public double getSentimentScore() {
-    return sentimentScore;
-  }
-
-  public void setSentimentScore(double sentimentScore) {
-    this.sentimentScore = sentimentScore;
   }
 }
