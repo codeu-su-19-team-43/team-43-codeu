@@ -147,7 +147,7 @@ function buildMessageDiv(message) {
     labelDiv.innerHTML = '<p class="text-muted d-inline px-1">Tags:</p>';
     // eslint-disable-next-line no-return-assign
     message.imageLabels.map(imageLabel => labelDiv.innerHTML
-            += `<a href="/feed.html">
+            += `<a href="/feed.html?imageLabel=${imageLabel}">
             <button type="button" 
                     class="btn btn-outline-info m-1 p-1 font-weight-lighter tag-button"
             >${imageLabel}
@@ -179,7 +179,7 @@ function fetchMessagesFromUrl(url) {
 
 /** Fetches messages and add them to the page. */
 // eslint-disable-next-line no-unused-vars
-function fetchCurrentUserMessages(parameterUsername) {
+function fetchMessagesByUser(parameterUsername) {
   const url = `/messages?user=${parameterUsername}`;
   fetchMessagesFromUrl(url);
 }
@@ -188,5 +188,12 @@ function fetchCurrentUserMessages(parameterUsername) {
 // eslint-disable-next-line no-unused-vars
 function fetchAllUserMessages() {
   const url = '/feed';
+  fetchMessagesFromUrl(url);
+}
+
+/** Fetches messages and add them to the page. */
+// eslint-disable-next-line no-unused-vars
+function fetchMessagesByImageLabel(imageLabel) {
+  const url = `/feed?imageLabel=${imageLabel}`;
   fetchMessagesFromUrl(url);
 }
