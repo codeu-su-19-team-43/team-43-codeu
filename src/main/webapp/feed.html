@@ -6,7 +6,10 @@
       onload="loadHeader('Message Feed')"
     ></script>
     <script src="js/feed-page-loader.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.9.0/css/all.css"
+    />
     <link rel="stylesheet" href="/css/message.css" />
     <link rel="stylesheet" href="/css/feed-page.css" />
   </head>
@@ -19,8 +22,8 @@
     </div>
 
     <div id="content-container">
-      <div class="search-container mb-6">
-        <div class="search-bar">
+      <div class="search-container border-bottom pb-4 mb-5">
+        <div class="search-bar mb-3">
           <input
             type="text"
             class="searchText"
@@ -32,10 +35,12 @@
             <i class="fa fa-search"></i>
           </button>
         </div>
-      </div>
-    </div>
 
-      <div class="message-container">
+        <div class="image-label-container" id="image-label-container">
+        </div>
+      </div>
+
+      <div class="message-container mt-5">
         <div id="message-cards-container" class="card-columns">
           Loading...
         </div>
