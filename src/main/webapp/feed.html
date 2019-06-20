@@ -13,14 +13,24 @@
     <link rel="stylesheet" href="/css/message.css" />
     <link rel="stylesheet" href="/css/feed-page.css" />
     <script>
+      function checkUniqueImageLabel(imageLabel) {
+        const parameterImageLabels = urlParams.getAll('imageLabel');
+        if (parameterImageLabels.indexOf(imageLabel) > -1) {
+          return false
+        }
+        return true;
+      }
       function onClickSearchButton() {
-        let redirectLocation = window.location.href;
-
-        redirectLocation += redirectLocation.includes("?") ? "&" : "?";
-        redirectLocation += `imageLabel=${document
-          .getElementById("search-input")
-          .value.toLowerCase()}`;
-        window.location.replace(redirectLocation);
+        const imageLabel = document.getElementById("search-input").value.toLowerCase();
+        if (checkUniqueImageLabel(imageLabel)) {
+          let redirectLocation = window.location.href;
+          const parameterImageLabels = urlParams.getAll('imageLabel');
+          redirectLocation += redirectLocation.includes("?") ? "&" : "?";
+          redirectLocation += `imageLabel=${imageLabel}`;
+          window.location.replace(redirectLocation);
+        } else {
+          document.getElementById("search-input").value = "";
+        }
       }
 
       function onClickImageLabelCancelButton(imageLabel) {
@@ -58,7 +68,7 @@
         </div>
 
         <div
-          class="image-label-container d-flex"
+          class="image-label-container d-flex flex-wrap"
           id="image-label-container"
         ></div>
       </div>
