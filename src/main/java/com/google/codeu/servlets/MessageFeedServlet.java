@@ -5,6 +5,7 @@ import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -38,11 +39,14 @@ public class MessageFeedServlet extends HttpServlet {
     
     List<Message> messages = datastore.getAllMessages();
 
-    String imageLabel = request.getParameter("imageLabel");
+    String[] imageLabels = request.getParameterValues("imageLabel");
 
-    if (imageLabel != null && imageLabel != "") {
+
+    if (imageLabels != null && imageLabels.length > 0) {
       messages = messages.stream()
-          .filter(message -> message.getImageLabels() != null && message.getImageLabels().contains(imageLabel))
+          .filter(message -> message.getImageLabels() != null)
+          .filter(message -> message.getImageLabels().stream().anyMatch(imageLabel -> Arrays.asList(imageLabels).contains(
+              imageLabel.toLowerCase())))
           .collect(Collectors.toList());
     }
 
