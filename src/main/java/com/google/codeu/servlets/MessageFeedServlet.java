@@ -45,8 +45,9 @@ public class MessageFeedServlet extends HttpServlet {
     if (imageLabels != null && imageLabels.length > 0) {
       messages = messages.stream()
           .filter(message -> message.getImageLabels() != null)
-          .filter(message -> message.getImageLabels().stream().anyMatch(imageLabel -> Arrays.asList(imageLabels).contains(
-              imageLabel.toLowerCase())))
+          .filter(message -> message.getImageLabels().stream()
+                  .anyMatch(imageLabel -> Arrays.asList(imageLabels)
+                            .contains(imageLabel.toLowerCase())))
           .collect(Collectors.toList());
     }
 
