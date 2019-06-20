@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
@@ -31,16 +33,10 @@ public class TextToSpeechServlet extends HttpServlet {
 
   private TextToSpeechClient ttsClient;
 
+  @Getter
+  @Setter
   private class TextToSpeechRequestBody {
     String text;
-
-    public String getText() {
-      return text;
-    }
-
-    public void setText(String text) {
-      this.text = text;
-    }
   }
 
   @Override
