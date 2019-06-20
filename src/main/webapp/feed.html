@@ -12,6 +12,22 @@
     />
     <link rel="stylesheet" href="/css/message.css" />
     <link rel="stylesheet" href="/css/feed-page.css" />
+    <script>
+      function onClickSearchButton() {
+        let redirectLocation = window.location.href;
+
+        redirectLocation += redirectLocation.includes("?") ? "&" : "?";
+        redirectLocation += `imageLabel=${document
+          .getElementById("search-input")
+          .value.toLowerCase()}`;
+        window.location.replace(redirectLocation);
+      }
+
+      function onClickImageLabelCancelButton(imageLabel) {
+        let redirectLocation = window.location.href.replace(new RegExp(`&?imageLabel=${imageLabel}`, "g"), "").replace("\?&", "?").replace(/\?$/, "");
+        window.location.replace(redirectLocation);
+      }
+    </script>
   </head>
   <body onload="buildUI()">
     <div class="text-center page-header">
@@ -26,18 +42,25 @@
         <div class="search-bar mb-3">
           <input
             type="text"
-            class="searchText"
+            class="searchText font-weight-lighter"
             placeholder="Search"
             onfocus="this.placeholder = ''"
             onblur="this.placeholder = 'Search'"
+            id="search-input"
           />
-          <button type="submit" class="searchButton">
+          <button
+            type="submit"
+            class="searchButton"
+            onclick="onClickSearchButton()"
+          >
             <i class="fa fa-search"></i>
           </button>
         </div>
 
-        <div class="image-label-container" id="image-label-container">
-        </div>
+        <div
+          class="image-label-container d-flex"
+          id="image-label-container"
+        ></div>
       </div>
 
       <div class="message-container mt-5">

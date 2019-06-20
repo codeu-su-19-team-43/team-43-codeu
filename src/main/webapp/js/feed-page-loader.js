@@ -1,14 +1,16 @@
 const urlParams = new URLSearchParams(window.location.search);
-const parameterImageLabel = urlParams.get('imageLabel');
+const parameterImageLabels = urlParams.getAll('imageLabel');
 
 function fetchImageLabels() {
-  if (parameterImageLabel != null && parameterImageLabel !== '') {
-    const imageLabelContainer = document.getElementById('image-label-container');
-    const imageLabelButton = document.createElement('div');
-    imageLabelButton.innerHTML = `<button type="button" class="btn btn-info btn-sm">
-                                  <span>${parameterImageLabel} &times;</span>
-                                </button>`;
-    imageLabelContainer.appendChild(imageLabelButton);
+  if (parameterImageLabels != null) {
+    parameterImageLabels.forEach((parameterImageLabel) => {
+      const imageLabelContainer = document.getElementById('image-label-container');
+      const imageLabelButton = document.createElement('div');
+      imageLabelButton.innerHTML = `<button type="button" class="btn btn-info btn-sm mr-2 pr-1 imageLabelButton">
+                                      <span class="mr-1">${parameterImageLabel}</span>  <span onClick="onClickImageLabelCancelButton('${parameterImageLabel}')">&times;</span>
+                                    </button>`;
+      imageLabelContainer.appendChild(imageLabelButton);
+    });
   }
 }
 
@@ -17,12 +19,12 @@ function fetchImageLabels() {
 function buildUI() {
   fetchImageLabels();
   $.getScript('/js/message-loader.js', () => {
-    if (parameterImageLabel != null) {
+    if (parameterImageLabels != null && parameterImageLabels.length > 0) {
       // eslint-disable-next-line no-undef
-      fetchMessagesByImageLabel(parameterImageLabel);
+      fetchMessagesByImageLabels(parameterImageLabels);
     } else {
       // eslint-disable-next-line no-undef
-      fetchAllUserMessages();
+      fetchAllMessages();
     }
   });
 }
