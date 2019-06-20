@@ -139,7 +139,7 @@ function buildMessageDiv(message) {
     imageDiv.classList.add('card-img-top');
     imageDiv.src = message.imageUrl;
     // eslint-disable-next-line prefer-destructuring
-    imageDiv.alt = message.imageLabels[0];
+    imageDiv.alt = imageDiv.alt == null || imageDiv.alt === '' ? message.imageLabels[0] : imageDiv.alt;
 
     card.insertBefore(imageDiv, card.childNodes[0]);
 
