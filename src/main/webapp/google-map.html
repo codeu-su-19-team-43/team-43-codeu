@@ -14,9 +14,9 @@
 
 		function createMap(){
 			map = new google.maps.Map(document.getElementById('map'), {
-				center: {lat: 38.5949, 
-						lng: -94.8923}, 
-				zoom: 4
+				center: {lat: 1.3483, 
+						lng: 103.6831}, 
+				zoom: 8
 			});
 
 		//When the user clicks in the map, show a marker with a text box the user can edit 
@@ -42,11 +42,15 @@
 		//Creates a marker that shows a read-only info window when clicked 
 
 		function createMarkerForDisplay(lat, lng, content){
+			//var image = '/images/device-camera-icon.png';
+
 			const marker = new google.maps.Marker({
 				position: {lat: lat, lng: lng}, 
 				map: map
+				//icon: image
 			});
-			var infoWindow = new google.maps.infoWindow({
+
+			var infoWindow = new google.maps.InfoWindow({
 				content: content
 			});
 			marker.addListener('click', () => {
@@ -74,39 +78,44 @@
 			if (editMarker){
 				editMarker.setMap(null);
 			}
+
 			editMarker = new google.maps.Marker({
 				position: {lat: lat, lng: lng}, 
 				map: map
 			});
+
 			const infoWindow = new google.maps.InfoWindow({
 				content: buildInfoWindowInput(lat, lng)});
 
+			editMarker.addListener('click', function(){
+				infowindow.open(map, editMarker);
+			});
 			//When the user closes the editable info window, close the marker
 
 			google.maps.event.addListener(infoWindow, 'closeclick', () => {
 				editMarker.setMap(null);
 			});
+
 			infoWindow.open(map, editMarker);
 		}
 
 		//Builds and returns HTML elements that show an editable textbox and a submit button
 
-		function buildInfoWindowsInput( lat, lng){
-			const textBox = document.createElement('textarea');
-			const button = document.createElement('button');
-			button.appendChild(document.createTextNode('Submit'));
-			button.onclick = () => {
-				postMarker(lat, lng, textbox.value);
-				createMarkerForDisplay(lat, lng, textbox.value);
-				editMarker.setMap(null);
-			};
-
-			const containerDiv = document.createElement('div');
-			containerDiv.appendChild(textbox);
-			containerDiv.appendChild(document.createElement('br'));
-			containerDiv.appendChild(button);
-			return containerDiv;
-		}
+		function buildInfoWindowInput(lat, lng){
+      		const textBox = document.createElement('textarea');
+      		const button = document.createElement('button');
+      		button.appendChild(document.createTextNode('Submit'));
+      		button.onclick = () => {
+        		postMarker(lat, lng, textBox.value);
+        		createMarkerForDisplay(lat, lng, textBox.value);
+        		editMarker.setMap(null);
+      		};
+      		const containerDiv = document.createElement('div');
+      		containerDiv.appendChild(textBox);
+      		containerDiv.appendChild(document.createElement('br'));
+      		containerDiv.appendChild(button);
+      		return containerDiv;
+    	}
 
 	</script>
 
