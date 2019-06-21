@@ -22,7 +22,18 @@
 		//When the user clicks in the map, show a marker with a text box the user can edit 
 
 			map.addListener('click', (event) => {
-				createMarkerForEdit(event.latLng.lat(), event.latLng.lng());
+
+				//Allows adding marker only if the user is logged in 
+				fetch('/login-status').then((response) => {
+					return response.json();
+				}).then((user_status) => {
+					if(user_status.isLoggedIn==false){
+						alert("You should be logged in to add markers!");
+					}
+					else{
+						createMarkerForEdit(event.latLng.lat(), event.latLng.lng());
+					}
+				});	
 			});
 			fetchMarkers();
 		}
