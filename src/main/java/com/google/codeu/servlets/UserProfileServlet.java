@@ -2,9 +2,9 @@ package com.google.codeu.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.appengine.repackaged.com.google.gson.Gson;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.User;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -41,7 +41,8 @@ public class UserProfileServlet extends HttpServlet {
     User userData = datastore.getUser(user);
     Gson gson = new Gson();
     String json = gson.toJson(userData);
-    response.getOutputStream().print(json);
+
+    response.getWriter().println(json);
   }
 
   @Override
