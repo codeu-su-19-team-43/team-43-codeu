@@ -18,9 +18,9 @@ import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
 import com.google.cloud.vision.v1.EntityAnnotation;
 import com.google.cloud.vision.v1.Feature;
+import com.google.cloud.vision.v1.Feature.Type;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
-
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.Message;
 import com.google.gson.Gson;
@@ -102,16 +102,25 @@ public class MessageServlet extends HttpServlet {
     if (blobKey != null) {
       // Get the URL of the image that the user uploaded.
       String imageUrl = getUploadedFileUrl(blobKey);
+      message.setImageUrl(imageUrl);
 
       // Get the labels of the image that the user uploaded.
       byte[] blobBytes = getBlobBytes(blobKey);
+
       List<EntityAnnotation> imageLabels = getImageLabels(blobBytes);
-
-      message.setImageUrl(imageUrl);
-
       List<String> imageLabelsList = imageLabels.stream()
             .map(label -> label.getDescription()).collect(Collectors.toList());
       message.setImageLabels(imageLabelsList);
+
+      List<EntityAnnotation> imageLandmarks = getImageLandmarks(blobBytes);
+      if (imageLandmarks != null && imageLandmarks.size() != 0) {
+        String imageLandmark= imageLandmarks.get(0).getDescription();
+        double imageLat = imageLandmarks.get(0).getLocations(0).getLatLng().getLatitude();
+        double imageLong = imageLandmarks.get(0).getLocations(0).getLatLng().getLongitude();
+        message.setImageLandmark(imageLandmark);
+        message.setImageLat(imageLat);
+        message.setImageLong(imageLong);
+      }
     }
 
     // Set text for sentiment analysis.
@@ -203,10 +212,26 @@ public class MessageServlet extends HttpServlet {
    * represented by the binary data stored in imgBytes.
    */
   private List<EntityAnnotation> getImageLabels(byte[] imgBytes) throws IOException {
+    return getImageAnalysis(imgBytes, Type.LABEL_DETECTION) == null ? null :
+        getImageAnalysis(imgBytes, Type.LABEL_DETECTION).getLabelAnnotationsList();
+  }
+
+  /**
+   * Uses the Google Cloud Vision API to generate the landmark that applies to the image
+   * represented by the binary data stored in imgBytes.
+   */
+  private List<EntityAnnotation> getImageLandmarks(byte[] imgBytes) throws IOException {
+    return getImageAnalysis(imgBytes, Type.LANDMARK_DETECTION) == null ? null :
+        getImageAnalysis(imgBytes, Type.LANDMARK_DETECTION).getLandmarkAnnotationsList();
+  }
+
+
+  private AnnotateImageResponse getImageAnalysis(byte[] imgBytes, Feature.Type featureType) 
+        throws IOException {
     ByteString byteString = ByteString.copyFrom(imgBytes);
     Image image = Image.newBuilder().setContent(byteString).build();
 
-    Feature feature = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
+    Feature feature = Feature.newBuilder().setType(featureType).build();
     AnnotateImageRequest request =
             AnnotateImageRequest.newBuilder().addFeatures(feature).setImage(image).build();
     List<AnnotateImageRequest> requests = new ArrayList<>();
@@ -219,10 +244,9 @@ public class MessageServlet extends HttpServlet {
     AnnotateImageResponse imageResponse = imageResponses.get(0);
 
     if (imageResponse.hasError()) {
-      System.err.println("Error getting image labels: " + imageResponse.getError().getMessage());
+      System.err.println("Error getting image analysis: " + imageResponse.getError().getMessage());
       return null;
     }
-
-    return imageResponse.getLabelAnnotationsList();
+    return imageResponse;
   }
 }
