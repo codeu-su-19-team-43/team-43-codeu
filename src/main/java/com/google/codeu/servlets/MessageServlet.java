@@ -114,7 +114,7 @@ public class MessageServlet extends HttpServlet {
 
       List<EntityAnnotation> imageLandmarks = getImageLandmarks(blobBytes);
       if (imageLandmarks != null && imageLandmarks.size() != 0) {
-        String imageLandmark= imageLandmarks.get(0).getDescription();
+        String imageLandmark = imageLandmarks.get(0).getDescription();
         double imageLat = imageLandmarks.get(0).getLocations(0).getLatLng().getLatitude();
         double imageLong = imageLandmarks.get(0).getLocations(0).getLatLng().getLongitude();
         message.setImageLandmark(imageLandmark);
