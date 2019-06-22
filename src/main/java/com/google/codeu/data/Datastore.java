@@ -110,7 +110,7 @@ public class Datastore {
           message.setImageLat((double) entity.getProperty("imageLat"));
         }
 
-        if (entity.hasProperty("imageLabels")) {
+        if (entity.hasProperty("imageLong")) {
           message.setImageLong((double) entity.getProperty("imageLong"));
         }
 
