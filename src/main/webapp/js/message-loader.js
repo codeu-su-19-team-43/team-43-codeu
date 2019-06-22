@@ -100,8 +100,11 @@ function buildInfoDiv(message) {
  * @return {Element}
  */
 function buildMessageDiv(message) {
+  const cardContainer = document.createElement('div');
+  cardContainer.classList.add('card', 'p-2', 'border-0');
+
   const card = document.createElement('div');
-  card.classList.add('card');
+  card.classList.add('border');
 
   const cardBody = document.createElement('div');
   cardBody.classList.add('card-body');
@@ -169,7 +172,9 @@ function buildMessageDiv(message) {
     card.appendChild(labelDiv);
   }
 
-  return card;
+  cardContainer.appendChild(card);
+
+  return cardContainer;
 }
 
 function fetchMessagesFromUrl(url) {
