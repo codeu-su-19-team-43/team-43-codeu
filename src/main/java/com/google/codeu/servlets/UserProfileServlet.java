@@ -39,8 +39,9 @@ public class UserProfileServlet extends HttpServlet {
     }
 
     User userData = datastore.getUser(user);
-    response.getOutputStream().print(new Gson().toJson(userData));
-//    response.getOutputStream().print(userData.toString());
+    Gson gson = new Gson();
+    String json = gson.toJson(userData);
+    response.getOutputStream().print(json);
   }
 
   @Override

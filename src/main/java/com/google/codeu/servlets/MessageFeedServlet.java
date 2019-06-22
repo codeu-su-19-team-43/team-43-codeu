@@ -41,7 +41,6 @@ public class MessageFeedServlet extends HttpServlet {
 
     String[] imageLabels = request.getParameterValues("imageLabel");
 
-
     if (imageLabels != null && imageLabels.length > 0) {
       messages = messages.stream()
           .filter(message -> message.getImageLabels() != null)
