@@ -14,18 +14,20 @@
       }
 
       function checkUniqueImageLabel(imageLabel) {
-        const parameterImageLabels = urlParams.getAll('imageLabel');
+        const parameterImageLabels = urlParams.getAll("imageLabel");
         if (parameterImageLabels.indexOf(imageLabel) > -1) {
-          return false
+          return false;
         }
         return true;
       }
 
       function onClickSearchButton() {
-        const imageLabel = document.getElementById("search-input").value.toLowerCase();
+        const imageLabel = document
+          .getElementById("search-input")
+          .value.toLowerCase();
         if (checkUniqueImageLabel(imageLabel)) {
           let redirectLocation = window.location.href;
-          const parameterImageLabels = urlParams.getAll('imageLabel');
+          const parameterImageLabels = urlParams.getAll("imageLabel");
           redirectLocation += redirectLocation.includes("?") ? "&" : "?";
           redirectLocation += `imageLabel=${imageLabel}`;
           window.location.replace(cleanWindowLocation(redirectLocation));
@@ -35,10 +37,14 @@
       }
 
       function onClickImageLabelCancelButton(imageLabel) {
-        let redirectLocation = cleanWindowLocation(window.location.href.replace(new RegExp(`&?imageLabel=${imageLabel}`, "g"), ""));
+        let redirectLocation = cleanWindowLocation(
+          window.location.href.replace(
+            new RegExp(`&?imageLabel=${imageLabel}`, "g"),
+            ""
+          )
+        );
         window.location.replace(redirectLocation);
       }
-
     </script>
   </head>
   <body onload="buildUI()">
