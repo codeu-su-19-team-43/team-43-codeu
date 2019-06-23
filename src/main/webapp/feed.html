@@ -6,9 +6,46 @@
       onload="loadHeader('Message Feed')"
     ></script>
     <script src="js/feed-page-loader.js"></script>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <link rel="stylesheet" href="/css/message.css" />
     <link rel="stylesheet" href="/css/feed-page.css" />
+    <script>
+      function cleanWindowLocation(windowLocation) {
+        return windowLocation.replace("\?&", "?").replace(/\?$/, "");
+      }
+
+      function checkUniqueImageLabel(imageLabel) {
+        const parameterImageLabels = urlParams.getAll("imageLabel");
+        if (parameterImageLabels.indexOf(imageLabel) > -1) {
+          return false;
+        }
+        return true;
+      }
+
+      function onClickSearchButton() {
+        const imageLabel = document
+          .getElementById("search-input")
+          .value.toLowerCase();
+        if (checkUniqueImageLabel(imageLabel)) {
+          let redirectLocation = window.location.href;
+          const parameterImageLabels = urlParams.getAll("imageLabel");
+          redirectLocation += redirectLocation.includes("?") ? "&" : "?";
+          redirectLocation += `imageLabel=${imageLabel}`;
+          window.location.replace(cleanWindowLocation(redirectLocation));
+        } else {
+          document.getElementById("search-input").value = "";
+        }
+      }
+
+      function onClickImageLabelCancelButton(imageLabel) {
+        let redirectLocation = cleanWindowLocation(
+          window.location.href.replace(
+            new RegExp(`&?imageLabel=${imageLabel}`, "g"),
+            ""
+          )
+        );
+        window.location.replace(redirectLocation);
+      }
+    </script>
   </head>
   <body onload="buildUI()">
     <div class="text-center page-header">
@@ -19,23 +56,32 @@
     </div>
 
     <div id="content-container">
-      <div class="search-container mb-6">
-        <div class="search-bar">
+      <div class="search-container border-bottom pb-4 mb-5">
+        <div class="search-bar mb-3">
           <input
             type="text"
-            class="searchText"
+            class="searchText font-weight-lighter"
             placeholder="Search"
             onfocus="this.placeholder = ''"
             onblur="this.placeholder = 'Search'"
+            id="search-input"
           />
-          <button type="submit" class="searchButton">
+          <button
+            type="submit"
+            class="searchButton"
+            onclick="onClickSearchButton()"
+          >
             <i class="fa fa-search"></i>
           </button>
         </div>
-      </div>
-    </div>
 
-      <div class="message-container">
+        <div
+          class="image-label-container d-flex flex-wrap"
+          id="image-label-container"
+        ></div>
+      </div>
+
+      <div class="message-container mt-5">
         <div id="message-cards-container" class="card-columns">
           Loading...
         </div>

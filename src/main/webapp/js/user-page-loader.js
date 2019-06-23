@@ -185,7 +185,7 @@ function buildUI() {
   showMessageFormAndEditProfileButtonIfViewingSelf();
   $.getScript('/js/message-loader.js', () => {
     // eslint-disable-next-line no-undef
-    fetchCurrentUserMessages(parameterUsername);
+    fetchMessagesByUser(parameterUsername);
   });
   fetchProfileImage();
   fetchUserProfile();
