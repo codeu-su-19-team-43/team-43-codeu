@@ -47,6 +47,9 @@ public class Datastore {
     messageEntity.setProperty("timestamp", message.getTimestamp());
     messageEntity.setProperty("imageUrl", message.getImageUrl());
     messageEntity.setProperty("imageLabels", message.getImageLabels());
+    messageEntity.setProperty("imageLandmark", message.getImageLandmark());
+    messageEntity.setProperty("imageLat", message.getImageLat());
+    messageEntity.setProperty("imageLong", message.getImageLong());
     messageEntity.setProperty("sentimentScore", message.getSentimentScore());
 
     datastore.put(messageEntity);
@@ -97,6 +100,18 @@ public class Datastore {
 
         if (entity.hasProperty("imageLabels")) {
           message.setImageLabels((List<String>) entity.getProperty("imageLabels"));
+        }
+
+        if (entity.hasProperty("imageLandmark")) {
+          message.setImageLandmark((String) entity.getProperty("imageLandmark"));
+        }
+
+        if (entity.hasProperty("imageLat")) {
+          message.setImageLat((double) entity.getProperty("imageLat"));
+        }
+
+        if (entity.hasProperty("imageLong")) {
+          message.setImageLong((double) entity.getProperty("imageLong"));
         }
 
         if (entity.hasProperty("sentimentScore")) {

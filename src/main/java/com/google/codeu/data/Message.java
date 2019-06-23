@@ -40,6 +40,9 @@ public class Message {
   private String imageUrl;
 
   private List<String> imageLabels;
+  private String imageLandmark;
+  private double imageLat;
+  private double imageLong;
   private double sentimentScore;
 
   /**
