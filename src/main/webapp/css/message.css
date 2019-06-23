@@ -36,6 +36,8 @@
 }
 
 .image-label-container {
+  max-height: 4.6em;
+  width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0;
