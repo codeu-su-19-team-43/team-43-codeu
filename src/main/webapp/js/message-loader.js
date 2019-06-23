@@ -161,11 +161,11 @@ function buildMessageDiv(message) {
                                 src=${message.imageUrl} 
                                 alt=${message.imageLabels[0]}>`;
 
-    let labelHtml = '<div id="image-label-container" class="card-footer p-1 image-label-container hidden">';
+    let labelHtml = '<div id="image-label-container" class="card-footer p-1 border-top-0 image-label-container hidden">';
     // eslint-disable-next-line no-return-assign
     message.imageLabels.map(imageLabel => labelHtml
       += `<a href="/feed.html?imageLabel=${imageLabel.toLowerCase()}">
-            <button type="button" class="btn btn-outline-info m-1 p-1 font-weight-lighter tag-button">
+            <button type="button" class="btn btn-outline-light m-1 p-1 font-weight-lighter tag-button">
               ${imageLabel}
             </button>
           </a>`);
