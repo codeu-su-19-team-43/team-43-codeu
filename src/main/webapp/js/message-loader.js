@@ -94,6 +94,16 @@ function buildInfoDiv(message) {
   return { infoDiv, translateResult };
 }
 
+// eslint-disable-next-line no-unused-vars
+function onMouseEnterImageDiv(element) {
+  element.childNodes[1].classList.remove('hidden');
+}
+
+// eslint-disable-next-line no-unused-vars
+function onMouseOutImageDiv(element) {
+  element.childNodes[1].classList.add('hidden');
+}
+
 /**
  * Builds an element that displays the message.
  * @param {Message} message
@@ -131,10 +141,6 @@ function buildMessageDiv(message) {
     landmarkDiv.classList.add('mb-2', 'imageLandmark-container');
     landmarkDiv.innerHTML = `<a href="#" class="card-text">${message.imageLandmark}</a>`;
     cardBody.appendChild(landmarkDiv);
-
-    // console.log(message.imageLandmark);
-    // console.log(message.imageLat);
-    // console.log(message.imageLong);
   }
 
   const textDiv = document.createElement('p');
@@ -149,31 +155,54 @@ function buildMessageDiv(message) {
   card.appendChild(cardBody);
 
   if (message.imageUrl != null) {
-    const imageDiv = document.createElement('img');
-    imageDiv.classList.add('card-img-top');
-    imageDiv.src = message.imageUrl;
-    // eslint-disable-next-line prefer-destructuring
-    imageDiv.alt = imageDiv.alt == null || imageDiv.alt === '' ? message.imageLabels[0] : imageDiv.alt;
+    let imageDivHtml = '<div class="card" id="image-container" onmouseenter="onMouseEnterImageDiv(this)" onmouseleave="onMouseOutImageDiv(this)">';
 
-    card.insertBefore(imageDiv, card.childNodes[0]);
+    imageDivHtml += `<img class="card-img-top" 
+                                src=${message.imageUrl} 
+                                alt=${message.imageLabels[0]}>`;
 
-    const labelDiv = document.createElement('div');
-    labelDiv.classList.add('card-footer');
-    labelDiv.classList.add('p-1');
-    labelDiv.innerHTML = '<p class="text-muted d-inline px-1">Tags:</p>';
+    let labelHtml = '<div id="image-label-container" class="card-footer p-1 image-label-container hidden">';
     // eslint-disable-next-line no-return-assign
-    message.imageLabels.map(imageLabel => labelDiv.innerHTML
+    message.imageLabels.map(imageLabel => labelHtml
       += `<a href="/feed.html?imageLabel=${imageLabel.toLowerCase()}">
             <button type="button" class="btn btn-outline-info m-1 p-1 font-weight-lighter tag-button">
               ${imageLabel}
             </button>
           </a>`);
+    labelHtml += '</div>';
+    imageDivHtml += labelHtml;
 
-    card.appendChild(labelDiv);
+    imageDivHtml += '</div>';
+
+    const imageDiv = document.createElement('div');
+    imageDiv.innerHTML = imageDivHtml;
+    card.insertBefore(imageDiv, card.childNodes[0]);
   }
 
-  cardContainer.appendChild(card);
+  const commentDiv = document.createElement('div');
+  commentDiv.classList.add('px-2', 'py-1', 'border-top');
+  commentDiv.innerHTML = `<div class="media comment-container">
+                            <a class="mr-3 my-2" href="#">
+                              <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
+                            </a>
+                            <div class="media-body">
+                              <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">Media heading</p></a>
+                              <p class="font-weight-light comment-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                              <div class="media mt-3 comment-container">
+                                <a class="mr-3 my-2" href="#">
+                                <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
+                                </a>
+                                <div class="media-body">
+                                  <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">Media heading</p></a>
+                                  <p class="font-weight-light comment-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>`;
 
+
+  card.appendChild(commentDiv);
+  cardContainer.appendChild(card);
   return cardContainer;
 }
 

@@ -13,5 +13,34 @@
 
 .card-body > .imageLandmark-container {
   line-height: 1em;
-  font-size: 80%;;
+  font-size: 80%;
+}
+
+.comment-container > a > .comment-image {
+  object-fit: cover;
+  width: 40px;
+  height: 40px;
+}
+
+.media-body > a:hover {
+  text-decoration: none;
+}
+
+.media-body > a > .comment-username {
+  font-size: 0.9em;
+  color: black;
+}
+
+.media-body > .comment-text {
+  font-size: 0.8em;
+}
+
+.image-label-container {
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+}
+
+.hidden {
+  display: none;
 }
