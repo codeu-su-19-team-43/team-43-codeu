@@ -10,3 +10,8 @@
 .sentiment-score-icon {
   padding-right: 0.5em;
 }
+
+.card-body > .imageLandmark-container {
+  line-height: 1em;
+  font-size: 80%;;
+}
