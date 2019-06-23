@@ -165,10 +165,40 @@ function buildImageDiv(message) {
   return imageDiv;
 }
 
+// eslint-disable-next-line no-unused-vars
+function onCLickCommentCount() {
+  document.getElementById('comment-container').classList.remove('hidden');
+}
+
+function buildResponseDiv(message) {
+  const resonseDiv = document.createElement('div');
+  resonseDiv.innerHTML = `<div id="response-container" class="response-container d-flex justify-content-between mt-2 pb-2 border-bottom">
+                            <span class="reaction-container d-flex flex-row">
+                              <i class="reaction-icon far fa-thumbs-up mr-1"></i>
+                              <p class="reaction-count font-weight-light mb-0">10</p>
+                            </span>
+                            <div class="comment-share-container d-flex flex-row">
+                              <p class="text-muted font-weight-light pr-2 mb-0" data-toggle="collapse" data-target="#comment-container-${message.id}">10 comments</p>
+                              <p class="text-muted font-weight-light mb-0">5 shares</p>
+                            </div>
+                         </div>`;
+  return resonseDiv;
+}
+
+function buildActionDiv() {
+  const actionDiv = document.createElement('div');
+  actionDiv.innerHTML = `<div id="action-container" class="action-container d-flex justify-content-between mt-2 pb-2">
+                            <button class="btn btn-light btn-sm action-icon-container font-weight-light"><i class="action-icon far fa-thumbs-up mr-1"></i>Like</button>
+                            <button class="btn btn-light btn-sm font-weight-light"><i class="far fa-comment-alt mr-1"></i>Comment</button>
+                            <button class="btn btn-light btn-sm font-weight-light"><i class="far fa-share-square mr-1"></i>Shares</button>
+                         </div>`;
+  return actionDiv;
+}
+
 function buildCommentDiv(message) {
   const commentDiv = document.createElement('div');
   commentDiv.classList.add('px-2', 'py-1', 'border-top');
-  commentDiv.innerHTML = `<div class="media comment-container">
+  commentDiv.innerHTML = `<div class="media comment-container collapse" id="comment-container-${message.id}">
                             <a class="mr-3 my-2" href="#">
                               <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
                             </a>
@@ -191,7 +221,7 @@ function buildCommentDiv(message) {
 
 function buildCardBodyDiv(message) {
   const cardBody = document.createElement('div');
-  cardBody.classList.add('card-body', 'p-3');
+  cardBody.classList.add('card-body', 'pb-0', 'px-3');
 
   cardBody.appendChild(buildUsernameDiv(message));
   cardBody.appendChild(buildTimeDiv(message));
@@ -205,6 +235,9 @@ function buildCardBodyDiv(message) {
   const { infoDiv, translateResult } = buildInfoDiv(message);
   cardBody.appendChild(infoDiv);
   cardBody.appendChild(translateResult);
+
+  cardBody.appendChild(buildResponseDiv(message));
+  cardBody.appendChild(buildActionDiv());
 
   return cardBody;
 }

@@ -1,3 +1,7 @@
+.hidden {
+  display: none;
+}
+
 .card-footer > a > .tag-button {
   line-height: normal;
   font-size: small;
@@ -43,6 +47,19 @@
   bottom: 0;
 }
 
-.hidden {
-  display: none;
+.response-container {
+  font-size: 0.85em;
+}
+
+.reaction-icon {
+  line-height: 1.2em;
+  font-size: 1.2em;
+}
+
+.action-container > * {
+  width: 33%;
+}
+
+.comment-share-container > * {
+  cursor: pointer;
 }
