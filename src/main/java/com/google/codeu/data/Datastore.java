@@ -207,7 +207,7 @@ public class Datastore {
    * Gets comments posted on a specific message.
    *
    * @return a list of comments on a message, or empty list if there are no
-   *     comments on the message. List is sorted by time descending.
+   *     comments on the message.
    */
   public List<Comment> getCommentsForMessage(String messageId) {
     List<Comment> commentsForMessage = new ArrayList<>();
