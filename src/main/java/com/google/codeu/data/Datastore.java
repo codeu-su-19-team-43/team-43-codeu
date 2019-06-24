@@ -61,7 +61,6 @@ public class Datastore {
     datastore.put(messageEntity);
   }
 
-  // TODO: check correctness
   /**
    * Gets {@link Message} using {@param messageId}.
    *
