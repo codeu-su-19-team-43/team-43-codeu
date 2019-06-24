@@ -30,7 +30,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-/** Provides access to the data stored in Datastore. */
+/**
+ * Provides access to the data stored in Datastore.
+ */
 public class Datastore {
 
   private DatastoreService datastore;
@@ -39,7 +41,9 @@ public class Datastore {
     datastore = DatastoreServiceFactory.getDatastoreService();
   }
 
-  /** Stores the Message in Datastore. */
+  /**
+   * Stores the Message in Datastore.
+   */
   public void storeMessage(Message message) {
     Entity messageEntity = new Entity("Message", message.getId().toString());
     messageEntity.setProperty("user", message.getUser());
@@ -51,8 +55,23 @@ public class Datastore {
     messageEntity.setProperty("imageLat", message.getImageLat());
     messageEntity.setProperty("imageLong", message.getImageLong());
     messageEntity.setProperty("sentimentScore", message.getSentimentScore());
-
+    messageEntity.setProperty("commentIdsAsStrings",
+            message.convertCommentIdsToStrings(message.getCommentIds()));
     datastore.put(messageEntity);
+  }
+
+  // TODO: check correctness
+  /**
+   * Gets {@link Message} using {@param messageId}.
+   *
+   * @return a message with given id, or throws an exception.
+   */
+  public Message getMessage(String messageId) throws Exception {
+    Query query = new Query("Message").setFilter(
+            new Query.FilterPredicate("id", FilterOperator.EQUAL, messageId)
+    );
+    Entity entity = datastore.prepare(query).asSingleEntity();
+    return convertMessageFromEntity(entity);
   }
 
   /**
@@ -61,8 +80,7 @@ public class Datastore {
    * @return a list of messages posted by the user, or empty list if user has never posted a
    *     message. List is sorted by time descending.
    */
-  public List<Message> getMessages(String user) {
-
+  public List<Message> getUserMessages(String user) {
     Query query =
         new Query("Message")
             .setFilter(new Query.FilterPredicate("user", FilterOperator.EQUAL, user))
@@ -72,7 +90,9 @@ public class Datastore {
     return convertMessagesFromQuery(results);
   }
 
-  /** Returns all messages for all users. */
+  /**
+   * Returns all messages for all users.
+   */
   public List<Message> getAllMessages() {
     Query query = new Query("Message")
         .addSort("timestamp", SortDirection.DESCENDING);
@@ -81,43 +101,15 @@ public class Datastore {
     return convertMessagesFromQuery(results);
   }
 
-  /** Convert query to messages. */
+  /**
+   * Converts query to messages.
+   */
   public List<Message> convertMessagesFromQuery(PreparedQuery results) {
     List<Message> messages = new ArrayList<>();
 
     for (Entity entity : results.asIterable()) {
       try {
-        String idString = entity.getKey().getName();
-        UUID id = UUID.fromString(idString);
-        String user = (String) entity.getProperty("user");
-        long timestamp = (long) entity.getProperty("timestamp");
-        String text = (String) entity.getProperty("text");
-        Message message = new Message(id, user, timestamp, text);
-
-        if (entity.hasProperty("imageUrl")) {
-          message.setImageUrl((String) entity.getProperty("imageUrl"));
-        }
-
-        if (entity.hasProperty("imageLabels")) {
-          message.setImageLabels((List<String>) entity.getProperty("imageLabels"));
-        }
-
-        if (entity.hasProperty("imageLandmark")) {
-          message.setImageLandmark((String) entity.getProperty("imageLandmark"));
-        }
-
-        if (entity.hasProperty("imageLat")) {
-          message.setImageLat((double) entity.getProperty("imageLat"));
-        }
-
-        if (entity.hasProperty("imageLong")) {
-          message.setImageLong((double) entity.getProperty("imageLong"));
-        }
-
-        if (entity.hasProperty("sentimentScore")) {
-          message.setSentimentScore((double) entity.getProperty("sentimentScore"));
-        }
-
+        Message message = convertMessageFromEntity(entity);
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
@@ -125,19 +117,163 @@ public class Datastore {
         e.printStackTrace();
       }
     }
-
     return messages;
-
   }
 
-  /** Returns the total number of messages for all users. */
+  /**
+   * Converts message entity to {@link Message}.
+   */
+  public Message convertMessageFromEntity(Entity entity) throws Exception {
+    String idString = entity.getKey().getName();
+    UUID id = UUID.fromString(idString);
+    String user = (String) entity.getProperty("user");
+    long timestamp = (long) entity.getProperty("timestamp");
+    String text = (String) entity.getProperty("text");
+    Message message = new Message(id, user, timestamp, text);
+
+    if (entity.hasProperty("imageUrl")) {
+      message.setImageUrl((String) entity.getProperty("imageUrl"));
+    }
+
+    if (entity.hasProperty("imageLabels")) {
+      message.setImageLabels((List<String>) entity.getProperty("imageLabels"));
+    }
+
+    if (entity.hasProperty("imageLandmark")) {
+      message.setImageLandmark((String) entity.getProperty("imageLandmark"));
+    }
+
+    if (entity.hasProperty("imageLat")) {
+      message.setImageLat((double) entity.getProperty("imageLat"));
+    }
+
+    if (entity.hasProperty("imageLong")) {
+      message.setImageLong((double) entity.getProperty("imageLong"));
+    }
+
+    if (entity.hasProperty("sentimentScore")) {
+      message.setSentimentScore((double) entity.getProperty("sentimentScore"));
+    }
+
+    if (entity.hasProperty("commentIdsAsStrings")) {
+      message.setCommentIds(message.convertStringsToCommentIds(
+              (List<String>) entity.getProperty("commentIdsAsStrings")
+      ));
+    }
+
+    return message;
+  }
+
+  /**
+   * Returns the total number of messages for all users.
+   */
   public int getTotalMessageCount() {
     Query query = new Query("Message");
     PreparedQuery results = datastore.prepare(query);
     return results.countEntities(FetchOptions.Builder.withLimit(1000));
   }
 
-  /** Stores the User in Datastore. */
+  /**
+   * Adds comment ID to message's commentIds with given {@param messageId}.
+   */
+  public void addCommentToMessage(String messageId, Comment comment) {
+    try {
+      // Add new comment ID to message.
+      Message message = getMessage(messageId);
+      List<UUID> commentIds = message.getCommentIds();
+      commentIds.add(comment.getId());
+      message.setCommentIds(commentIds);
+      storeMessage(message);
+
+      // Store comment in Datastore.
+      storeComment(comment);
+    } catch (Exception e) {
+      System.err.println("Error adding comment to message.");
+      System.err.println(comment.toString());
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Stores the Comment in Datastore.
+   */
+  public void storeComment(Comment comment) {
+    Entity commentEntity = new Entity("Comment", comment.getId().toString());
+    commentEntity.setProperty("user", comment.getUser());
+    commentEntity.setProperty("text", comment.getText());
+    commentEntity.setProperty("timestamp", comment.getTimestamp());
+
+    datastore.put(commentEntity);
+  }
+
+  /**
+   * Gets comments posted on a specific message.
+   *
+   * @return a list of comments on a message, or empty list if there are no
+   *     comments on the message. List is sorted by time descending.
+   */
+  public List<Comment> getCommentsForMessage(String messageId) {
+    List<Comment> commentsForMessage = new ArrayList<>();
+
+    try {
+      Message message = getMessage(messageId);
+      if (message.getCommentIds().size() == 0) {
+        return commentsForMessage;
+      }
+
+      // TODO: check correctness
+      Query query = new Query("Comment")
+              .setFilter(new Query.FilterPredicate(
+                      "id",
+                      FilterOperator.IN,
+                      message.convertCommentIdsToStrings(message.getCommentIds()))
+              );
+
+      PreparedQuery results = datastore.prepare(query);
+      commentsForMessage = convertCommentsFromQuery(results);
+    } catch (Exception e) {
+      System.err.println("Error getting comments for message.");
+      e.printStackTrace();
+    }
+
+    return commentsForMessage;
+  }
+
+  /**
+   * Convert query to comments.
+   */
+  public List<Comment> convertCommentsFromQuery(PreparedQuery results) {
+    List<Comment> comments = new ArrayList<>();
+
+    for (Entity entity: results.asIterable()) {
+      try {
+        Comment comment = convertCommentFromEntity(entity);
+        comments.add(comment);
+      } catch (Exception e) {
+        System.err.println("Error reading comment.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return comments;
+  }
+
+  /**
+   * Converts message entity to {@link Comment}.
+   */
+  public Comment convertCommentFromEntity(Entity entity) {
+    String commentIdString = entity.getKey().getName();
+    UUID commentId = UUID.fromString(commentIdString);
+    String user = (String) entity.getProperty("user");
+    long timestamp = (long) entity.getProperty("timestamp");
+    String text = (String) entity.getProperty("text");
+    return new Comment(commentId, user, timestamp, text);
+  }
+
+  /**
+   * Stores {@link User} in Datastore.
+   */
   public void storeUser(User user) {
     Entity userEntity = new Entity("User", user.getEmail());
     userEntity.setProperty("email", user.getEmail());
@@ -154,7 +290,6 @@ public class Datastore {
    * or null if no matching User was found.
   */
   public User getUser(String email) {
- 
     Query query = new Query("User")
         .setFilter(new Query.FilterPredicate("email", FilterOperator.EQUAL, email));
     PreparedQuery results = datastore.prepare(query);
