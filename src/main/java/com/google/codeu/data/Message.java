@@ -16,6 +16,7 @@
 
 package com.google.codeu.data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,8 @@ public class Message {
   private double imageLong;
   private double sentimentScore;
 
+  private List<UUID> commentIds;
+
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text}. 
    * Generates a random ID and uses the current system 
@@ -62,5 +65,37 @@ public class Message {
     this.user = user;
     this.timestamp = timestamp;
     this.text = text;
+  }
+
+  /**
+   * Converts list of comment IDs as strings to list of comment IDs as UUIDs.
+   */
+  public List<UUID> convertStringsToCommentIds(List<String> commentIdsAsStrings) {
+    if (commentIdsAsStrings == null) {
+      return new ArrayList<>();
+    }
+
+    List<UUID> commentIds = new ArrayList<>();
+    for (String commentIdAsString: commentIdsAsStrings) {
+      commentIds.add(UUID.fromString(commentIdAsString));
+    }
+
+    return commentIds;
+  }
+
+  /**
+   * Converts list of comment IDs as UUIDs to list of comment IDs as strings.
+   */
+  public List<String> convertCommentIdsToStrings(List<UUID> commentIds) {
+    if (commentIds == null) {
+      return new ArrayList<>();
+    }
+
+    List<String> commentIdsAsStrings = new ArrayList<>();
+    for (UUID commentId: commentIds) {
+      commentIdsAsStrings.add(commentId.toString());
+    }
+
+    return commentIdsAsStrings;
   }
 }

@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import javax.servlet.annotation.WebServlet;
@@ -72,7 +73,7 @@ public class MessageServlet extends HttpServlet {
       return;
     }
 
-    List<Message> messages = datastore.getMessages(user);
+    List<Message> messages = datastore.getUserMessages(user);
     Gson gson = new Gson();
     String json = gson.toJson(messages);
 
@@ -135,6 +136,10 @@ public class MessageServlet extends HttpServlet {
 
     // Store sentiment score in message.
     message.setSentimentScore(sentimentScore);
+
+    // Create empty list for comments.
+    List<UUID> commentIds = new ArrayList<>();
+    message.setCommentIds(commentIds);
 
     datastore.storeMessage(message);
 
