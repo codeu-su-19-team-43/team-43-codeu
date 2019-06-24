@@ -20,6 +20,7 @@ import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
@@ -218,11 +219,16 @@ public class Datastore {
         return commentsForMessage;
       }
 
+      List<Key> keysForComments = new ArrayList<>();
+      for (String commentId: message.convertCommentIdsToStrings(message.getCommentIds())) {
+        keysForComments.add(KeyFactory.createKey("Comment", commentId));
+      }
+
       Query query = new Query("Comment")
               .setFilter(new Query.FilterPredicate(
                       Entity.KEY_RESERVED_PROPERTY,
                       FilterOperator.IN,
-                      message.convertCommentIdsToStrings(message.getCommentIds()))
+                      keysForComments)
               );
 
       PreparedQuery results = datastore.prepare(query);
