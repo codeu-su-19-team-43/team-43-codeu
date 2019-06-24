@@ -218,7 +218,6 @@ public class Datastore {
         return commentsForMessage;
       }
 
-      // TODO: check correctness
       Query query = new Query("Comment")
               .setFilter(new Query.FilterPredicate(
                       Entity.KEY_RESERVED_PROPERTY,
