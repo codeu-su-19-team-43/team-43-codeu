@@ -67,10 +67,7 @@ public class Datastore {
    * @return a message with given id, or throws an exception.
    */
   public Message getMessage(String messageId) throws Exception {
-    Query query = new Query("Message").setFilter(
-            new Query.FilterPredicate("id", FilterOperator.EQUAL, messageId)
-    );
-    Entity entity = datastore.prepare(query).asSingleEntity();
+    Entity entity = datastore.get(KeyFactory.createKey("Message", messageId));
     return convertMessageFromEntity(entity);
   }
 
@@ -224,7 +221,7 @@ public class Datastore {
       // TODO: check correctness
       Query query = new Query("Comment")
               .setFilter(new Query.FilterPredicate(
-                      "id",
+                      Entity.KEY_RESERVED_PROPERTY,
                       FilterOperator.IN,
                       message.convertCommentIdsToStrings(message.getCommentIds()))
               );
