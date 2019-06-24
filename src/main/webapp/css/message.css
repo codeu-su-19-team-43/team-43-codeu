@@ -15,27 +15,39 @@
   padding-right: 0.5em;
 }
 
-.card-body > .imageLandmark-container {
+.imageLandmark-container {
   line-height: 1em;
   font-size: 80%;
 }
 
-.comment-container > a > .comment-image {
+.comment-form-container {
+  margin-left: -0.15em;
+}
+
+.input-group> textarea {
+  resize: none;
+  overflow: hidden;
+  min-height: 32px;
+  height: 32px;
+  max-height: 100px;
+}
+
+.comment-image {
   object-fit: cover;
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
 }
 
 .media-body > a:hover {
   text-decoration: none;
 }
 
-.media-body > a > .comment-username {
+.comment-username {
   font-size: 0.9em;
   color: black;
 }
 
-.media-body > .comment-text {
+.comment-text {
   font-size: 0.8em;
 }
 

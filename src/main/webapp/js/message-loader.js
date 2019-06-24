@@ -179,43 +179,75 @@ function buildResponseDiv(message) {
                             </span>
                             <div class="comment-share-container d-flex flex-row">
                               <p class="text-muted font-weight-light pr-2 mb-0" data-toggle="collapse" data-target="#comment-container-${message.id}">10 comments</p>
-                              <p class="text-muted font-weight-light mb-0">5 shares</p>
+                              <p class="text-muted font-weight-light mb-0">5 saves</p>
                             </div>
                          </div>`;
   return resonseDiv;
 }
 
-function buildActionDiv() {
+function buildActionDiv(message) {
   const actionDiv = document.createElement('div');
   actionDiv.innerHTML = `<div id="action-container" class="action-container d-flex justify-content-between mt-2 pb-2">
                             <button class="btn btn-light btn-sm action-icon-container font-weight-light"><i class="action-icon far fa-thumbs-up mr-1"></i>Like</button>
-                            <button class="btn btn-light btn-sm font-weight-light"><i class="far fa-comment-alt mr-1"></i>Comment</button>
-                            <button class="btn btn-light btn-sm font-weight-light"><i class="far fa-share-square mr-1"></i>Shares</button>
+                            <button class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${message.id}"><i class="far fa-comment-alt mr-1"></i>Comment</button>
+                            <button class="btn btn-light btn-sm font-weight-light"><i class="far fa-heart mr-1"></i>Save</button>
                          </div>`;
   return actionDiv;
+}
+
+function auto_grow(element) {
+  element.style.height = '5px';
+  element.style.height = (element.scrollHeight) + 'px';
+}
+
+function buildCommentForm(message) {
+  const commentFormHtml = `<li class="media">
+                            <a class="mr-3 my-2" href="#">
+                              <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
+                            </a>
+                            <div class="media-body">
+                              <div id="comment-form-container" class="comment-form-container">
+                                <form action="" method="POST" id="comment-form-${message.id}">
+                                  <div class="input-group input-group-sm mt-2">
+                                    <textarea
+                                      name=${message.id}
+                                      id=${message.id}
+                                      class=form-control
+                                      type=text
+                                      placeholder="Add a comment"
+                                      onblur="this.placeholder='Add a comment'"
+                                      onfocus="this.placeholder=''"
+                                      onkeyup="auto_grow(this)">
+                                    </textarea>
+                                    <div class="input-group-append">
+                                      <button class="btn btn-light comment-form-button border" type="button" id="comment-form-button">Post</button>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </li>`;
+  return commentFormHtml;
 }
 
 function buildCommentDiv(message) {
   const commentDiv = document.createElement('div');
   commentDiv.classList.add('px-2', 'py-1', 'border-top');
-  commentDiv.innerHTML = `<div class="media comment-container collapse" id="comment-container-${message.id}">
-                            <a class="mr-3 my-2" href="#">
-                              <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
-                            </a>
-                            <div class="media-body">
-                              <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">Media heading</p></a>
-                              <p class="font-weight-light comment-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                              <div class="media mt-3 comment-container">
-                                <a class="mr-3 my-2" href="#">
-                                <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
-                                </a>
-                                <div class="media-body">
-                                  <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">Media heading</p></a>
-                                  <p class="font-weight-light comment-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>`;
+
+  let commentHtml = `<ul class="list-unstyled comment-container collapse" id="comment-container-${message.id}">`;
+  commentHtml += buildCommentForm(message);
+  commentHtml += `<li class="media">
+                    <a class="mr-3 my-2" href="#">
+                      <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
+                    </a>
+                    <div class="media-body">
+                      <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">Anqi Tu</p></a>
+                      <p class="font-weight-light comment-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
+                    </div>
+                  </li>`;
+
+  commentHtml += '</ul>';
+  commentDiv.innerHTML = commentHtml;
   return commentDiv;
 }
 
@@ -237,7 +269,7 @@ function buildCardBodyDiv(message) {
   cardBody.appendChild(translateResult);
 
   cardBody.appendChild(buildResponseDiv(message));
-  cardBody.appendChild(buildActionDiv());
+  cardBody.appendChild(buildActionDiv(message));
 
   return cardBody;
 }
