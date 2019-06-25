@@ -23,7 +23,7 @@ public class User {
   private String website;
   private String aboutMe;
   private String profileImageUrl;
-  private List<UUID> favouriteMessages;
+  private List<UUID> favouriteMessageIds;
 
   public User(String email, String username, String location, String organization,
               String website, String aboutMe, String profileImageUrl) {
@@ -34,32 +34,32 @@ public class User {
   /**
    * Converts list of favourite IDs as strings to list of favourite IDs as UUIDs.
    */
-  public List<UUID> convertStringsToFavouriteIds(List<String> favouriteIdsAsStrings) {
-    if (favouriteIdsAsStrings == null) {
+  public List<UUID> convertStringsToFavouriteMessageIds(List<String> favouriteMessageIdsAsStrings) {
+    if (favouriteMessageIdsAsStrings == null) {
       return new ArrayList<>();
     }
 
-    List<UUID> favouriteIds = new ArrayList<>();
-    for (String favouriteIdAsString: favouriteIdsAsStrings) {
-      favouriteIds.add(UUID.fromString(favouriteIdAsString));
+    List<UUID> favouriteMessageIds = new ArrayList<>();
+    for (String favouriteIdAsString: favouriteMessageIdsAsStrings) {
+      favouriteMessageIds.add(UUID.fromString(favouriteIdAsString));
     }
 
-    return favouriteIds;
+    return favouriteMessageIds;
   }
 
   /**
    * Converts list of favourite IDs as UUIDs to list of favourite IDs as strings.
    */
-  public List<String> convertfavouriteIdsToStrings(List<UUID> favouriteIds) {
-    if (favouriteIds == null) {
+  public List<String> convertfavouriteMessageIdsToStrings(List<UUID> favouriteMessageIds) {
+    if (favouriteMessageIds == null) {
       return new ArrayList<>();
     }
 
-    List<String> favouriteIdsAsStrings = new ArrayList<>();
-    for (UUID favouriteId: favouriteIds) {
-      favouriteIdsAsStrings.add(favouriteId.toString());
+    List<String> favouriteMessageIdsAsStrings = new ArrayList<>();
+    for (UUID favouriteId: favouriteMessageIds) {
+      favouriteMessageIdsAsStrings.add(favouriteId.toString());
     }
 
-    return favouriteIdsAsStrings;
+    return favouriteMessageIdsAsStrings;
   }
 }

@@ -285,8 +285,8 @@ public class Datastore {
     userEntity.setProperty("website", user.getWebsite());
     userEntity.setProperty("aboutMe", user.getAboutMe());
     userEntity.setProperty("profileImageUrl", user.getProfileImageUrl());
-    userEntity.setProperty("favouriteIdsAsStrings",
-            user.convertfavouriteIdsToStrings(user.getFavouriteMessages()));
+    userEntity.setProperty("favouriteMessageIdsAsStrings",
+            user.convertfavouriteMessageIdsToStrings(user.getFavouriteMessageIds()));
     datastore.put(userEntity);
   }
 
@@ -312,9 +312,9 @@ public class Datastore {
     User user = new User(email, username, location, organization, website,
             aboutMe, profileImageUrl);
 
-    if (userEntity.hasProperty("commentIdsAsStrings")) {
-      user.setFavouriteMessages(user.convertStringsToFavouriteIds(
-              (List<String>) userEntity.getProperty("commentIdsAsStrings")
+    if (userEntity.hasProperty("favouriteMessageIdsAsStrings")) {
+      user.setFavouriteMessageIds(user.convertStringsToFavouriteMessageIds(
+              (List<String>) userEntity.getProperty("favouriteMessageIdsAsStrings")
       ));
     }
 
@@ -339,9 +339,9 @@ public class Datastore {
     User user = getUser(email);
 
     if (user != null) {
-      List<UUID> favouriteMessages = user.getFavouriteMessages();
+      List<UUID> favouriteMessages = user.getFavouriteMessageIds();
       favouriteMessages.add(UUID.fromString(messageId));
-      user.setFavouriteMessages(favouriteMessages);
+      user.setFavouriteMessageIds(favouriteMessages);
       storeUser(user);
     }
   }
@@ -354,12 +354,12 @@ public class Datastore {
     List<Message> favouriteMessages = new ArrayList<>();
 
     try {
-      if (user.getFavouriteMessages().size() == 0) {
+      if (user.getFavouriteMessageIds().size() == 0) {
         return favouriteMessages;
       }
 
       List<Key> keysForFavouriteMessages = new ArrayList<>();
-      for (String favouriteId: user.convertfavouriteIdsToStrings(user.getFavouriteMessages())) {
+      for (String favouriteId: user.convertfavouriteMessageIdsToStrings(user.getFavouriteMessageIds())) {
         keysForFavouriteMessages.add(KeyFactory.createKey("Message", favouriteId));
       }
 
