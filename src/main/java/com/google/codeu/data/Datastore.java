@@ -359,7 +359,8 @@ public class Datastore {
       }
 
       List<Key> keysForFavouriteMessages = new ArrayList<>();
-      for (String favouriteId: user.convertfavouriteMessageIdsToStrings(user.getFavouriteMessageIds())) {
+      for (String favouriteId: user.convertfavouriteMessageIdsToStrings(
+              user.getFavouriteMessageIds())) {
         keysForFavouriteMessages.add(KeyFactory.createKey("Message", favouriteId));
       }
 
