@@ -195,39 +195,71 @@ function buildActionDiv(message) {
   return actionDiv;
 }
 
-function auto_grow(element) {
+// eslint-disable-next-line no-unused-vars
+function autoGrow(element) {
+  // eslint-disable-next-line no-param-reassign
   element.style.height = '5px';
-  element.style.height = (element.scrollHeight) + 'px';
+  // eslint-disable-next-line no-param-reassign
+  element.style.height = `${element.scrollHeight}px`;
 }
 
-function buildCommentForm(message) {
+// eslint-disable-next-line no-unused-vars
+function onClickCommentPostButton() {
+  console.log('onClickCommentPostButton');
+  const comment = { messageId: '1927db6b-3025-403c-886b-24aa5927dbc1', userText: 'this is a comment' };
+  $.ajax({
+    contentType: 'application/json',
+    data: JSON.stringify(comment),
+    dataType: 'json',
+    processData: false,
+    type: 'POST',
+    url: '/comments',
+  });
+}
+
+function buildCommentInput(message) {
   const commentFormHtml = `<li class="media">
                             <a class="mr-3 my-2" href="#">
                               <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
                             </a>
                             <div class="media-body">
-                              <div id="comment-form-container" class="comment-form-container">
-                                <form action="" method="POST" id="comment-form-${message.id}">
-                                  <div class="input-group input-group-sm mt-2">
-                                    <textarea
-                                      name=${message.id}
-                                      id=${message.id}
-                                      class=form-control
-                                      type=text
-                                      placeholder="Add a comment"
-                                      onblur="this.placeholder='Add a comment'"
-                                      onfocus="this.placeholder=''"
-                                      onkeyup="auto_grow(this)">
-                                    </textarea>
-                                    <div class="input-group-append">
-                                      <button class="btn btn-light comment-form-button border" type="button" id="comment-form-button">Post</button>
-                                    </div>
+                              <div id="comment-input-container" class="comment-input-container">
+                                <div class="input-group input-group-sm mt-2">
+                                  <textarea
+                                    name=${message.id}
+                                    id=${message.id}
+                                    class=form-control
+                                    type=text
+                                    placeholder="Add a comment"
+                                    onblur="this.placeholder='Add a comment'"
+                                    onfocus="this.placeholder=''"
+                                    onkeyup="autoGrow(this)">
+                                  </textarea>
+                                  <div class="input-group-append">
+                                    <button class="btn btn-light comment-post-button border" 
+                                            type="button" 
+                                            id="comment-post-button"
+                                            onclick="onClickCommentPostButton();">
+                                            Post
+                                    </button>
                                   </div>
-                                </form>
+                                </div>
                               </div>
                             </div>
                           </li>`;
   return commentFormHtml;
+}
+
+function buildCommentItem(comment) {
+  return `<li class="media">
+            <a class="mr-3 my-2" href="#">
+              <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
+            </a>
+            <div class="media-body">
+              <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">${comment.user}</p></a>
+              <p class="font-weight-light comment-text">${comment.text}</p>
+            </div>
+          </li>`;
 }
 
 function buildCommentDiv(message) {
@@ -235,16 +267,13 @@ function buildCommentDiv(message) {
   commentDiv.classList.add('px-2', 'py-1', 'border-top');
 
   let commentHtml = `<ul class="list-unstyled comment-container collapse" id="comment-container-${message.id}">`;
-  commentHtml += buildCommentForm(message);
-  commentHtml += `<li class="media">
-                    <a class="mr-3 my-2" href="#">
-                      <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
-                    </a>
-                    <div class="media-body">
-                      <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">Anqi Tu</p></a>
-                      <p class="font-weight-light comment-text">Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.</p>
-                    </div>
-                  </li>`;
+  commentHtml += buildCommentInput(message);
+
+  $.ajaxSetup({ async: false });
+  $.getJSON(`/comments?messageId=${message.id}`, (comments) => {
+    comments.forEach((comment) => { commentHtml += buildCommentItem(comment); });
+  });
+  $.ajaxSetup({ async: true });
 
   commentHtml += '</ul>';
   commentDiv.innerHTML = commentHtml;

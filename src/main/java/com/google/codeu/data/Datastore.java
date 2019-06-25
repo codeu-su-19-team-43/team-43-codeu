@@ -179,6 +179,10 @@ public class Datastore {
       // Add new comment ID to message.
       Message message = getMessage(messageId);
       List<UUID> commentIds = message.getCommentIds();
+
+      if (commentIds == null) {
+        commentIds = new ArrayList<>();
+      }
       commentIds.add(comment.getId());
       message.setCommentIds(commentIds);
       storeMessage(message);
