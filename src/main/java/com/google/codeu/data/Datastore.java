@@ -23,6 +23,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.PropertyProjection;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -338,11 +339,16 @@ public class Datastore {
   /** Returns all users. */
   public Set<String> getUsers() {
     Set<String> users = new HashSet<>();
-    Query query = new Query("Message");
-    PreparedQuery results = datastore.prepare(query);
-    for (Entity entity: results.asIterable()) {
-      users.add((String) entity.getProperty("user"));
+    Query query = new Query("User")
+            .addProjection(new PropertyProjection("email", String.class))
+            .setDistinct(true);
+
+    List<Entity> userEntities = datastore.prepare(query)
+            .asList(FetchOptions.Builder.withLimit(1000));
+    for (Entity userEntity : userEntities) {
+      users.add((String) userEntity.getProperty("email"));
     }
+
     return users;
   }
 
