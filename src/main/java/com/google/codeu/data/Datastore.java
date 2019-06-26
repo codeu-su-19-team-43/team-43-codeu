@@ -344,7 +344,7 @@ public class Datastore {
             .setDistinct(true);
 
     List<Entity> userEntities = datastore.prepare(query)
-            .asList(FetchOptions.Builder.withLimit(1000));
+            .asList(FetchOptions.Builder.withDefaults());
     for (Entity userEntity : userEntities) {
       users.add((String) userEntity.getProperty("email"));
     }
@@ -435,7 +435,7 @@ public class Datastore {
       }
 
       List<Key> keysForFavouriteMessages = new ArrayList<>();
-      for (String favouriteId: user.convertfavouriteMessageIdsToStrings(
+      for (String favouriteId : user.convertfavouriteMessageIdsToStrings(
               user.getFavouriteMessageIds())) {
         keysForFavouriteMessages.add(KeyFactory.createKey("Message", favouriteId));
       }
@@ -455,5 +455,22 @@ public class Datastore {
     }
 
     return favouriteMessages;
+  }
+
+  /**
+   * Returns all sentiment scores.
+   */
+  public List<Double> getSentimentScores() {
+    List<Double> sentimentScores = new ArrayList<>();
+    Query query = new Query("Message")
+            .addProjection(new PropertyProjection("sentimentScore", Double.class));
+
+    List<Entity> sentimentScoreEntities = datastore.prepare(query)
+            .asList(FetchOptions.Builder.withDefaults());
+    for (Entity sentimentScoreEntity : sentimentScoreEntities) {
+      sentimentScores.add((Double) sentimentScoreEntity.getProperty("sentimentScore"));
+    }
+
+    return sentimentScores;
   }
 }
