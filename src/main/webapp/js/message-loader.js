@@ -203,21 +203,7 @@ function autoGrow(element) {
   element.style.height = `${element.scrollHeight}px`;
 }
 
-// eslint-disable-next-line no-unused-vars
-function onClickCommentPostButton() {
-  console.log('onClickCommentPostButton');
-  const comment = { messageId: '1927db6b-3025-403c-886b-24aa5927dbc1', userText: 'this is a comment' };
-  $.ajax({
-    contentType: 'application/json',
-    data: JSON.stringify(comment),
-    dataType: 'json',
-    processData: false,
-    type: 'POST',
-    url: '/comments',
-  });
-}
-
-function buildCommentInput(message) {
+function buildCommentInput(messageId) {
   const commentFormHtml = `<li class="media">
                             <a class="mr-3 my-2" href="#">
                               <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
@@ -226,8 +212,8 @@ function buildCommentInput(message) {
                               <div id="comment-input-container" class="comment-input-container">
                                 <div class="input-group input-group-sm mt-2">
                                   <textarea
-                                    name=${message.id}
-                                    id=${message.id}
+                                    name=${messageId}
+                                    id=${messageId}
                                     class=form-control
                                     type=text
                                     placeholder="Add a comment"
@@ -239,7 +225,7 @@ function buildCommentInput(message) {
                                     <button class="btn btn-light comment-post-button border" 
                                             type="button" 
                                             id="comment-post-button"
-                                            onclick="onClickCommentPostButton();">
+                                            onclick="onClickCommentPostButton('${messageId}');">
                                             Post
                                     </button>
                                   </div>
@@ -262,21 +248,40 @@ function buildCommentItem(comment) {
           </li>`;
 }
 
-function buildCommentDiv(message) {
-  const commentDiv = document.createElement('div');
-  commentDiv.classList.add('px-2', 'py-1', 'border-top');
-
-  let commentHtml = `<ul class="list-unstyled comment-container collapse" id="comment-container-${message.id}">`;
-  commentHtml += buildCommentInput(message);
+function buildCommentHtml(messageId) {
+  let commentHtml = `<ul class="list-unstyled comment-list" id="comment-list-${messageId}">`;
+  commentHtml += buildCommentInput(messageId);
 
   $.ajaxSetup({ async: false });
-  $.getJSON(`/comments?messageId=${message.id}`, (comments) => {
+  $.getJSON(`/comments?messageId=${messageId}`, (comments) => {
     comments.forEach((comment) => { commentHtml += buildCommentItem(comment); });
   });
   $.ajaxSetup({ async: true });
 
   commentHtml += '</ul>';
-  commentDiv.innerHTML = commentHtml;
+  return commentHtml;
+}
+
+// eslint-disable-next-line no-unused-vars
+function onClickCommentPostButton(messageId) {
+  const comment = { messageId, userText: document.getElementById(messageId).value };
+  $.ajax({
+    contentType: 'application/json',
+    data: JSON.stringify(comment),
+    processData: false,
+    type: 'POST',
+    url: '/comments',
+  }).done(() => {
+    $(`#comment-container-${messageId}`).html(buildCommentHtml(messageId));
+  });
+}
+
+function buildCommentDiv(messageId) {
+  const commentDiv = document.createElement('div');
+  commentDiv.classList.add('px-2', 'py-1', 'border-top', 'collapse', 'comment-container');
+  commentDiv.id = `comment-container-${messageId}`;
+
+  commentDiv.innerHTML = buildCommentHtml(messageId);
   return commentDiv;
 }
 
@@ -321,7 +326,7 @@ function buildMessageDiv(message) {
     card.insertBefore(buildImageDiv(message), card.childNodes[0]);
   }
 
-  card.appendChild(buildCommentDiv(message));
+  card.appendChild(buildCommentDiv(message.id));
   cardContainer.appendChild(card);
   return cardContainer;
 }
