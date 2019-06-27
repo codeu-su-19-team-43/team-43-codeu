@@ -289,12 +289,14 @@ public class Datastore {
     userEntity.setProperty("website", user.getWebsite());
     userEntity.setProperty("aboutMe", user.getAboutMe());
     userEntity.setProperty("profileImageUrl", user.getProfileImageUrl());
+    userEntity.setProperty("favouriteMessageIdsAsStrings",
+            user.convertfavouriteMessageIdsToStrings(user.getFavouriteMessageIds()));
     datastore.put(userEntity);
   }
 
   /** Returns the User owned by the email address,
    * or null if no matching User was found.
-  */
+   */
   public User getUser(String email) {
     Query query = new Query("User")
         .setFilter(new Query.FilterPredicate("email", FilterOperator.EQUAL, email));
@@ -311,8 +313,15 @@ public class Datastore {
     String organization = (String) userEntity.getProperty("organization");
     String website = (String) userEntity.getProperty("website");
 
-    User user = new User(email, username, location, organization,
-                         website, aboutMe, profileImageUrl);
+    User user = new User(email, username, location, organization, website,
+            aboutMe, profileImageUrl);
+
+    if (userEntity.hasProperty("favouriteMessageIdsAsStrings")) {
+      user.setFavouriteMessageIds(user.convertStringsToFavouriteMessageIds(
+              (List<String>) userEntity.getProperty("favouriteMessageIdsAsStrings")
+      ));
+    }
+
     return user;
   }
 
@@ -325,5 +334,54 @@ public class Datastore {
       users.add((String) entity.getProperty("user"));
     }
     return users;
+  }
+
+  /**
+   * Adds a message as favourite for a user with given email.
+   */
+  public void addMessageToUserAsFavourite(String email, String messageId) {
+    User user = getUser(email);
+
+    if (user != null) {
+      List<UUID> favouriteMessages = user.getFavouriteMessageIds();
+      favouriteMessages.add(UUID.fromString(messageId));
+      user.setFavouriteMessageIds(favouriteMessages);
+      storeUser(user);
+    }
+  }
+
+  /**
+   * Returns favourite messages for user with given email.
+   */
+  public List<Message> getFavouriteMessagesForUser(String email) {
+    User user = getUser(email);
+    List<Message> favouriteMessages = new ArrayList<>();
+
+    try {
+      if (user.getFavouriteMessageIds().size() == 0) {
+        return favouriteMessages;
+      }
+
+      List<Key> keysForFavouriteMessages = new ArrayList<>();
+      for (String favouriteId: user.convertfavouriteMessageIdsToStrings(
+              user.getFavouriteMessageIds())) {
+        keysForFavouriteMessages.add(KeyFactory.createKey("Message", favouriteId));
+      }
+
+      Query query = new Query("Message")
+              .setFilter(new Query.FilterPredicate(
+                      Entity.KEY_RESERVED_PROPERTY,
+                      FilterOperator.IN,
+                      keysForFavouriteMessages
+              ));
+
+      PreparedQuery results = datastore.prepare(query);
+      favouriteMessages = convertMessagesFromQuery(results);
+    } catch (Exception e) {
+      System.err.println("Could not get favourite messages for user.");
+      e.printStackTrace();
+    }
+
+    return favouriteMessages;
   }
 }
