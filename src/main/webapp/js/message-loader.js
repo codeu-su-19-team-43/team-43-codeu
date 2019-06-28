@@ -195,24 +195,42 @@ function buildLikeCount(message) {
             <p class="reaction-count font-weight-light mb-0">${messageCount}</p>`;
 }
 
-function buildResponseDiv(message) {
-  const resonseDiv = document.createElement('div');
+function hasResponse(message) {
+  return ((message.commentIds != null && message.commentIds.length !== 0)
+    || (message.favouritedUserEmails != null && message.favouritedUserEmails.length !== 0)
+    || (message.likedUserEmails != null && message.likedUserEmails.length !== 0));
+}
 
-  resonseDiv.innerHTML = `<div id="response-container" class="response-container d-flex justify-content-between mt-2 pb-2 border-bottom">
-                            <span class="like-count-container d-flex flex-row" id="like-count-container-${message.id}">
-                              ${buildLikeCount(message)}
-                            </span>
-                            <div class="comment-favourite-container d-flex flex-row">
-                              <div id="comment-count-container-${message.id}">
-                                ${buildCommentCount(message)}
-                              </div>
-                              <div id="favourite-count-container-${message.id}">
-                                ${buildFavouriteCount(message)}
-                              </div>
+function toggleResponse(message) {
+  const responseDiv = document.getElementById(`response-container-${message.id}`);
+  if (hasResponse(message)) {
+    responseDiv.classList.remove('hidden');
+  } else {
+    responseDiv.classList.add('hidden');
+  }
+}
+
+function buildResponseDiv(message) {
+  const responseDiv = document.createElement('div');
+  responseDiv.id = `response-container-${message.id}`;
+  responseDiv.classList.add('response-container', 'd-flex', 'justify-content-between', 'mt-2', 'pb-2', 'border-bottom');
+
+  if (!hasResponse(message)) {
+    responseDiv.classList.add('hidden');
+  }
+
+  responseDiv.innerHTML = `<span class="like-count-container d-flex flex-row" id="like-count-container-${message.id}">
+                            ${buildLikeCount(message)}
+                          </span>
+                          <div class="comment-favourite-container d-flex flex-row">
+                            <div id="comment-count-container-${message.id}">
+                              ${buildCommentCount(message)}
+                            </div>
+                            <div id="favourite-count-container-${message.id}">
+                              ${buildFavouriteCount(message)}
                             </div>
                           </div>`;
-
-  return resonseDiv;
+  return responseDiv;
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -235,6 +253,7 @@ function onClickLikeIcon(messageId) {
               $(`#like-count-container-${messageId}`).html(
                 buildLikeCount(message),
               );
+              toggleResponse(message);
             });
         });
       }
@@ -261,6 +280,7 @@ function onClickFavouriteButton(messageId) {
               $(`#favourite-count-container-${messageId}`).html(
                 buildFavouriteCount(message),
               );
+              toggleResponse(message);
             });
         });
       }
@@ -360,6 +380,7 @@ function onCommentPost(messageId) {
       $(`#comment-count-container-${messageId}`).html(
         buildCommentCount(message),
       );
+      toggleResponse(message);
     });
 }
 
