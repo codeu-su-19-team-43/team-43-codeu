@@ -58,7 +58,8 @@ public class Datastore {
     messageEntity.setProperty("imageLong", message.getImageLong());
     messageEntity.setProperty("sentimentScore", message.getSentimentScore());
     messageEntity.setProperty("commentIdsAsStrings",
-            message.convertCommentIdsToStrings(message.getCommentIds()));
+            message.convertUUIDsToStrings(message.getCommentIds()));
+    messageEntity.setProperty("favouritedUserEmails",message.getFavouritedUserEmails());
     datastore.put(messageEntity);
   }
 
@@ -154,9 +155,13 @@ public class Datastore {
     }
 
     if (entity.hasProperty("commentIdsAsStrings")) {
-      message.setCommentIds(message.convertStringsToCommentIds(
+      message.setCommentIds(message.convertStringsToUUIDs(
               (List<String>) entity.getProperty("commentIdsAsStrings")
       ));
+    }
+
+    if (entity.hasProperty("favouritedUserEmails")) {
+      message.setFavouritedUserEmails((List<String>) entity.getProperty("favouritedUserEmails"));
     }
 
     return message;
@@ -224,7 +229,7 @@ public class Datastore {
       }
 
       List<Key> keysForComments = new ArrayList<>();
-      for (String commentId: message.convertCommentIdsToStrings(message.getCommentIds())) {
+      for (String commentId: message.convertUUIDsToStrings(message.getCommentIds())) {
         keysForComments.add(KeyFactory.createKey("Comment", commentId));
       }
 
@@ -337,16 +342,46 @@ public class Datastore {
   }
 
   /**
+   * Adds the email of the user who newly add the message as favourite to the message
+   */
+  public void addFavouritedUserEmailToMessage(String messageId, String email) {
+    try {
+      // Add ID of the user who newly marked the message as favourite to message.
+      Message message = getMessage(messageId);
+      List<String> favouritedUserEmailes = message.getFavouritedUserEmails();
+
+      if (favouritedUserEmailes == null) {
+        favouritedUserEmailes = new ArrayList<>();
+      }
+      favouritedUserEmailes.add(email);
+      message.setFavouritedUserEmails(favouritedUserEmailes);
+      storeMessage(message);
+
+    } catch (Exception e) {
+      System.err.println("Error adding user to message.");
+      e.printStackTrace();
+    }
+  }
+
+  /**
    * Adds a message as favourite for a user with given email.
    */
   public void addMessageToUserAsFavourite(String email, String messageId) {
     User user = getUser(email);
+    System.out.println(user);
+    System.out.println(email);
 
     if (user != null) {
       List<UUID> favouriteMessages = user.getFavouriteMessageIds();
+      if (favouriteMessages == null) {
+        favouriteMessages = new ArrayList<>();
+      }
       favouriteMessages.add(UUID.fromString(messageId));
+      System.out.println("Log: user.setFavouriteMessageIds(favouriteMessages);");
       user.setFavouriteMessageIds(favouriteMessages);
       storeUser(user);
+
+      addFavouritedUserEmailToMessage(messageId, email);
     }
   }
 
@@ -358,7 +393,7 @@ public class Datastore {
     List<Message> favouriteMessages = new ArrayList<>();
 
     try {
-      if (user.getFavouriteMessageIds().size() == 0) {
+      if (user.getFavouriteMessageIds() == null || user.getFavouriteMessageIds().size() == 0) {
         return favouriteMessages;
       }
 

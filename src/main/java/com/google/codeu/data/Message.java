@@ -16,9 +16,9 @@
 
 package com.google.codeu.data;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,6 +47,7 @@ public class Message {
   private double sentimentScore;
 
   private List<UUID> commentIds;
+  private List<String> favouritedUserEmails;
 
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text}. 
@@ -70,32 +71,22 @@ public class Message {
   /**
    * Converts list of comment IDs as strings to list of comment IDs as UUIDs.
    */
-  public List<UUID> convertStringsToCommentIds(List<String> commentIdsAsStrings) {
-    if (commentIdsAsStrings == null) {
-      return new ArrayList<>();
-    }
+  public List<UUID> convertStringsToUUIDs(List<String> UUIDStrings) {
 
-    List<UUID> commentIds = new ArrayList<>();
-    for (String commentIdAsString: commentIdsAsStrings) {
-      commentIds.add(UUID.fromString(commentIdAsString));
+    if (UUIDStrings == null) {
+      return null;
     }
-
-    return commentIds;
+    return UUIDStrings.stream().map(UUID::fromString).collect(Collectors.toList());
   }
 
   /**
    * Converts list of comment IDs as UUIDs to list of comment IDs as strings.
    */
-  public List<String> convertCommentIdsToStrings(List<UUID> commentIds) {
-    if (commentIds == null) {
-      return new ArrayList<>();
-    }
+  public List<String> convertUUIDsToStrings(List<UUID> UUIDs) {
 
-    List<String> commentIdsAsStrings = new ArrayList<>();
-    for (UUID commentId: commentIds) {
-      commentIdsAsStrings.add(commentId.toString());
+    if (UUIDs == null) {
+      return null;
     }
-
-    return commentIdsAsStrings;
+    return UUIDs.stream().map(UUID::toString).collect(Collectors.toList());
   }
 }
