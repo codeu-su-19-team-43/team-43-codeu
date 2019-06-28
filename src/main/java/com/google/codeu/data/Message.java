@@ -48,6 +48,7 @@ public class Message {
 
   private List<UUID> commentIds;
   private List<String> favouritedUserEmails;
+  private List<String> likedUserEmails;
 
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text}. 
