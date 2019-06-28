@@ -166,31 +166,82 @@ function buildImageDiv(message) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function onCLickCommentCount() {
+function onClickCommentCount() {
   document.getElementById('comment-container').classList.remove('hidden');
+}
+
+function buildCommentCount(message) {
+  // eslint-disable-next-line no-nested-ternary
+  return (message.commentIds == null || message.commentIds.length === 0)
+    ? '' : message.commentIds.length === 1
+      ? `<p class="text-muted font-weight-light pr-2 mb-0" data-toggle="collapse" data-target="#comment-container-${message.id}">1 comment</p>`
+      : `<p class="text-muted font-weight-light pr-2 mb-0" data-toggle="collapse" data-target="#comment-container-${message.id}">${message.commentIds.length} comments</p>`;
+}
+
+function buildFavouriteCount(message) {
+  // eslint-disable-next-line no-nested-ternary
+  return (message.favouritedUserEmails == null
+    || message.favouritedUserEmails.length === 0)
+    ? '' : message.favouritedUserEmails.length === 1
+      ? '<p class="text-muted font-weight-light mb-0">1 Favourite</p>'
+      : `<p class="text-muted font-weight-light mb-0">${message.favouritedUserEmails.length} Favourites</p>`;
 }
 
 function buildResponseDiv(message) {
   const resonseDiv = document.createElement('div');
-  resonseDiv.innerHTML = `<div id="response-container" class="response-container d-flex justify-content-between mt-2 pb-2 border-bottom">
-                            <span class="reaction-container d-flex flex-row">
-                              <i class="reaction-icon far fa-thumbs-up mr-1"></i>
-                              <p class="reaction-count font-weight-light mb-0">10</p>
-                            </span>
-                            <div class="comment-share-container d-flex flex-row">
-                              <p class="text-muted font-weight-light pr-2 mb-0" data-toggle="collapse" data-target="#comment-container-${message.id}">10 comments</p>
-                              <p class="text-muted font-weight-light mb-0">5 saves</p>
-                            </div>
-                         </div>`;
+  let responseHtml = `<div id="response-container" class="response-container d-flex justify-content-between mt-2 pb-2 border-bottom">
+                        <span class="reaction-container d-flex flex-row">
+                          <i class="reaction-icon far fa-thumbs-up mr-1"></i>
+                          <p class="reaction-count font-weight-light mb-0">10</p>
+                        </span>
+                        <div class="comment-favourite-container d-flex flex-row">`;
+
+  responseHtml += `<div id="comment-count-container-${message.id}">`;
+  responseHtml += buildCommentCount(message);
+  responseHtml += '</div>';
+
+  responseHtml += `<div id="favourite-count-container-${message.id}">`;
+  responseHtml += buildFavouriteCount(message);
+  responseHtml += '</div></div></div>';
+  resonseDiv.innerHTML += responseHtml;
   return resonseDiv;
 }
 
-function buildActionDiv(message) {
+
+// eslint-disable-next-line no-unused-vars
+function onClickFavouriteButton(messageId) {
+  fetch('/login-status')
+    .then(response => response.json())
+    .then((loginStatus) => {
+      if (loginStatus.isLoggedIn) {
+        const data = { userEmail: loginStatus.username, messageId };
+        $.ajax({
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          processData: false,
+          type: 'POST',
+          url: '/favourite',
+        }).done(() => {
+          fetch(`/message?messageId=${messageId}`)
+            .then(response => response.json())
+            .then((message) => {
+              $(`#favourite-count-container-${messageId}`).html(
+                buildFavouriteCount(message),
+              );
+            });
+        });
+      }
+    });
+}
+
+function buildActionDiv(messageId) {
   const actionDiv = document.createElement('div');
   actionDiv.innerHTML = `<div id="action-container" class="action-container d-flex justify-content-between mt-2 pb-2">
                             <button class="btn btn-light btn-sm action-icon-container font-weight-light"><i class="action-icon far fa-thumbs-up mr-1"></i>Like</button>
-                            <button class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${message.id}"><i class="far fa-comment-alt mr-1"></i>Comment</button>
-                            <button class="btn btn-light btn-sm font-weight-light"><i class="far fa-heart mr-1"></i>Save</button>
+                            <button class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${messageId}"><i class="far fa-comment-alt mr-1"></i>Comment</button>
+                            <button class="btn btn-light btn-sm font-weight-light" onclick="onClickFavouriteButton('${messageId}');">
+                              <i class="far fa-heart mr-1"></i>Favourite
+                            </button>
                          </div>`;
   return actionDiv;
 }
@@ -243,13 +294,13 @@ function buildCommentItem(comment) {
             </a>
             <div class="media-body">
               <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">${comment.user}</p></a>
-              <p class="font-weight-light comment-text">${comment.text}</p>
+              <p class="font-weight-light comment-text mb-0">${comment.text}</p>
             </div>
           </li>`;
 }
 
 function buildCommentHtml(messageId) {
-  let commentHtml = `<ul class="list-unstyled comment-list" id="comment-list-${messageId}">`;
+  let commentHtml = `<ul class="list-unstyled comment-list mb-0" id="comment-list-${messageId}">`;
   commentHtml += buildCommentInput(messageId);
 
   $.ajaxSetup({ async: false });
@@ -260,6 +311,16 @@ function buildCommentHtml(messageId) {
 
   commentHtml += '</ul>';
   return commentHtml;
+}
+
+function onCommentPost(messageId) {
+  fetch(`/message?messageId=${messageId}`)
+    .then(response => response.json())
+    .then((message) => {
+      $(`#comment-count-container-${messageId}`).html(
+        buildCommentCount(message),
+      );
+    });
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -273,6 +334,7 @@ function onClickCommentPostButton(messageId) {
     url: '/comments',
   }).done(() => {
     $(`#comment-container-${messageId}`).html(buildCommentHtml(messageId));
+    onCommentPost(messageId);
   });
 }
 
@@ -303,7 +365,7 @@ function buildCardBodyDiv(message) {
   cardBody.appendChild(translateResult);
 
   cardBody.appendChild(buildResponseDiv(message));
-  cardBody.appendChild(buildActionDiv(message));
+  cardBody.appendChild(buildActionDiv(message.id));
 
   return cardBody;
 }
@@ -351,7 +413,7 @@ function fetchMessagesFromUrl(url) {
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchMessagesByUser(parameterUsername) {
-  const url = `/messages?user=${parameterUsername}`;
+  const url = `/user-messages?user=${parameterUsername}`;
   fetchMessagesFromUrl(url);
 }
 
