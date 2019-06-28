@@ -100,19 +100,22 @@ function buildInfoDiv(message) {
  * @return {Element}
  */
 function buildMessageDiv(message) {
+  const cardContainer = document.createElement('div');
+  cardContainer.classList.add('card', 'p-2', 'border-0');
+
   const card = document.createElement('div');
-  card.classList.add('card');
+  card.classList.add('border');
 
   const cardBody = document.createElement('div');
   cardBody.classList.add('card-body');
 
   const usernameDiv = document.createElement('h5');
-  usernameDiv.classList.add('card-title');
+  usernameDiv.classList.add('card-title', 'mb-0');
   usernameDiv.appendChild(document.createTextNode(message.user));
   cardBody.appendChild(usernameDiv);
 
   const timeDiv = document.createElement('p');
-  timeDiv.classList.add('card-text');
+  timeDiv.classList.add('card-text', 'mb-0');
 
   const timeText = document.createElement('small');
   timeText.classList.add('text-muted');
@@ -123,8 +126,19 @@ function buildMessageDiv(message) {
   timeDiv.appendChild(timeText);
   cardBody.appendChild(timeDiv);
 
+  if (message.imageLandmark != null && message.imageLandmark !== '') {
+    const landmarkDiv = document.createElement('div');
+    landmarkDiv.classList.add('mb-2', 'imageLandmark-container');
+    landmarkDiv.innerHTML = `<a href="#" class="card-text">${message.imageLandmark}</a>`;
+    cardBody.appendChild(landmarkDiv);
+
+    // console.log(message.imageLandmark);
+    // console.log(message.imageLat);
+    // console.log(message.imageLong);
+  }
+
   const textDiv = document.createElement('p');
-  textDiv.classList.add('card-text');
+  textDiv.classList.add('card-text', 'border-top', 'pt-2');
   textDiv.innerHTML = message.text;
   cardBody.appendChild(textDiv);
 
@@ -158,7 +172,9 @@ function buildMessageDiv(message) {
     card.appendChild(labelDiv);
   }
 
-  return card;
+  cardContainer.appendChild(card);
+
+  return cardContainer;
 }
 
 function fetchMessagesFromUrl(url) {
