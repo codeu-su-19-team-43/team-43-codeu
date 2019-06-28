@@ -187,26 +187,59 @@ function buildFavouriteCount(message) {
       : `<p class="text-muted font-weight-light mb-0">${message.favouritedUserEmails.length} Favourites</p>`;
 }
 
+function buildLikeCount(message) {
+  const messageCount = (message.likedUserEmails == null || message.likedUserEmails.length === 0)
+    ? '' : message.likedUserEmails.length;
+  return (message.likedUserEmails == null || message.likedUserEmails.length === 0)
+    ? '' : `<i class="reaction-icon far fa-thumbs-up mr-1"></i>
+            <p class="reaction-count font-weight-light mb-0">${messageCount}</p>`;
+}
+
 function buildResponseDiv(message) {
   const resonseDiv = document.createElement('div');
-  let responseHtml = `<div id="response-container" class="response-container d-flex justify-content-between mt-2 pb-2 border-bottom">
-                        <span class="reaction-container d-flex flex-row">
-                          <i class="reaction-icon far fa-thumbs-up mr-1"></i>
-                          <p class="reaction-count font-weight-light mb-0">10</p>
-                        </span>
-                        <div class="comment-favourite-container d-flex flex-row">`;
 
-  responseHtml += `<div id="comment-count-container-${message.id}">`;
-  responseHtml += buildCommentCount(message);
-  responseHtml += '</div>';
+  resonseDiv.innerHTML = `<div id="response-container" class="response-container d-flex justify-content-between mt-2 pb-2 border-bottom">
+                            <span class="like-count-container d-flex flex-row" id="like-count-container-${message.id}">
+                              ${buildLikeCount(message)}
+                            </span>
+                            <div class="comment-favourite-container d-flex flex-row">
+                              <div id="comment-count-container-${message.id}">
+                                ${buildCommentCount(message)}
+                              </div>
+                              <div id="favourite-count-container-${message.id}">
+                                ${buildFavouriteCount(message)}
+                              </div>
+                            </div>
+                          </div>`;
 
-  responseHtml += `<div id="favourite-count-container-${message.id}">`;
-  responseHtml += buildFavouriteCount(message);
-  responseHtml += '</div></div></div>';
-  resonseDiv.innerHTML += responseHtml;
   return resonseDiv;
 }
 
+// eslint-disable-next-line no-unused-vars
+function onClickLikeIcon(messageId) {
+  fetch('/login-status')
+    .then(response => response.json())
+    .then((loginStatus) => {
+      if (loginStatus.isLoggedIn) {
+        const data = { userEmail: loginStatus.username, messageId };
+        $.ajax({
+          contentType: 'application/json',
+          data: JSON.stringify(data),
+          processData: false,
+          type: 'POST',
+          url: '/like',
+        }).done(() => {
+          fetch(`/message?messageId=${messageId}`)
+            .then(response => response.json())
+            .then((message) => {
+              $(`#like-count-container-${messageId}`).html(
+                buildLikeCount(message),
+              );
+            });
+        });
+      }
+    });
+}
 
 // eslint-disable-next-line no-unused-vars
 function onClickFavouriteButton(messageId) {
@@ -237,11 +270,18 @@ function onClickFavouriteButton(messageId) {
 function buildActionDiv(messageId) {
   const actionDiv = document.createElement('div');
   actionDiv.innerHTML = `<div id="action-container" class="action-container d-flex justify-content-between mt-2 pb-2">
-                            <button class="btn btn-light btn-sm action-icon-container font-weight-light"><i class="action-icon far fa-thumbs-up mr-1"></i>Like</button>
-                            <button class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${messageId}"><i class="far fa-comment-alt mr-1"></i>Comment</button>
-                            <button class="btn btn-light btn-sm font-weight-light" onclick="onClickFavouriteButton('${messageId}');">
-                              <i class="far fa-heart mr-1"></i>Favourite
-                            </button>
+                          <button class="btn btn-light btn-sm action-icon-container font-weight-light" onclick="onClickLikeIcon('${messageId}');">
+                            <i class="action-icon far fa-thumbs-up mr-1"></i>
+                            Like
+                          </button>
+                          <button class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${messageId}">
+                            <i class="far fa-comment-alt mr-1"></i>
+                            Comment
+                          </button>
+                          <button class="btn btn-light btn-sm font-weight-light" onclick="onClickFavouriteButton('${messageId}');">
+                            <i class="far fa-heart mr-1"></i>
+                            Favourite
+                          </button>
                          </div>`;
   return actionDiv;
 }
