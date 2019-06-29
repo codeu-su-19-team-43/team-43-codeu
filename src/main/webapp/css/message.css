@@ -1,3 +1,7 @@
+.hidden {
+  display: none;
+}
+
 .card-footer > a > .tag-button {
   line-height: normal;
   font-size: small;
@@ -11,7 +15,63 @@
   padding-right: 0.5em;
 }
 
-.card-body > .imageLandmark-container {
+.imageLandmark-container {
   line-height: 1em;
-  font-size: 80%;;
+  font-size: 80%;
+}
+
+.comment-input-container {
+  margin-left: -0.15em;
+}
+
+.input-group> textarea {
+  resize: none;
+  overflow: hidden;
+  min-height: 32px;
+  height: 32px;
+  max-height: 100px;
+}
+
+.comment-image {
+  object-fit: cover;
+  width: 32px;
+  height: 32px;
+}
+
+.media-body > a:hover {
+  text-decoration: none;
+}
+
+.comment-username {
+  font-size: 0.9em;
+  color: black;
+}
+
+.comment-text {
+  font-size: 0.8em;
+}
+
+.image-label-container {
+  max-height: 4.6em;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  bottom: 0;
+}
+
+.response-container {
+  font-size: 0.85em;
+}
+
+.reaction-icon {
+  line-height: 1.2em;
+  font-size: 1.2em;
+}
+
+.action-container > * {
+  width: 33%;
+}
+
+.comment-favourite-container > * {
+  cursor: pointer;
 }

@@ -82,6 +82,7 @@ public class FavouriteMessageServlet extends HttpServlet {
       return;
     }
 
-    datastore.addMessageToUserAsFavourite(userEmail, messageId);
+    datastore.resetMessageToUserAsFavourite(userEmail, messageId);
+    datastore.resetFavouritedUserEmailToMessage(userEmail, messageId);
   }
 }

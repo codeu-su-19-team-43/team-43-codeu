@@ -106,7 +106,7 @@ function fetchProfileImage() {
 
 // eslint-disable-next-line no-unused-vars
 function fetchBlobstoreUrlAndShowMessageForm() {
-  fetch('/blobstore-upload-url?form=messages')
+  fetch('/blobstore-upload-url?form=user-messages')
     .then(response => response.text())
     .then((imageUploadUrl) => {
       const messageForm = document.getElementById('message-form');

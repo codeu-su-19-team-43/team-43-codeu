@@ -58,7 +58,9 @@ public class Datastore {
     messageEntity.setProperty("imageLong", message.getImageLong());
     messageEntity.setProperty("sentimentScore", message.getSentimentScore());
     messageEntity.setProperty("commentIdsAsStrings",
-            message.convertCommentIdsToStrings(message.getCommentIds()));
+            message.convertUuidsToStrings(message.getCommentIds()));
+    messageEntity.setProperty("favouritedUserEmails",message.getFavouritedUserEmails());
+    messageEntity.setProperty("likedUserEmails",message.getLikedUserEmails());
     datastore.put(messageEntity);
   }
 
@@ -154,9 +156,17 @@ public class Datastore {
     }
 
     if (entity.hasProperty("commentIdsAsStrings")) {
-      message.setCommentIds(message.convertStringsToCommentIds(
+      message.setCommentIds(message.convertStringsToUuids(
               (List<String>) entity.getProperty("commentIdsAsStrings")
       ));
+    }
+
+    if (entity.hasProperty("favouritedUserEmails")) {
+      message.setFavouritedUserEmails((List<String>) entity.getProperty("favouritedUserEmails"));
+    }
+
+    if (entity.hasProperty("likedUserEmails")) {
+      message.setLikedUserEmails((List<String>) entity.getProperty("likedUserEmails"));
     }
 
     return message;
@@ -179,6 +189,10 @@ public class Datastore {
       // Add new comment ID to message.
       Message message = getMessage(messageId);
       List<UUID> commentIds = message.getCommentIds();
+
+      if (commentIds == null) {
+        commentIds = new ArrayList<>();
+      }
       commentIds.add(comment.getId());
       message.setCommentIds(commentIds);
       storeMessage(message);
@@ -220,7 +234,7 @@ public class Datastore {
       }
 
       List<Key> keysForComments = new ArrayList<>();
-      for (String commentId: message.convertCommentIdsToStrings(message.getCommentIds())) {
+      for (String commentId: message.convertUuidsToStrings(message.getCommentIds())) {
         keysForComments.add(KeyFactory.createKey("Comment", commentId));
       }
 
@@ -332,14 +346,70 @@ public class Datastore {
     return users;
   }
 
+  /**  Toggle the existence of a string in a list. */
+  public List<String> toggleStringInList(List<String> list, String element) {
+    if (list.contains(element)) {
+      list.remove(element);
+    } else {
+      list.add(element);
+    }
+    return list;
+  }
+
+  /**
+   * Adds the email of the user who newly likes the message as favourite to the message.
+   */
+  public void resetLikedUserEmailToMessage(String email, String messageId) {
+    try {
+      // Add ID of the user who newly marked the message as favourite to message.
+      Message message = getMessage(messageId);
+      List<String> likedUserEmails = message.getLikedUserEmails();
+
+      if (likedUserEmails == null) {
+        likedUserEmails = new ArrayList<>();
+      }
+
+      message.setLikedUserEmails(toggleStringInList(likedUserEmails, email));
+      storeMessage(message);
+
+    } catch (Exception e) {
+      System.err.println("Error adding user to message.");
+      e.printStackTrace();
+    }
+  }
+
+  /**
+   * Adds the email of the user who newly adds the message as favourite to the message.
+   */
+  public void resetFavouritedUserEmailToMessage(String email, String messageId) {
+    try {
+      // Add ID of the user who newly marked the message as favourite to message.
+      Message message = getMessage(messageId);
+      List<String> favouritedUserEmailes = message.getFavouritedUserEmails();
+
+      if (favouritedUserEmailes == null) {
+        favouritedUserEmailes = new ArrayList<>();
+      }
+
+      message.setFavouritedUserEmails(toggleStringInList(favouritedUserEmailes, email));
+      storeMessage(message);
+
+    } catch (Exception e) {
+      System.err.println("Error adding user to message.");
+      e.printStackTrace();
+    }
+  }
+
   /**
    * Adds a message as favourite for a user with given email.
    */
-  public void addMessageToUserAsFavourite(String email, String messageId) {
+  public void resetMessageToUserAsFavourite(String email, String messageId) {
     User user = getUser(email);
-
     if (user != null) {
       List<UUID> favouriteMessages = user.getFavouriteMessageIds();
+      if (favouriteMessages == null) {
+        favouriteMessages = new ArrayList<>();
+      }
       favouriteMessages.add(UUID.fromString(messageId));
       user.setFavouriteMessageIds(favouriteMessages);
       storeUser(user);
@@ -354,7 +424,7 @@ public class Datastore {
     List<Message> favouriteMessages = new ArrayList<>();
 
     try {
-      if (user.getFavouriteMessageIds().size() == 0) {
+      if (user.getFavouriteMessageIds() == null || user.getFavouriteMessageIds().size() == 0) {
         return favouriteMessages;
       }
 
