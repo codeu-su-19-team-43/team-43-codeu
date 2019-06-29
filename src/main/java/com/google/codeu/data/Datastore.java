@@ -58,7 +58,7 @@ public class Datastore {
     messageEntity.setProperty("imageLong", message.getImageLong());
     messageEntity.setProperty("sentimentScore", message.getSentimentScore());
     messageEntity.setProperty("commentIdsAsStrings",
-            message.convertUUIDsToStrings(message.getCommentIds()));
+            message.convertUuidsToStrings(message.getCommentIds()));
     messageEntity.setProperty("favouritedUserEmails",message.getFavouritedUserEmails());
     messageEntity.setProperty("likedUserEmails",message.getLikedUserEmails());
     datastore.put(messageEntity);
@@ -156,7 +156,7 @@ public class Datastore {
     }
 
     if (entity.hasProperty("commentIdsAsStrings")) {
-      message.setCommentIds(message.convertStringsToUUIDs(
+      message.setCommentIds(message.convertStringsToUuids(
               (List<String>) entity.getProperty("commentIdsAsStrings")
       ));
     }
@@ -234,7 +234,7 @@ public class Datastore {
       }
 
       List<Key> keysForComments = new ArrayList<>();
-      for (String commentId: message.convertUUIDsToStrings(message.getCommentIds())) {
+      for (String commentId: message.convertUuidsToStrings(message.getCommentIds())) {
         keysForComments.add(KeyFactory.createKey("Comment", commentId));
       }
 

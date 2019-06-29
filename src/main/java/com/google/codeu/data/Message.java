@@ -72,7 +72,7 @@ public class Message {
   /**
    * Converts list of comment IDs as strings to list of comment IDs as UUIDs.
    */
-  public List<UUID> convertStringsToUUIDs(List<String> uuidStrings) {
+  public List<UUID> convertStringsToUuids(List<String> uuidStrings) {
 
     if (uuidStrings == null) {
       return null;
@@ -83,7 +83,7 @@ public class Message {
   /**
    * Converts list of comment IDs as UUIDs to list of comment IDs as strings.
    */
-  public List<String> convertUUIDsToStrings(List<UUID> uuids) {
+  public List<String> convertUuidsToStrings(List<UUID> uuids) {
 
     if (uuids == null) {
       return null;

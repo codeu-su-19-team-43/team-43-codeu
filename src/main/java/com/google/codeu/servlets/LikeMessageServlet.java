@@ -13,7 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Handles recording liked users for a message
+ * Handles recording liked users for a message.
  */
 @WebServlet("/like")
 public class LikeMessageServlet extends HttpServlet {
