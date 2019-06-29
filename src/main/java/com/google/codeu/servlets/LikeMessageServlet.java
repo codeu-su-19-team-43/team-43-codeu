@@ -53,7 +53,7 @@ public class LikeMessageServlet extends HttpServlet {
       return;
     }
 
-    datastore.addLikedUserEmailToMessage(userEmail, messageId);
+    datastore.resetLikedUserEmailToMessage(userEmail, messageId);
   }
 
 }

@@ -346,10 +346,19 @@ public class Datastore {
     return users;
   }
 
+  public List<String> toggleStringInList(List<String> list, String element) {
+    if (list.contains(element)) {
+      list.remove(element);
+    } else {
+      list.add(element);
+    }
+    return list;
+  }
+
   /**
    * Adds the email of the user who newly likes the message as favourite to the message
    */
-  public void addLikedUserEmailToMessage(String email, String messageId) {
+  public void resetLikedUserEmailToMessage(String email, String messageId) {
     try {
       // Add ID of the user who newly marked the message as favourite to message.
       Message message = getMessage(messageId);
@@ -358,8 +367,8 @@ public class Datastore {
       if (likedUserEmails == null) {
         likedUserEmails = new ArrayList<>();
       }
-      likedUserEmails.add(email);
-      message.setLikedUserEmails(likedUserEmails);
+
+      message.setLikedUserEmails(toggleStringInList(likedUserEmails, email));
       storeMessage(message);
 
     } catch (Exception e) {
@@ -371,7 +380,7 @@ public class Datastore {
   /**
    * Adds the email of the user who newly adds the message as favourite to the message
    */
-  public void addFavouritedUserEmailToMessage(String email, String messageId) {
+  public void resetFavouritedUserEmailToMessage(String email, String messageId) {
     try {
       // Add ID of the user who newly marked the message as favourite to message.
       Message message = getMessage(messageId);
@@ -380,8 +389,8 @@ public class Datastore {
       if (favouritedUserEmailes == null) {
         favouritedUserEmailes = new ArrayList<>();
       }
-      favouritedUserEmailes.add(email);
-      message.setFavouritedUserEmails(favouritedUserEmailes);
+
+      message.setFavouritedUserEmails(toggleStringInList(favouritedUserEmailes, email));
       storeMessage(message);
 
     } catch (Exception e) {
@@ -393,7 +402,7 @@ public class Datastore {
   /**
    * Adds a message as favourite for a user with given email.
    */
-  public void addMessageToUserAsFavourite(String email, String messageId) {
+  public void resetMessageToUserAsFavourite(String email, String messageId) {
     User user = getUser(email);
     if (user != null) {
       List<UUID> favouriteMessages = user.getFavouriteMessageIds();
@@ -403,8 +412,6 @@ public class Datastore {
       favouriteMessages.add(UUID.fromString(messageId));
       user.setFavouriteMessageIds(favouriteMessages);
       storeUser(user);
-
-      addFavouritedUserEmailToMessage(email, messageId);
     }
   }
 
