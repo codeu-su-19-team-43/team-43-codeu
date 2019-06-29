@@ -4,12 +4,12 @@ const parameterImageLabels = urlParams.getAll('imageLabel');
 function fetchImageLabels() {
   if (parameterImageLabels != null) {
     parameterImageLabels.forEach((parameterImageLabel) => {
-      const imageLabelContainer = document.getElementById('image-label-container');
+      const searchTagContainer = document.getElementById('search-tag-container');
       const imageLabelButton = document.createElement('div');
       imageLabelButton.innerHTML = `<button type="button" class="btn btn-info btn-sm mr-2 mb-2 pr-1 imageLabelButton">
                                       <span class="mr-1">${parameterImageLabel}</span>  <span onClick="onClickImageLabelCancelButton('${parameterImageLabel}')">&times;</span>
                                     </button>`;
-      imageLabelContainer.appendChild(imageLabelButton);
+      searchTagContainer.appendChild(imageLabelButton);
     });
   }
 }
