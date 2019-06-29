@@ -72,22 +72,22 @@ public class Message {
   /**
    * Converts list of comment IDs as strings to list of comment IDs as UUIDs.
    */
-  public List<UUID> convertStringsToUUIDs(List<String> UUIDStrings) {
+  public List<UUID> convertStringsToUUIDs(List<String> uuidStrings) {
 
-    if (UUIDStrings == null) {
+    if (uuidStrings == null) {
       return null;
     }
-    return UUIDStrings.stream().map(UUID::fromString).collect(Collectors.toList());
+    return uuidStrings.stream().map(UUID::fromString).collect(Collectors.toList());
   }
 
   /**
    * Converts list of comment IDs as UUIDs to list of comment IDs as strings.
    */
-  public List<String> convertUUIDsToStrings(List<UUID> UUIDs) {
+  public List<String> convertUUIDsToStrings(List<UUID> uuids) {
 
-    if (UUIDs == null) {
+    if (uuids == null) {
       return null;
     }
-    return UUIDs.stream().map(UUID::toString).collect(Collectors.toList());
+    return uuids.stream().map(UUID::toString).collect(Collectors.toList());
   }
 }

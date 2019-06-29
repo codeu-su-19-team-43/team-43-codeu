@@ -33,7 +33,7 @@ public class LikeMessageServlet extends HttpServlet {
   }
 
   /**
-   * Stores a new user email to the likedUserEmail of the message
+   * Stores a new user email to the likedUserEmail of the message.
    * Request body should contain userEmail and messageId.
    */
   @Override

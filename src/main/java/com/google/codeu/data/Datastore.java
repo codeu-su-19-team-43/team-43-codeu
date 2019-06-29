@@ -346,6 +346,7 @@ public class Datastore {
     return users;
   }
 
+  /**  Toggle the existence of a string in a list. */
   public List<String> toggleStringInList(List<String> list, String element) {
     if (list.contains(element)) {
       list.remove(element);
@@ -356,7 +357,7 @@ public class Datastore {
   }
 
   /**
-   * Adds the email of the user who newly likes the message as favourite to the message
+   * Adds the email of the user who newly likes the message as favourite to the message.
    */
   public void resetLikedUserEmailToMessage(String email, String messageId) {
     try {
@@ -378,7 +379,7 @@ public class Datastore {
   }
 
   /**
-   * Adds the email of the user who newly adds the message as favourite to the message
+   * Adds the email of the user who newly adds the message as favourite to the message.
    */
   public void resetFavouritedUserEmailToMessage(String email, String messageId) {
     try {
