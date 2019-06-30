@@ -305,6 +305,49 @@ public class Datastore {
     datastore.put(userEntity);
   }
 
+  /**
+   * Convert query to users.
+   */
+  public List<User> convertUsersFromQuery(PreparedQuery results) {
+    List<User> users = new ArrayList<>();
+
+    for (Entity entity: results.asIterable()) {
+      try {
+        User user = convertUserFromEntity(entity);
+        users.add(user);
+      } catch (Exception e) {
+        System.err.println("Error reading user.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+
+    return users;
+  }
+
+  /**
+   * Converts user entity to {@link User}.
+   */
+  public User convertUserFromEntity(Entity userEntity) {
+    String email = (String) userEntity.getProperty("email");
+    String aboutMe = (String) userEntity.getProperty("aboutMe");
+    String username = (String) userEntity.getProperty("username");
+    String profileImageUrl = (String) userEntity.getProperty("profileImageUrl");
+    String location = (String) userEntity.getProperty("location");
+    String organization = (String) userEntity.getProperty("organization");
+    String website = (String) userEntity.getProperty("website");
+    User user = new User(email, username, location, organization, website,
+        aboutMe, profileImageUrl);
+
+    if (userEntity.hasProperty("favouriteMessageIdsAsStrings")) {
+      user.setFavouriteMessageIds(Util.convertStringsToUuids(
+              (List<String>) userEntity.getProperty("favouriteMessageIdsAsStrings")
+      ));
+    }
+
+    return user;
+  }
+
   /** Returns the User owned by the email address,
    * or null if no matching User was found.
    */
@@ -316,34 +359,17 @@ public class Datastore {
     if (userEntity == null) {
       return null;
     }
-    
-    String aboutMe = (String) userEntity.getProperty("aboutMe");
-    String username = (String) userEntity.getProperty("username");
-    String profileImageUrl = (String) userEntity.getProperty("profileImageUrl");
-    String location = (String) userEntity.getProperty("location");
-    String organization = (String) userEntity.getProperty("organization");
-    String website = (String) userEntity.getProperty("website");
 
-    User user = new User(email, username, location, organization, website,
-            aboutMe, profileImageUrl);
-
-    if (userEntity.hasProperty("favouriteMessageIdsAsStrings")) {
-      user.setFavouriteMessageIds(Util.convertStringsToUuids(
-              (List<String>) userEntity.getProperty("favouriteMessageIdsAsStrings")
-      ));
-    }
+    User user = convertUserFromEntity(userEntity);
 
     return user;
   }
 
   /** Returns all users. */
-  public Set<String> getUsers() {
-    Set<String> users = new HashSet<>();
-    Query query = new Query("Message");
+  public List<User> getUsers() {
+    Query query = new Query("User");
     PreparedQuery results = datastore.prepare(query);
-    for (Entity entity: results.asIterable()) {
-      users.add((String) entity.getProperty("user"));
-    }
+    List<User> users = convertUsersFromQuery(results);
     return users;
   }
 
