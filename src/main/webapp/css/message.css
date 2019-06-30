@@ -61,6 +61,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0;
+  overflow: hidden;
 }
 
 .response-container {

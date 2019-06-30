@@ -513,11 +513,7 @@ function buildMessagesDivFromUrl(url, parentId) {
     .then(response => response.json())
     .then((messages) => {
       const messagesContainer = document.getElementById(parentId);
-      if (messages.length === 0) {
-        messagesContainer.innerHTML = '<p>This user has no posts yet.</p>';
-      } else {
-        messagesContainer.innerHTML = '';
-      }
+      messagesContainer.innerHTML = '';
       messages.forEach((message) => {
         const messageDiv = buildMessageDiv(message);
         messagesContainer.appendChild(messageDiv);
