@@ -47,15 +47,19 @@ function drawUserMessageActivityChart() {
   fetch('/feed')
     .then(response => response.json())
     .then((messagesJson) => {
-      // Create chart data
+      // Get message count by date
       // eslint-disable-next-line no-undef
       const messagesGroupedByDay = _.countBy(messagesJson, message => moment(message.timestamp).format('DD/MM/YYYY'));
 
-      const rawUserMessageActivityData = [['Date', 'Message Count']];
+      // Create chart data
+      const rawUserMessageActivityData = [];
       // eslint-disable-next-line no-undef
-      _.forOwn(messagesGroupedByDay, (value, key) => {
+      _(messagesGroupedByDay).forOwn((value, key) => {
         rawUserMessageActivityData.push([key, value]);
       });
+      // eslint-disable-next-line no-undef
+      _.reverse(rawUserMessageActivityData); // Reverse to display from first date to last date
+      rawUserMessageActivityData.unshift(['Date', 'Message Count']);
 
       // Set chart data
       // eslint-disable-next-line
@@ -70,12 +74,81 @@ function drawUserMessageActivityChart() {
         explorer: { actions: ['dragToZoom', 'rightClickToReset'] },
       };
 
+      // Draw chart
       // eslint-disable-next-line no-undef
       const userMessageActivityChart = new google.visualization.LineChart(
         document.getElementById('user-message-activity-chart'),
       );
 
       userMessageActivityChart.draw(userMessageActivityData, userMessageActivityChartOptions);
+    })
+    .catch((error) => {
+      document.getElementById('user-message-activity-chart')
+        .innerHTML = `<p>Error in loading chart: ${error}</p>`;
+    });
+}
+
+// eslint-disable-next-line no-unused-vars
+function drawAllTimeTopImageLabelsChart() {
+  fetch('/feed')
+    .then(response => response.json())
+    .then((messagesJson) => {
+      // Get all image labels
+      let imageLabels = [];
+      // eslint-disable-next-line no-undef
+      _.forEach(messagesJson, (message) => {
+        if (message.imageLabels) {
+          // eslint-disable-next-line no-undef
+          imageLabels = _.concat(imageLabels, message.imageLabels);
+        }
+      });
+
+      // Get top 10 image labels by count
+      // eslint-disable-next-line no-undef
+      const imageLabelsCount = _(imageLabels).groupBy()
+        .map(items => ({ imageLabel: items[0], count: items.length }))
+        .orderBy('count', 'desc')
+        .slice(0, 10)
+        .value();
+
+      // Create chart data
+      const rawAllTimeTopImageLabelsData = [['Image Label', 'Count']];
+      // eslint-disable-next-line no-undef
+      _.forEach(imageLabelsCount, (imageLabelCount) => {
+        rawAllTimeTopImageLabelsData.push([imageLabelCount.imageLabel, imageLabelCount.count]);
+      });
+
+      // Throw error if there are no messages with images
+      if (rawAllTimeTopImageLabelsData.length === 1) {
+        throw new Error('Add some messages with images to see this chart!');
+      }
+
+      // Set chart data
+      // eslint-disable-next-line
+      const allTimeTopImageLabelsData = new google.visualization.arrayToDataTable(
+        rawAllTimeTopImageLabelsData,
+      );
+
+      // Create chart options
+      const allTimeTopImageLabelsChartOptions = {
+        title: 'Top 10 Image Labels All Time',
+        width: 'auto',
+      };
+
+      // Draw chart
+      // eslint-disable-next-line no-undef
+      const allTimeTopImageLabelsChart = new google.visualization.BarChart(
+        document.getElementById('all-time-top-image-labels-chart'),
+      );
+      allTimeTopImageLabelsChart.draw(allTimeTopImageLabelsData, allTimeTopImageLabelsChartOptions);
+      // eslint-disable-next-line no-undef
+      google.visualization.events.addListener(allTimeTopImageLabelsChart, 'select', () => {
+        alert(allTimeTopImageLabelsChart.getSelection());
+      });
+    })
+    .catch((error) => {
+      document.getElementById('all-time-top-image-labels-chart')
+        .innerHTML = `<p>Error in loading chart: ${error}</p>`;
     });
 }
 
@@ -103,12 +176,11 @@ function drawLocationVotesChart() {
     width: 'auto',
   };
 
-  // Create bar chart
+  // Draw bar chart
   // eslint-disable-next-line no-undef
   const locationVotesBarChart = new google.visualization.BarChart(
     document.getElementById('location-votes-chart'),
   );
-
   locationVotesBarChart.draw(locationVotesData, locationVotesBarChartOptions);
 }
 
@@ -138,7 +210,14 @@ function drawPhotoCategoriesChart() {
       };
 
       // eslint-disable-next-line no-undef
-      const photoCategoriesChart = new google.visualization.BarChart(document.getElementById('photo-categories-chart'));
+      const photoCategoriesChart = new google.visualization.BarChart(
+        document.getElementById('photo-categories-chart'),
+      );
+
       photoCategoriesChart.draw(photoCategoriesData, photoCategoriesChartOptions);
+    })
+    .catch((error) => {
+      document.getElementById('photo-categories-chart')
+        .innerHTML = `<p>Error in loading chart: ${error}</p>`;
     });
 }

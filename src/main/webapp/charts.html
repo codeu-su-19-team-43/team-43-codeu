@@ -13,6 +13,7 @@
         google.charts.load('current', { packages: ['corechart'] });
         google.charts.setOnLoadCallback(drawSentimentScoresChart);
         google.charts.setOnLoadCallback(drawUserMessageActivityChart);
+        google.charts.setOnLoadCallback(drawAllTimeTopImageLabelsChart);
         google.charts.setOnLoadCallback(drawLocationVotesChart);
         google.charts.setOnLoadCallback(drawPhotoCategoriesChart);
     </script>
@@ -26,6 +27,7 @@
     <div id="content">
         <div id="sentiment-scores-chart"></div>
         <div id="user-message-activity-chart"></div>
+        <div id="all-time-top-image-labels-chart"></div>
         <div id="location-votes-chart"></div>
         <div id="photo-categories-chart"></div>
     </div>
