@@ -3,6 +3,7 @@ function drawSentimentScoresChart() {
   fetch('/sentiment-scores')
     .then(response => response.json())
     .then((sentimentScoresJson) => {
+      // Create chart data
       let positiveScoreCount = 0;
       let neutralScoreCount = 0;
       let negativeScoreCount = 0;
@@ -16,6 +17,7 @@ function drawSentimentScoresChart() {
         }
       }
 
+      // Set chart data
       // eslint-disable-next-line
       const sentimentScoresData = new google.visualization.arrayToDataTable([
         ['Sentiment', 'Message Count'],
@@ -37,6 +39,43 @@ function drawSentimentScoresChart() {
       );
 
       sentimentScoresChart.draw(sentimentScoresData, sentimentScoresChartOptions);
+    });
+}
+
+// eslint-disable-next-line no-unused-vars
+function drawUserMessageActivityChart() {
+  fetch('/feed')
+    .then(response => response.json())
+    .then((messagesJson) => {
+      // Create chart data
+      // eslint-disable-next-line no-undef
+      const messagesGroupedByDay = _.countBy(messagesJson, message => moment(message.timestamp).format('DD/MM/YYYY'));
+
+      const rawUserMessageActivityData = [['Date', 'Message Count']];
+      // eslint-disable-next-line no-undef
+      _.forOwn(messagesGroupedByDay, (value, key) => {
+        rawUserMessageActivityData.push([key, value]);
+      });
+
+      // Set chart data
+      // eslint-disable-next-line
+      const userMessageActivityData = new google.visualization.arrayToDataTable(
+        rawUserMessageActivityData,
+      );
+
+      // Create chart options
+      const userMessageActivityChartOptions = {
+        title: 'User Message Activity By Day',
+        width: 'auto',
+        explorer: { actions: ['dragToZoom', 'rightClickToReset'] },
+      };
+
+      // eslint-disable-next-line no-undef
+      const userMessageActivityChart = new google.visualization.LineChart(
+        document.getElementById('user-message-activity-chart'),
+      );
+
+      userMessageActivityChart.draw(userMessageActivityData, userMessageActivityChartOptions);
     });
 }
 
