@@ -1,3 +1,21 @@
+$.ajax({
+  async: false,
+  url: '/js/moment.min.js',
+  dataType: 'script',
+});
+
+let userEmail = null;
+
+function fetchUserEmail() {
+  $.ajaxSetup({ async: false });
+  $.getJSON('/login-status', (loginStatus) => {
+    userEmail = loginStatus.username;
+  });
+  $.ajaxSetup({ async: true });
+}
+
+fetchUserEmail();
+
 function getIconTypeUsingSentimentScore(sentimentScore) {
   const iconClassNames = ['sentiment-score-icon', 'fas'];
   if (sentimentScore > 0.5) {
@@ -101,15 +119,30 @@ function buildUsernameDiv(message) {
   return usernameDiv;
 }
 
-function buildTimeDiv(message) {
+function getHourDiffFromNow(timeStamp) {
+  // eslint-disable-next-line no-undef
+  const duration = moment.duration(moment(new Date()).diff(moment(timeStamp)));
+  const hours = duration.asHours();
+  return hours;
+}
+
+function getTimeText(timestamp) {
+  // eslint-disable-next-line no-nested-ternary, no-undef
+  return getHourDiffFromNow(timestamp) < 24 ? moment(timestamp).fromNow()
+  // eslint-disable-next-line no-undef
+    : getHourDiffFromNow(timestamp) < (24 * 7) ? moment(timestamp).calendar()
+    // eslint-disable-next-line no-undef
+      : moment(timestamp).format('ll');
+}
+
+function buildTimeDiv(timestamp) {
   const timeDiv = document.createElement('p');
   timeDiv.classList.add('card-text', 'mb-0');
 
   const timeText = document.createElement('small');
   timeText.classList.add('text-muted');
-  timeText.appendChild(
-    document.createTextNode(new Date(message.timestamp)),
-  );
+
+  timeText.innerHTML = getTimeText(timestamp);
 
   timeDiv.appendChild(timeText);
   return timeDiv;
@@ -143,8 +176,8 @@ function buildImageDiv(message) {
   let imageDivHtml = '<div class="card mb-0 border-0" id="image-container" onmouseenter="onMouseEnterImageDiv(this)" onmouseleave="onMouseOutImageDiv(this)">';
 
   imageDivHtml += `<img class="card-img-top border-bottom" 
-                                src=${message.imageUrl} 
-                                alt=${message.imageLabels[0]}>`;
+                        src=${message.imageUrl} 
+                        alt=${message.imageLabels[0]}>`;
 
   let labelHtml = '<div id="image-label-container" class="card-footer p-1 border-top-0 image-label-container hidden">';
   // eslint-disable-next-line no-return-assign
@@ -233,74 +266,90 @@ function buildResponseDiv(message) {
   return responseDiv;
 }
 
+function buildLikeAction(message) {
+  let iconHtml;
+  if (message.likedUserEmails != null && message.likedUserEmails.includes(userEmail)) {
+    iconHtml = '<i class="fas fa-thumbs-up mr-1"></i>Like';
+  } else {
+    iconHtml = '<i class="far fa-thumbs-up mr-1"></i>Like';
+  }
+  return iconHtml;
+}
+
+function buildFavouriteAction(message) {
+  let iconHtml;
+  if (message.favouritedUserEmails != null && message.favouritedUserEmails.includes(userEmail)) {
+    iconHtml = '<i class="fas fa-heart mr-1"></i>Favourite';
+  } else {
+    iconHtml = '<i class="far fa-heart mr-1"></i>Favourite';
+  }
+  return iconHtml;
+}
+
 // eslint-disable-next-line no-unused-vars
-function onClickLikeIcon(messageId) {
-  fetch('/login-status')
-    .then(response => response.json())
-    .then((loginStatus) => {
-      if (loginStatus.isLoggedIn) {
-        const data = { userEmail: loginStatus.username, messageId };
-        $.ajax({
-          contentType: 'application/json',
-          data: JSON.stringify(data),
-          processData: false,
-          type: 'POST',
-          url: '/like',
-        }).done(() => {
-          fetch(`/message?messageId=${messageId}`)
-            .then(response => response.json())
-            .then((message) => {
-              $(`#like-count-container-${messageId}`).html(
-                buildLikeCount(message),
-              );
-              toggleResponse(message);
-            });
+function onClickLikeButton(messageId) {
+  if (userEmail != null) {
+    const data = { userEmail, messageId };
+    $.ajax({
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      processData: false,
+      type: 'POST',
+      url: '/like',
+    }).done(() => {
+      fetch(`/message?messageId=${messageId}`)
+        .then(response => response.json())
+        .then((message) => {
+          $(`#like-count-container-${messageId}`).html(
+            buildLikeCount(message),
+          );
+          $(`#like-action-container-${messageId}`).html(
+            buildLikeAction(message),
+          );
+          toggleResponse(message);
         });
-      }
     });
+  }
 }
 
 // eslint-disable-next-line no-unused-vars
 function onClickFavouriteButton(messageId) {
-  fetch('/login-status')
-    .then(response => response.json())
-    .then((loginStatus) => {
-      if (loginStatus.isLoggedIn) {
-        const data = { userEmail: loginStatus.username, messageId };
-        $.ajax({
-          contentType: 'application/json',
-          data: JSON.stringify(data),
-          processData: false,
-          type: 'POST',
-          url: '/favourite',
-        }).done(() => {
-          fetch(`/message?messageId=${messageId}`)
-            .then(response => response.json())
-            .then((message) => {
-              $(`#favourite-count-container-${messageId}`).html(
-                buildFavouriteCount(message),
-              );
-              toggleResponse(message);
-            });
+  if (userEmail != null) {
+    const data = { userEmail, messageId };
+    $.ajax({
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      processData: false,
+      type: 'POST',
+      url: '/favourite',
+    }).done(() => {
+      fetch(`/message?messageId=${messageId}`)
+        .then(response => response.json())
+        .then((message) => {
+          $(`#favourite-count-container-${messageId}`).html(
+            buildFavouriteCount(message),
+          );
+          $(`#favourite-action-container-${messageId}`).html(
+            buildFavouriteAction(message),
+          );
+          toggleResponse(message);
         });
-      }
     });
+  }
 }
 
-function buildActionDiv(messageId) {
+function buildActionDiv(message) {
   const actionDiv = document.createElement('div');
   actionDiv.innerHTML = `<div id="action-container" class="action-container d-flex justify-content-between mt-2 pb-2">
-                          <button class="btn btn-light btn-sm action-icon-container font-weight-light" onclick="onClickLikeIcon('${messageId}');">
-                            <i class="action-icon far fa-thumbs-up mr-1"></i>
-                            Like
+                          <button id="like-action-container-${message.id}" class="btn btn-light btn-sm font-weight-light" onclick="onClickLikeButton('${message.id}');">
+                            ${buildLikeAction(message)}
                           </button>
-                          <button class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${messageId}">
+                          <button id="comment-action-container-${message.id}" class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${message.id}">
                             <i class="far fa-comment-alt mr-1"></i>
                             Comment
                           </button>
-                          <button class="btn btn-light btn-sm font-weight-light" onclick="onClickFavouriteButton('${messageId}');">
-                            <i class="far fa-heart mr-1"></i>
-                            Favourite
+                          <button id="favourite-action-container-${message.id}" class="btn btn-light btn-sm font-weight-light" onclick="onClickFavouriteButton('${message.id}');">
+                            ${buildFavouriteAction(message)}
                           </button>
                          </div>`;
   return actionDiv;
@@ -353,7 +402,12 @@ function buildCommentItem(comment) {
               <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
             </a>
             <div class="media-body">
-              <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">${comment.user}</p></a>
+              <div class="d-flex justify-content-between mt-1">
+                <a href="#"><p class="mb-0 font-weight-normal comment-username">${comment.user}</p></a>
+                <p class="card-text mb-0 comment-time-container">
+                  <small class="text-muted">${getTimeText(comment.timestamp)}</small>  
+                </p>
+              </div>
               <p class="font-weight-light comment-text mb-0">${comment.text}</p>
             </div>
           </li>`;
@@ -413,7 +467,7 @@ function buildCardBodyDiv(message) {
   cardBody.classList.add('card-body', 'pb-0', 'px-3');
 
   cardBody.appendChild(buildUsernameDiv(message));
-  cardBody.appendChild(buildTimeDiv(message));
+  cardBody.appendChild(buildTimeDiv(message.timestamp));
 
   if (message.imageLandmark != null && message.imageLandmark !== '') {
     cardBody.appendChild(buildLandmarkDiv(message));
@@ -426,7 +480,7 @@ function buildCardBodyDiv(message) {
   cardBody.appendChild(translateResult);
 
   cardBody.appendChild(buildResponseDiv(message));
-  cardBody.appendChild(buildActionDiv(message.id));
+  cardBody.appendChild(buildActionDiv(message));
 
   return cardBody;
 }
@@ -454,16 +508,12 @@ function buildMessageDiv(message) {
   return cardContainer;
 }
 
-function fetchMessagesFromUrl(url) {
+function buildMessagesDivFromUrl(url, parentId) {
   fetch(url)
     .then(response => response.json())
     .then((messages) => {
-      const messagesContainer = document.getElementById('message-cards-container');
-      if (messages.length === 0) {
-        messagesContainer.innerHTML = '<p>This user has no posts yet.</p>';
-      } else {
-        messagesContainer.innerHTML = '';
-      }
+      const messagesContainer = document.getElementById(parentId);
+      messagesContainer.innerHTML = '';
       messages.forEach((message) => {
         const messageDiv = buildMessageDiv(message);
         messagesContainer.appendChild(messageDiv);
@@ -474,15 +524,15 @@ function fetchMessagesFromUrl(url) {
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchMessagesByUser(parameterUsername) {
-  const url = `/user-messages?user=${parameterUsername}`;
-  fetchMessagesFromUrl(url);
+  buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container');
+  buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container');
 }
 
 /** Fetches all messages and add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchAllMessages() {
   const url = '/feed';
-  fetchMessagesFromUrl(url);
+  buildMessagesDivFromUrl(url, 'message-cards-container');
 }
 
 /** Fetches messages for given image labels and add them to the page. */
@@ -495,5 +545,5 @@ function fetchMessagesByImageLabels(imageLabels) {
       url += '&';
     }
   });
-  fetchMessagesFromUrl(url);
+  buildMessagesDivFromUrl(url, 'message-cards-container');
 }

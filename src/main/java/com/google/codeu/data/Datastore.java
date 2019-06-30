@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.codeu.Util;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +59,7 @@ public class Datastore {
     messageEntity.setProperty("imageLong", message.getImageLong());
     messageEntity.setProperty("sentimentScore", message.getSentimentScore());
     messageEntity.setProperty("commentIdsAsStrings",
-            message.convertUuidsToStrings(message.getCommentIds()));
+            Util.convertUuidsToStrings(message.getCommentIds()));
     messageEntity.setProperty("favouritedUserEmails",message.getFavouritedUserEmails());
     messageEntity.setProperty("likedUserEmails",message.getLikedUserEmails());
     datastore.put(messageEntity);
@@ -156,7 +157,7 @@ public class Datastore {
     }
 
     if (entity.hasProperty("commentIdsAsStrings")) {
-      message.setCommentIds(message.convertStringsToUuids(
+      message.setCommentIds(Util.convertStringsToUuids(
               (List<String>) entity.getProperty("commentIdsAsStrings")
       ));
     }
@@ -234,7 +235,7 @@ public class Datastore {
       }
 
       List<Key> keysForComments = new ArrayList<>();
-      for (String commentId: message.convertUuidsToStrings(message.getCommentIds())) {
+      for (String commentId: Util.convertUuidsToStrings(message.getCommentIds())) {
         keysForComments.add(KeyFactory.createKey("Comment", commentId));
       }
 
@@ -300,7 +301,7 @@ public class Datastore {
     userEntity.setProperty("aboutMe", user.getAboutMe());
     userEntity.setProperty("profileImageUrl", user.getProfileImageUrl());
     userEntity.setProperty("favouriteMessageIdsAsStrings",
-            user.convertfavouriteMessageIdsToStrings(user.getFavouriteMessageIds()));
+            Util.convertUuidsToStrings(user.getFavouriteMessageIds()));
     datastore.put(userEntity);
   }
 
@@ -327,7 +328,7 @@ public class Datastore {
             aboutMe, profileImageUrl);
 
     if (userEntity.hasProperty("favouriteMessageIdsAsStrings")) {
-      user.setFavouriteMessageIds(user.convertStringsToFavouriteMessageIds(
+      user.setFavouriteMessageIds(Util.convertStringsToUuids(
               (List<String>) userEntity.getProperty("favouriteMessageIdsAsStrings")
       ));
     }
@@ -346,16 +347,6 @@ public class Datastore {
     return users;
   }
 
-  /**  Toggle the existence of a string in a list. */
-  public List<String> toggleStringInList(List<String> list, String element) {
-    if (list.contains(element)) {
-      list.remove(element);
-    } else {
-      list.add(element);
-    }
-    return list;
-  }
-
   /**
    * Adds the email of the user who newly likes the message as favourite to the message.
    */
@@ -369,7 +360,7 @@ public class Datastore {
         likedUserEmails = new ArrayList<>();
       }
 
-      message.setLikedUserEmails(toggleStringInList(likedUserEmails, email));
+      message.setLikedUserEmails(Util.toggleStringInList(likedUserEmails, email));
       storeMessage(message);
 
     } catch (Exception e) {
@@ -391,7 +382,7 @@ public class Datastore {
         favouritedUserEmailes = new ArrayList<>();
       }
 
-      message.setFavouritedUserEmails(toggleStringInList(favouritedUserEmailes, email));
+      message.setFavouritedUserEmails(Util.toggleStringInList(favouritedUserEmailes, email));
       storeMessage(message);
 
     } catch (Exception e) {
@@ -407,11 +398,15 @@ public class Datastore {
     User user = getUser(email);
     if (user != null) {
       List<UUID> favouriteMessages = user.getFavouriteMessageIds();
-      if (favouriteMessages == null) {
-        favouriteMessages = new ArrayList<>();
+
+      List<String> favouriteMessagesString = new ArrayList<>();;
+      if (favouriteMessages != null) {
+        favouriteMessagesString = Util.convertUuidsToStrings(favouriteMessages);
       }
-      favouriteMessages.add(UUID.fromString(messageId));
-      user.setFavouriteMessageIds(favouriteMessages);
+
+      favouriteMessagesString = Util.toggleStringInList(favouriteMessagesString, messageId);
+
+      user.setFavouriteMessageIds(Util.convertStringsToUuids(favouriteMessagesString));
       storeUser(user);
     }
   }
@@ -429,7 +424,7 @@ public class Datastore {
       }
 
       List<Key> keysForFavouriteMessages = new ArrayList<>();
-      for (String favouriteId: user.convertfavouriteMessageIdsToStrings(
+      for (String favouriteId: Util.convertUuidsToStrings(
               user.getFavouriteMessageIds())) {
         keysForFavouriteMessages.add(KeyFactory.createKey("Message", favouriteId));
       }

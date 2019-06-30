@@ -23,7 +23,6 @@
   },
   "homepage": "https://github.com/codeu-su-19-team-43/team-43-codeu#readme",
   "dependencies": {
-    "moment": "^2.24.0",
     "tslint": "^5.17.0"
   }
 }
