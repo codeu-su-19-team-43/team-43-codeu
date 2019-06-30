@@ -230,7 +230,7 @@ public class Datastore {
 
     try {
       Message message = getMessage(messageId);
-      if (message.getCommentIds().size() == 0) {
+      if (message.getCommentIds() == null || message.getCommentIds().size() == 0) {
         return commentsForMessage;
       }
 
