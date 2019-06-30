@@ -67,7 +67,13 @@ limitations under the License.
               id="edit-profile-image"
             >
               <i class="fas fa-pencil-alt fa-2x"></i>
-              <input type="file" name="image" accept="image/*" id="profile-image-upload-input" style="display: none;"/>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                id="profile-image-upload-input"
+                style="display: none;"
+              />
             </label>
           </div>
         </form>
@@ -135,9 +141,58 @@ limitations under the License.
           <input type="submit" value="Submit" />
         </form>
 
-        <div class="message-container">
-          <div id="message-cards-container" class="card-columns">
-            Loading...
+        <ul class="nav nav-tabs content-tab" id="tab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              id="gallery-tab"
+              data-toggle="tab"
+              href="#gallery"
+              role="tab"
+              aria-controls="gallery"
+              aria-selected="true"
+              >Gallery</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              id="favourite-tab"
+              data-toggle="tab"
+              href="#favourite"
+              role="tab"
+              aria-controls="favourite"
+              aria-selected="false"
+              >Favourite</a
+            >
+          </li>
+        </ul>
+        <div class="tab-content" id="tab-content">
+          <div
+            class="tab-pane fade show active user-gallery-container-tab-pane"
+            id="gallery"
+            role="tabpanel"
+            aria-labelledby="gallery-tab"
+          >
+            <div
+              id="user-gallery-container"
+              class="card-columns user-gallery-container"
+            >
+              Loading...
+            </div>
+          </div>
+          <div
+            class="tab-pane fade favourite-messages-container-tab-pane"
+            id="favourite"
+            role="tabpanel"
+            aria-labelledby="favourite-tab"
+          >
+            <div
+              id="favourite-messages-container"
+              class="card-columns favourite-messages-container"
+            >
+              Loading...
+            </div>
           </div>
         </div>
       </div>
