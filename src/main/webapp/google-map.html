@@ -14,10 +14,28 @@
 
 		function createMap(){
 			map = new google.maps.Map(document.getElementById('map'), {
-				center: {lat: 1.3483, 
-						lng: 103.6831}, 
+				center: {lat: 27.1750, 
+						lng: 78.0422}, 
 				zoom: 8
 			});
+
+			infoWindow = new google.maps.InfoWindow;
+
+			// Try HTML5 geolocation.
+	        if (navigator.geolocation) {
+	          navigator.geolocation.getCurrentPosition(function(position) {
+	            var pos = {
+	              lat: position.coords.latitude,
+	              lng: position.coords.longitude
+	            };
+	            map.setCenter(pos);
+	          }, function() {
+	            handleLocationError(true, infoWindow, map.getCenter());
+	          });
+	        } else {
+	          // Browser doesn't support Geolocation
+	          handleLocationError(false, infoWindow, map.getCenter());
+	        }
 
 		//When the user clicks in the map, show a marker with a text box the user can edit 
 
@@ -49,6 +67,14 @@
 				});
 			});
 		}
+
+		function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        	infoWindow.setPosition(pos);
+        	infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+        	infoWindow.open(map);
+      	}
 
 		//Creates a marker that shows a read-only info window when clicked 
 
