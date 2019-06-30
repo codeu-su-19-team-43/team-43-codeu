@@ -30,36 +30,4 @@ public class User {
     this(email, username, location, organization, website, aboutMe, profileImageUrl,
             new ArrayList<>());
   }
-
-  /**
-   * Converts list of favourite IDs as strings to list of favourite IDs as UUIDs.
-   */
-  public List<UUID> convertStringsToFavouriteMessageIds(List<String> favouriteMessageIdsAsStrings) {
-    if (favouriteMessageIdsAsStrings == null) {
-      return new ArrayList<>();
-    }
-
-    List<UUID> favouriteMessageIds = new ArrayList<>();
-    for (String favouriteIdAsString: favouriteMessageIdsAsStrings) {
-      favouriteMessageIds.add(UUID.fromString(favouriteIdAsString));
-    }
-
-    return favouriteMessageIds;
-  }
-
-  /**
-   * Converts list of favourite IDs as UUIDs to list of favourite IDs as strings.
-   */
-  public List<String> convertfavouriteMessageIdsToStrings(List<UUID> favouriteMessageIds) {
-    if (favouriteMessageIds == null) {
-      return new ArrayList<>();
-    }
-
-    List<String> favouriteMessageIdsAsStrings = new ArrayList<>();
-    for (UUID favouriteId: favouriteMessageIds) {
-      favouriteMessageIdsAsStrings.add(favouriteId.toString());
-    }
-
-    return favouriteMessageIdsAsStrings;
-  }
 }

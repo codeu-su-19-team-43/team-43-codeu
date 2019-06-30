@@ -38,13 +38,17 @@
   height: 32px;
 }
 
-.media-body > a:hover {
+.media-body > div > a:hover {
   text-decoration: none;
 }
 
 .comment-username {
   font-size: 0.9em;
   color: black;
+}
+
+.comment-time-container {
+  line-height: normal;
 }
 
 .comment-text {
@@ -57,6 +61,7 @@
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   bottom: 0;
+  overflow: hidden;
 }
 
 .response-container {
