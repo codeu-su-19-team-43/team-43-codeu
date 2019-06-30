@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class Marker {
 
-    private double lat;
-    private double lng;
-    private String content;
+  private double lat;
+  private double lng;
+  private String content;
 }

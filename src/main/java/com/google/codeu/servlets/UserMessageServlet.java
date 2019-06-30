@@ -5,6 +5,9 @@ import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
@@ -22,13 +25,10 @@ import com.google.cloud.vision.v1.Feature.Type;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.codeu.data.Datastore;
+import com.google.codeu.data.Marker;
 import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
-
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -273,28 +273,4 @@ public class UserMessageServlet extends HttpServlet {
     return imageResponse;
   }
 
-  public class Marker {
-
-      private double lat;
-      private double lng;
-      private String content;
-
-      public Marker(double lat, double lng, String content) {
-        this.lat = lat;
-        this.lng = lng;
-        this.content = content;
-      }
-
-      public double getLat() {
-        return lat;
-      }
-
-      public double getLng() {
-        return lng;
-      }
-
-      public String getContent() {
-        return content;
-      }
-  }
 }
