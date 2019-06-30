@@ -1,4 +1,3 @@
-
 // eslint-disable-next-line no-unused-vars
 function drawAllTimeTopImageLabelsChart() {
   fetch('/feed')
@@ -55,7 +54,11 @@ function drawAllTimeTopImageLabelsChart() {
       allTimeTopImageLabelsChart.draw(allTimeTopImageLabelsData, allTimeTopImageLabelsChartOptions);
       // eslint-disable-next-line no-undef
       google.visualization.events.addListener(allTimeTopImageLabelsChart, 'select', () => {
-        alert(allTimeTopImageLabelsChart.getSelection());
+        const selected = allTimeTopImageLabelsChart.getSelection();
+        if (selected) {
+          const imageLabelToFilterBy = rawAllTimeTopImageLabelsData[selected[0].row + 1][0];
+          window.location.href = `/feed.html?imageLabel=${encodeURI(imageLabelToFilterBy.toLowerCase())}`;
+        }
       });
     })
     .catch((error) => {
