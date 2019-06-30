@@ -347,16 +347,6 @@ public class Datastore {
     return users;
   }
 
-  /**  Toggle the existence of a string in a list. */
-  public List<String> toggleStringInList(List<String> list, String element) {
-    if (list.contains(element)) {
-      list.remove(element);
-    } else {
-      list.add(element);
-    }
-    return list;
-  }
-
   /**
    * Adds the email of the user who newly likes the message as favourite to the message.
    */
@@ -370,7 +360,7 @@ public class Datastore {
         likedUserEmails = new ArrayList<>();
       }
 
-      message.setLikedUserEmails(toggleStringInList(likedUserEmails, email));
+      message.setLikedUserEmails(Util.toggleStringInList(likedUserEmails, email));
       storeMessage(message);
 
     } catch (Exception e) {
@@ -392,7 +382,7 @@ public class Datastore {
         favouritedUserEmailes = new ArrayList<>();
       }
 
-      message.setFavouritedUserEmails(toggleStringInList(favouritedUserEmailes, email));
+      message.setFavouritedUserEmails(Util.toggleStringInList(favouritedUserEmailes, email));
       storeMessage(message);
 
     } catch (Exception e) {
@@ -408,11 +398,15 @@ public class Datastore {
     User user = getUser(email);
     if (user != null) {
       List<UUID> favouriteMessages = user.getFavouriteMessageIds();
-      if (favouriteMessages == null) {
-        favouriteMessages = new ArrayList<>();
+
+      List<String> favouriteMessagesString = new ArrayList<>();;
+      if (favouriteMessages != null) {
+        favouriteMessagesString = Util.convertUuidsToStrings(favouriteMessages);
       }
-      favouriteMessages.add(UUID.fromString(messageId));
-      user.setFavouriteMessageIds(favouriteMessages);
+
+      favouriteMessagesString = Util.toggleStringInList(favouriteMessagesString, messageId);
+
+      user.setFavouriteMessageIds(Util.convertStringsToUuids(favouriteMessagesString));
       storeUser(user);
     }
   }

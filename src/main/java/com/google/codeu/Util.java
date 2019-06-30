@@ -25,4 +25,14 @@ public class Util {
     }
     return uuids.stream().map(UUID::toString).collect(Collectors.toList());
   }
+
+  /**  Toggle the existence of a string in a list. */
+  public static List<String> toggleStringInList(List<String> list, String element) {
+    if (list.contains(element)) {
+      list.remove(element);
+    } else {
+      list.add(element);
+    }
+    return list;
+  }
 }
