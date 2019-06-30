@@ -1,3 +1,9 @@
+$.ajax({
+  async: false,
+  url: '/js/moment.min.js',
+  dataType: 'script',
+});
+
 let userEmail = null;
 
 function fetchUserEmail() {
@@ -113,15 +119,30 @@ function buildUsernameDiv(message) {
   return usernameDiv;
 }
 
-function buildTimeDiv(message) {
+function getHourDiffFromNow(timeStamp) {
+  // eslint-disable-next-line no-undef
+  const duration = moment.duration(moment(new Date()).diff(moment(timeStamp)));
+  const hours = duration.asHours();
+  return hours;
+}
+
+function getTimeText(timestamp) {
+  // eslint-disable-next-line no-nested-ternary, no-undef
+  return getHourDiffFromNow(timestamp) < 24 ? moment(timestamp).fromNow()
+  // eslint-disable-next-line no-undef
+    : getHourDiffFromNow(timestamp) < (24 * 7) ? moment(timestamp).calendar()
+    // eslint-disable-next-line no-undef
+      : moment(timestamp).format('ll');
+}
+
+function buildTimeDiv(timestamp) {
   const timeDiv = document.createElement('p');
   timeDiv.classList.add('card-text', 'mb-0');
 
   const timeText = document.createElement('small');
   timeText.classList.add('text-muted');
-  timeText.appendChild(
-    document.createTextNode(new Date(message.timestamp)),
-  );
+
+  timeText.innerHTML = getTimeText(timestamp);
 
   timeDiv.appendChild(timeText);
   return timeDiv;
@@ -381,7 +402,12 @@ function buildCommentItem(comment) {
               <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
             </a>
             <div class="media-body">
-              <a href="#"><p class="mt-1 mb-0 font-weight-normal comment-username">${comment.user}</p></a>
+              <div class="d-flex justify-content-between mt-1">
+                <a href="#"><p class="mb-0 font-weight-normal comment-username">${comment.user}</p></a>
+                <p class="card-text mb-0 comment-time-container">
+                  <small class="text-muted">${getTimeText(comment.timestamp)}</small>  
+                </p>
+              </div>
               <p class="font-weight-light comment-text mb-0">${comment.text}</p>
             </div>
           </li>`;
@@ -441,7 +467,7 @@ function buildCardBodyDiv(message) {
   cardBody.classList.add('card-body', 'pb-0', 'px-3');
 
   cardBody.appendChild(buildUsernameDiv(message));
-  cardBody.appendChild(buildTimeDiv(message));
+  cardBody.appendChild(buildTimeDiv(message.timestamp));
 
   if (message.imageLandmark != null && message.imageLandmark !== '') {
     cardBody.appendChild(buildLandmarkDiv(message));
