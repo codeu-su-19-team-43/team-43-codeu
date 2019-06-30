@@ -1,3 +1,11 @@
+// Trigger resize event to redraw charts
+$(window).resize(function setResizeTimeout() {
+  if (this.resizeTimeout) clearTimeout(this.resizeTimeout);
+  this.resizeTimeout = setTimeout(function callResizeEndEvent() {
+    $(this).trigger('resizeEnd');
+  }, 500);
+});
+
 // eslint-disable-next-line no-unused-vars
 function drawAllTimeTopImageLabelsChart() {
   fetch('/feed')
@@ -52,6 +60,14 @@ function drawAllTimeTopImageLabelsChart() {
         document.getElementById('all-time-top-image-labels-chart'),
       );
       allTimeTopImageLabelsChart.draw(allTimeTopImageLabelsData, allTimeTopImageLabelsChartOptions);
+
+      // Redraw graph when window resize is completed
+      $(window).on('resizeEnd', () => {
+        allTimeTopImageLabelsChart.draw(allTimeTopImageLabelsData,
+          allTimeTopImageLabelsChartOptions);
+      });
+
+      // Redirect to feed page with clicked image label as filter
       // eslint-disable-next-line no-undef
       google.visualization.events.addListener(allTimeTopImageLabelsChart, 'select', () => {
         const selected = allTimeTopImageLabelsChart.getSelection();
@@ -109,6 +125,11 @@ function drawSentimentScoresChart() {
       );
 
       sentimentScoresChart.draw(sentimentScoresData, sentimentScoresChartOptions);
+
+      // Redraw graph when window resize is completed
+      $(window).on('resizeEnd', () => {
+        sentimentScoresChart.draw(sentimentScoresData, sentimentScoresChartOptions);
+      });
     });
 }
 
@@ -164,6 +185,11 @@ function drawUserMessageActivityChart() {
       );
 
       userMessageActivityChart.draw(userMessageActivityData, userMessageActivityChartOptions);
+
+      // Redraw graph when window resize is completed
+      $(window).on('resizeEnd', () => {
+        userMessageActivityChart.draw(userMessageActivityData, userMessageActivityChartOptions);
+      });
     })
     .catch((error) => {
       document.getElementById('user-message-activity-chart')
@@ -208,6 +234,10 @@ function drawLocationVotesChart() {
     document.getElementById('location-votes-chart'),
   );
   locationVotesBarChart.draw(locationVotesData, locationVotesBarChartOptions);
+
+  $(window).on('resizeEnd', () => {
+    locationVotesBarChart.draw(locationVotesData, locationVotesBarChartOptions);
+  });
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -247,6 +277,10 @@ function drawPhotoCategoriesChart() {
       );
 
       photoCategoriesChart.draw(photoCategoriesData, photoCategoriesChartOptions);
+
+      $(window).on('resizeEnd', () => {
+        photoCategoriesChart.draw(photoCategoriesData, photoCategoriesChartOptions);
+      });
     })
     .catch((error) => {
       document.getElementById('photo-categories-chart')
