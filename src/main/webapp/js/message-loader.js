@@ -1,3 +1,15 @@
+let userEmail = null;
+
+function fetchUserEmail() {
+  $.ajaxSetup({ async: false });
+  $.getJSON('/login-status', (loginStatus) => {
+    userEmail = loginStatus.username;
+  });
+  $.ajaxSetup({ async: true });
+}
+
+fetchUserEmail();
+
 function getIconTypeUsingSentimentScore(sentimentScore) {
   const iconClassNames = ['sentiment-score-icon', 'fas'];
   if (sentimentScore > 0.5) {
@@ -143,8 +155,8 @@ function buildImageDiv(message) {
   let imageDivHtml = '<div class="card mb-0 border-0" id="image-container" onmouseenter="onMouseEnterImageDiv(this)" onmouseleave="onMouseOutImageDiv(this)">';
 
   imageDivHtml += `<img class="card-img-top border-bottom" 
-                                src=${message.imageUrl} 
-                                alt=${message.imageLabels[0]}>`;
+                        src=${message.imageUrl} 
+                        alt=${message.imageLabels[0]}>`;
 
   let labelHtml = '<div id="image-label-container" class="card-footer p-1 border-top-0 image-label-container hidden">';
   // eslint-disable-next-line no-return-assign
@@ -233,74 +245,90 @@ function buildResponseDiv(message) {
   return responseDiv;
 }
 
+function buildLikeAction(message) {
+  let iconHtml;
+  if (message.likedUserEmails != null && message.likedUserEmails.includes(userEmail)) {
+    iconHtml = '<i class="fas fa-thumbs-up mr-1"></i>Like';
+  } else {
+    iconHtml = '<i class="far fa-thumbs-up mr-1"></i>Like';
+  }
+  return iconHtml;
+}
+
+function buildFavouriteAction(message) {
+  let iconHtml;
+  if (message.favouritedUserEmails != null && message.favouritedUserEmails.includes(userEmail)) {
+    iconHtml = '<i class="fas fa-heart mr-1"></i>Favourite';
+  } else {
+    iconHtml = '<i class="far fa-heart mr-1"></i>Favourite';
+  }
+  return iconHtml;
+}
+
 // eslint-disable-next-line no-unused-vars
-function onClickLikeIcon(messageId) {
-  fetch('/login-status')
-    .then(response => response.json())
-    .then((loginStatus) => {
-      if (loginStatus.isLoggedIn) {
-        const data = { userEmail: loginStatus.username, messageId };
-        $.ajax({
-          contentType: 'application/json',
-          data: JSON.stringify(data),
-          processData: false,
-          type: 'POST',
-          url: '/like',
-        }).done(() => {
-          fetch(`/message?messageId=${messageId}`)
-            .then(response => response.json())
-            .then((message) => {
-              $(`#like-count-container-${messageId}`).html(
-                buildLikeCount(message),
-              );
-              toggleResponse(message);
-            });
+function onClickLikeButton(messageId) {
+  if (userEmail != null) {
+    const data = { userEmail, messageId };
+    $.ajax({
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      processData: false,
+      type: 'POST',
+      url: '/like',
+    }).done(() => {
+      fetch(`/message?messageId=${messageId}`)
+        .then(response => response.json())
+        .then((message) => {
+          $(`#like-count-container-${messageId}`).html(
+            buildLikeCount(message),
+          );
+          $(`#like-action-container-${messageId}`).html(
+            buildLikeAction(message),
+          );
+          toggleResponse(message);
         });
-      }
     });
+  }
 }
 
 // eslint-disable-next-line no-unused-vars
 function onClickFavouriteButton(messageId) {
-  fetch('/login-status')
-    .then(response => response.json())
-    .then((loginStatus) => {
-      if (loginStatus.isLoggedIn) {
-        const data = { userEmail: loginStatus.username, messageId };
-        $.ajax({
-          contentType: 'application/json',
-          data: JSON.stringify(data),
-          processData: false,
-          type: 'POST',
-          url: '/favourite',
-        }).done(() => {
-          fetch(`/message?messageId=${messageId}`)
-            .then(response => response.json())
-            .then((message) => {
-              $(`#favourite-count-container-${messageId}`).html(
-                buildFavouriteCount(message),
-              );
-              toggleResponse(message);
-            });
+  if (userEmail != null) {
+    const data = { userEmail, messageId };
+    $.ajax({
+      contentType: 'application/json',
+      data: JSON.stringify(data),
+      processData: false,
+      type: 'POST',
+      url: '/favourite',
+    }).done(() => {
+      fetch(`/message?messageId=${messageId}`)
+        .then(response => response.json())
+        .then((message) => {
+          $(`#favourite-count-container-${messageId}`).html(
+            buildFavouriteCount(message),
+          );
+          $(`#favourite-action-container-${messageId}`).html(
+            buildFavouriteAction(message),
+          );
+          toggleResponse(message);
         });
-      }
     });
+  }
 }
 
-function buildActionDiv(messageId) {
+function buildActionDiv(message) {
   const actionDiv = document.createElement('div');
   actionDiv.innerHTML = `<div id="action-container" class="action-container d-flex justify-content-between mt-2 pb-2">
-                          <button class="btn btn-light btn-sm action-icon-container font-weight-light" onclick="onClickLikeIcon('${messageId}');">
-                            <i class="action-icon far fa-thumbs-up mr-1"></i>
-                            Like
+                          <button id="like-action-container-${message.id}" class="btn btn-light btn-sm font-weight-light" onclick="onClickLikeButton('${message.id}');">
+                            ${buildLikeAction(message)}
                           </button>
-                          <button class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${messageId}">
+                          <button id="comment-action-container-${message.id}" class="btn btn-light btn-sm font-weight-light" data-toggle="collapse" data-target="#comment-container-${message.id}">
                             <i class="far fa-comment-alt mr-1"></i>
                             Comment
                           </button>
-                          <button class="btn btn-light btn-sm font-weight-light" onclick="onClickFavouriteButton('${messageId}');">
-                            <i class="far fa-heart mr-1"></i>
-                            Favourite
+                          <button id="favourite-action-container-${message.id}" class="btn btn-light btn-sm font-weight-light" onclick="onClickFavouriteButton('${message.id}');">
+                            ${buildFavouriteAction(message)}
                           </button>
                          </div>`;
   return actionDiv;
@@ -426,7 +454,7 @@ function buildCardBodyDiv(message) {
   cardBody.appendChild(translateResult);
 
   cardBody.appendChild(buildResponseDiv(message));
-  cardBody.appendChild(buildActionDiv(message.id));
+  cardBody.appendChild(buildActionDiv(message));
 
   return cardBody;
 }
