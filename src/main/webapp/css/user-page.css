@@ -12,6 +12,8 @@ body > .page-header {
   flex: 30%;
   top: 7em;
   height: 90vh;
+  overflow-y: auto;
+  padding-bottom: 10vh;
 }
 
 #user-profile-image {

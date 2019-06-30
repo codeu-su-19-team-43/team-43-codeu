@@ -23,6 +23,7 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.PropertyProjection;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
@@ -230,7 +231,7 @@ public class Datastore {
 
     try {
       Message message = getMessage(messageId);
-      if (message.getCommentIds().size() == 0) {
+      if (message.getCommentIds() == null || message.getCommentIds().size() == 0) {
         return commentsForMessage;
       }
 
@@ -370,6 +371,7 @@ public class Datastore {
     Query query = new Query("User");
     PreparedQuery results = datastore.prepare(query);
     List<User> users = convertUsersFromQuery(results);
+
     return users;
   }
 
@@ -470,5 +472,22 @@ public class Datastore {
     }
 
     return favouriteMessages;
+  }
+
+  /**
+   * Returns all sentiment scores.
+   */
+  public List<Double> getSentimentScores() {
+    List<Double> sentimentScores = new ArrayList<>();
+    Query query = new Query("Message")
+            .addProjection(new PropertyProjection("sentimentScore", Double.class));
+
+    List<Entity> sentimentScoreEntities = datastore.prepare(query)
+            .asList(FetchOptions.Builder.withDefaults());
+    for (Entity sentimentScoreEntity : sentimentScoreEntities) {
+      sentimentScores.add((Double) sentimentScoreEntity.getProperty("sentimentScore"));
+    }
+
+    return sentimentScores;
   }
 }
