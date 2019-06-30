@@ -1,3 +1,63 @@
 body > .page-header {
   margin: 7em 0em 4em 0em;
 }
+
+.content-container {
+  width: 85%;
+  margin: auto;
+}
+
+@media (min-width: 20em) {
+  .card-columns {
+    -webkit-column-count: 1;
+    -moz-column-count: 1;
+    column-count: 1;
+  }
+}
+
+@media (min-width: 40em) {
+  .card-columns {
+    -webkit-column-count: 2;
+    -moz-column-count: 2;
+    column-count: 2;
+  }
+}
+
+@media (min-width: 60em) {
+  .card-columns {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+  }
+}
+
+@media (min-width: 80em) {
+  .card-columns {
+    -webkit-column-count: 4;
+    -moz-column-count: 4;
+    column-count: 4;
+  }
+}
+
+.card {
+  border-color: rgba(23, 162, 184, 0.2);
+  border-width: 2px;
+}
+
+.user-profile-image {
+  object-fit: cover;
+  width: 64px;
+  height: 64px;
+}
+
+.media-body > a:hover {
+  text-decoration: none;
+}
+
+.username {
+  color: rgb(23, 162, 184);
+}
+
+.user-detail {
+  font-size: 0.77em;
+}
