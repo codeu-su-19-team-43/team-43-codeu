@@ -1,92 +1,3 @@
-// eslint-disable-next-line no-unused-vars
-function drawSentimentScoresChart() {
-  fetch('/sentiment-scores')
-    .then(response => response.json())
-    .then((sentimentScoresJson) => {
-      // Create chart data
-      let positiveScoreCount = 0;
-      let neutralScoreCount = 0;
-      let negativeScoreCount = 0;
-      for (let i = 0; i < sentimentScoresJson.length; i += 1) {
-        if (sentimentScoresJson[i] > 0.5) {
-          positiveScoreCount += 1;
-        } else if (sentimentScoresJson[i] < -0.5) {
-          negativeScoreCount += 1;
-        } else {
-          neutralScoreCount += 1;
-        }
-      }
-
-      // Set chart data
-      // eslint-disable-next-line
-      const sentimentScoresData = new google.visualization.arrayToDataTable([
-        ['Sentiment', 'Message Count'],
-        ['Positive', positiveScoreCount],
-        ['Neutral', neutralScoreCount],
-        ['Negative', negativeScoreCount],
-      ]);
-
-      // Create chart options
-      const sentimentScoresChartOptions = {
-        title: 'Sentiment Analysis of Messages',
-        width: 'auto',
-      };
-
-      // Create pie chart
-      // eslint-disable-next-line no-undef
-      const sentimentScoresChart = new google.visualization.PieChart(
-        document.getElementById('sentiment-scores-chart'),
-      );
-
-      sentimentScoresChart.draw(sentimentScoresData, sentimentScoresChartOptions);
-    });
-}
-
-// eslint-disable-next-line no-unused-vars
-function drawUserMessageActivityChart() {
-  fetch('/feed')
-    .then(response => response.json())
-    .then((messagesJson) => {
-      // Get message count by date
-      // eslint-disable-next-line no-undef
-      const messagesGroupedByDay = _.countBy(messagesJson, message => moment(message.timestamp).format('DD/MM/YYYY'));
-
-      // Create chart data
-      const rawUserMessageActivityData = [];
-      // eslint-disable-next-line no-undef
-      _(messagesGroupedByDay).forOwn((value, key) => {
-        rawUserMessageActivityData.push([key, value]);
-      });
-      // eslint-disable-next-line no-undef
-      _.reverse(rawUserMessageActivityData); // Reverse to display from first date to last date
-      rawUserMessageActivityData.unshift(['Date', 'Message Count']);
-
-      // Set chart data
-      // eslint-disable-next-line
-      const userMessageActivityData = new google.visualization.arrayToDataTable(
-        rawUserMessageActivityData,
-      );
-
-      // Create chart options
-      const userMessageActivityChartOptions = {
-        title: 'User Message Activity By Day',
-        width: 'auto',
-        explorer: { actions: ['dragToZoom', 'rightClickToReset'] },
-      };
-
-      // Draw chart
-      // eslint-disable-next-line no-undef
-      const userMessageActivityChart = new google.visualization.LineChart(
-        document.getElementById('user-message-activity-chart'),
-      );
-
-      userMessageActivityChart.draw(userMessageActivityData, userMessageActivityChartOptions);
-    })
-    .catch((error) => {
-      document.getElementById('user-message-activity-chart')
-        .innerHTML = `<p>Error in loading chart: ${error}</p>`;
-    });
-}
 
 // eslint-disable-next-line no-unused-vars
 function drawAllTimeTopImageLabelsChart() {
@@ -125,13 +36,14 @@ function drawAllTimeTopImageLabelsChart() {
 
       // Set chart data
       // eslint-disable-next-line
-      const allTimeTopImageLabelsData = new google.visualization.arrayToDataTable(
+            const allTimeTopImageLabelsData = new google.visualization.arrayToDataTable(
         rawAllTimeTopImageLabelsData,
       );
 
       // Create chart options
       const allTimeTopImageLabelsChartOptions = {
-        title: 'Top 10 Image Labels All Time',
+        title: 'Top 10 Image Labels (All Time)',
+        height: 'auto',
         width: 'auto',
       };
 
@@ -148,7 +60,111 @@ function drawAllTimeTopImageLabelsChart() {
     })
     .catch((error) => {
       document.getElementById('all-time-top-image-labels-chart')
-        .innerHTML = `<p>Error in loading chart: ${error}</p>`;
+        .innerHTML = `<div class="alert alert-danger" role="alert">${error}</div>`;
+    });
+}
+
+// eslint-disable-next-line no-unused-vars
+function drawSentimentScoresChart() {
+  fetch('/sentiment-scores')
+    .then(response => response.json())
+    .then((sentimentScoresJson) => {
+      // Create chart data
+      let positiveScoreCount = 0;
+      let neutralScoreCount = 0;
+      let negativeScoreCount = 0;
+      for (let i = 0; i < sentimentScoresJson.length; i += 1) {
+        if (sentimentScoresJson[i] > 0.5) {
+          positiveScoreCount += 1;
+        } else if (sentimentScoresJson[i] < -0.5) {
+          negativeScoreCount += 1;
+        } else {
+          neutralScoreCount += 1;
+        }
+      }
+
+      // Set chart data
+      // eslint-disable-next-line
+      const sentimentScoresData = new google.visualization.arrayToDataTable([
+        ['Sentiment', 'Message Count'],
+        ['Positive', positiveScoreCount],
+        ['Neutral', neutralScoreCount],
+        ['Negative', negativeScoreCount],
+      ]);
+
+      // Create chart options
+      const sentimentScoresChartOptions = {
+        title: 'Sentiment Analysis Of Messages',
+        height: 'auto',
+        width: 'auto',
+      };
+
+      // Create pie chart
+      // eslint-disable-next-line no-undef
+      const sentimentScoresChart = new google.visualization.PieChart(
+        document.getElementById('sentiment-scores-chart'),
+      );
+
+      sentimentScoresChart.draw(sentimentScoresData, sentimentScoresChartOptions);
+    });
+}
+
+// eslint-disable-next-line no-unused-vars
+function drawUserMessageActivityChart() {
+  fetch('/feed')
+    .then(response => response.json())
+    .then((messagesJson) => {
+      // Get message count by date
+      // eslint-disable-next-line no-undef
+      const messagesGroupedByDay = _.countBy(messagesJson, message => moment(message.timestamp).format('DD/MM/YYYY'));
+
+      // Create chart data
+      const rawUserMessageActivityData = [];
+      // eslint-disable-next-line no-undef
+      _(messagesGroupedByDay).forOwn((value, key) => {
+        rawUserMessageActivityData.push([key, value]);
+      });
+
+      if (rawUserMessageActivityData.length === 0) {
+        throw new Error('Add some messages to see this chart!');
+      }
+
+      // eslint-disable-next-line no-undef
+      _.reverse(rawUserMessageActivityData); // Reverse to display from first date to last date
+
+      rawUserMessageActivityData.unshift(['Date', 'Message Count']);
+
+      // Set chart data
+      // eslint-disable-next-line
+      const userMessageActivityData = new google.visualization.arrayToDataTable(
+        rawUserMessageActivityData,
+      );
+
+      // Create chart options
+      const userMessageActivityChartOptions = {
+        title: 'User Message Activity By Day',
+        height: 'auto',
+        width: 'auto',
+        explorer: { actions: ['dragToZoom', 'rightClickToReset'] },
+        hAxes: [
+          {
+            title: 'Date', // x axis
+          },
+          {},
+        ],
+      };
+
+      // Draw chart
+      // eslint-disable-next-line no-undef
+      const userMessageActivityChart = new google.visualization.LineChart(
+        document.getElementById('user-message-activity-chart'),
+      );
+
+      userMessageActivityChart.draw(userMessageActivityData, userMessageActivityChartOptions);
+    })
+    .catch((error) => {
+      document.getElementById('user-message-activity-chart')
+        .innerHTML = `<div class="alert alert-danger" role="alert">${error}</div>`;
     });
 }
 
@@ -172,8 +188,15 @@ function drawLocationVotesChart() {
 
   // Create chart options
   const locationVotesBarChartOptions = {
-    title: 'Top Locations of the Week',
+    title: 'Top Locations Of The Week',
+    height: 'auto',
     width: 'auto',
+    hAxes: [
+      {
+        title: 'Photo Count', // x axis
+      },
+      {},
+    ],
   };
 
   // Draw bar chart
@@ -204,9 +227,15 @@ function drawPhotoCategoriesChart() {
       }
 
       const photoCategoriesChartOptions = {
-        title: 'Number of Photos According to Categories',
+        title: 'Number Of Photos According To Categories',
         height: 'auto',
         width: 'auto',
+        hAxes: [
+          {
+            title: 'Photo Count', // x axis
+          },
+          {},
+        ],
       };
 
       // eslint-disable-next-line no-undef
@@ -218,6 +247,6 @@ function drawPhotoCategoriesChart() {
     })
     .catch((error) => {
       document.getElementById('photo-categories-chart')
-        .innerHTML = `<p>Error in loading chart: ${error}</p>`;
+        .innerHTML = `<div class="alert alert-danger" role="alert">${error}</div>`;
     });
 }
