@@ -508,11 +508,11 @@ function buildMessageDiv(message) {
   return cardContainer;
 }
 
-function fetchMessagesFromUrl(url) {
+function buildMessagesDivFromUrl(url, parentId) {
   fetch(url)
     .then(response => response.json())
     .then((messages) => {
-      const messagesContainer = document.getElementById('message-cards-container');
+      const messagesContainer = document.getElementById(parentId);
       if (messages.length === 0) {
         messagesContainer.innerHTML = '<p>This user has no posts yet.</p>';
       } else {
@@ -528,15 +528,15 @@ function fetchMessagesFromUrl(url) {
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchMessagesByUser(parameterUsername) {
-  const url = `/user-messages?user=${parameterUsername}`;
-  fetchMessagesFromUrl(url);
+  buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container');
+  buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container');
 }
 
 /** Fetches all messages and add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchAllMessages() {
   const url = '/feed';
-  fetchMessagesFromUrl(url);
+  buildMessagesDivFromUrl(url, 'message-cards-container');
 }
 
 /** Fetches messages for given image labels and add them to the page. */
@@ -549,5 +549,5 @@ function fetchMessagesByImageLabels(imageLabels) {
       url += '&';
     }
   });
-  fetchMessagesFromUrl(url);
+  buildMessagesDivFromUrl(url, 'message-cards-container');
 }

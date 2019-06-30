@@ -101,3 +101,12 @@ body > .page-header {
 #image-url {
   width: 100%;
 }
+
+.content-tab > li > a {
+  margin: 0 !important;
+}
+
+.user-gallery-container-tab-pane {
+  margin-left: -0.5em !important;
+  margin-right: -0.5em !important;
+}
