@@ -26,6 +26,10 @@ import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -121,6 +125,8 @@ public class UserMessageServlet extends HttpServlet {
         message.setImageLandmark(imageLandmark);
         message.setImageLat(imageLat);
         message.setImageLong(imageLong);
+        Marker marker = new Marker(imageLat, imageLong, imageLandmark);
+        storeMarker(marker);
       }
     }
 
@@ -144,6 +150,18 @@ public class UserMessageServlet extends HttpServlet {
     datastore.storeMessage(message);
 
     response.sendRedirect("/user-page.html?user=" + user);
+  }
+
+  /** Stores a marker in Datastore. */
+  public void storeMarker(Marker marker) {
+    Entity markerEntity = new Entity("Marker");
+    markerEntity.setProperty("lat", marker.getLat());
+    markerEntity.setProperty("lng", marker.getLng());
+    markerEntity.setProperty("content", marker.getContent());
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(markerEntity);
+
   }
 
   /**
@@ -253,5 +271,30 @@ public class UserMessageServlet extends HttpServlet {
       return null;
     }
     return imageResponse;
+  }
+
+  public class Marker {
+
+      private double lat;
+      private double lng;
+      private String content;
+
+      public Marker(double lat, double lng, String content) {
+        this.lat = lat;
+        this.lng = lng;
+        this.content = content;
+      }
+
+      public double getLat() {
+        return lat;
+      }
+
+      public double getLng() {
+        return lng;
+      }
+
+      public String getContent() {
+        return content;
+      }
   }
 }
