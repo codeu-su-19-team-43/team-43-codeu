@@ -5,6 +5,9 @@ import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
@@ -22,6 +25,7 @@ import com.google.cloud.vision.v1.Feature.Type;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.codeu.data.Datastore;
+import com.google.codeu.data.Marker;
 import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
@@ -121,6 +125,8 @@ public class UserMessageServlet extends HttpServlet {
         message.setImageLandmark(imageLandmark);
         message.setImageLat(imageLat);
         message.setImageLong(imageLong);
+        Marker marker = new Marker(imageLat, imageLong, imageLandmark);
+        storeMarker(marker);
       }
     }
 
@@ -144,6 +150,18 @@ public class UserMessageServlet extends HttpServlet {
     datastore.storeMessage(message);
 
     response.sendRedirect("/user-page.html?user=" + user);
+  }
+
+  /** Stores a marker in Datastore. */
+  public void storeMarker(Marker marker) {
+    Entity markerEntity = new Entity("Marker");
+    markerEntity.setProperty("lat", marker.getLat());
+    markerEntity.setProperty("lng", marker.getLng());
+    markerEntity.setProperty("content", marker.getContent());
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(markerEntity);
+
   }
 
   /**
@@ -254,4 +272,5 @@ public class UserMessageServlet extends HttpServlet {
     }
     return imageResponse;
   }
+
 }

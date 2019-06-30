@@ -1,50 +1,147 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Hello Google Maps</title>
+	<title>Photographer's Hub</title>
 	<script src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8"></script>
 	<script src="js/header-loader.js" onload="loadHeader('Charts')"></script>
 
-	<script type="text/javascript">
-		//Creates a map that shows landmarks around Google 
+	<script>
+
+		let map; 
+		// Editable marker that displays when a user clicks in the map 
+
+		let editMarker;
+
 		function createMap(){
-			const map = new google.maps.Map(document.getElementById('map'),{
-					center: {lat: 37.422, lng: -122.084},
-					zoom: 15
+			map = new google.maps.Map(document.getElementById('map'), {
+				center: {lat: 1.3483, 
+						lng: 103.6831}, 
+				zoom: 8
 			});
 
-			addLandmark(map, 37.423829, -122.092154, 'Google West Campus', 'Google West Campus is home to YouTube and Maps.')
+		//When the user clicks in the map, show a marker with a text box the user can edit 
 
-			addLandmark(map, 37.421903, -122.084674, 'Stan the T-Rex', 'This is Stan, the T-Rex statue.')
+			map.addListener('click', (event) => {
 
-			addLandmark(map, 37.420919, -122.086619, 'Permante Creek Trail', 'Permanente Creek Trail connects Google to a system of bike trails.');
-
+				//Allows adding marker only if the user is logged in 
+				fetch('/login-status').then((response) => {
+					return response.json();
+				}).then((user_status) => {
+					if(user_status.isLoggedIn==false){
+						alert("You should be logged in to add markers!");
+					}
+					else{
+						createMarkerForEdit(event.latLng.lat(), event.latLng.lng());
+					}
+				});	
+			});
+			fetchMarkers();
 		}
 
-		function addLandmark(map, lat, lng, title, description){
+		//Fetches markers from the backend and adds them to the map 
+
+		function fetchMarkers(){
+			fetch('/markers').then((response) => {
+				return response.json();
+			}).then((markers) => {
+				markers.forEach((marker) => {
+					createMarkerForDisplay(marker.lat, marker.lng, marker.content)
+				});
+			});
+		}
+
+		//Creates a marker that shows a read-only info window when clicked 
+
+		function createMarkerForDisplay(lat, lng, content){
+			//var image = '/images/device-camera-icon.png';
+
 			const marker = new google.maps.Marker({
-				position: {lat: lat, lng: lng},
-				map: map, 
-				title: title
+				position: {lat: lat, lng: lng}, 
+				map: map
+				//icon: image
 			});
 
-			//Associating a information to a marker
-			const infoWindow = new google.maps.InfoWindow({
-				content: description
+			var infoWindow = new google.maps.InfoWindow({
+				content: content
 			});
-
-			//Adding a click listener to the marker
-			marker.addListener('click', function(){
+			marker.addListener('click', () => {
 				infoWindow.open(map, marker);
 			});
 		}
+
+		//Sends the marker at the backend for saving 
+
+		function postMarker(lat, lng, content){
+			const params = new URLSearchParams();
+			params.append('lat', lat);
+			params.append('lng', lng);
+			params.append('content', content);
+			fetch('/markers', {
+				method: 'POST', 
+				body: params
+			});
+		}
+
+		//Creates a marker that shows a textbox the user can edit 
+
+		function createMarkerForEdit(lat, lng){
+			//if we are already showing an editable marker, then remove it 
+			if (editMarker){
+				editMarker.setMap(null);
+			}
+
+			editMarker = new google.maps.Marker({
+				position: {lat: lat, lng: lng}, 
+				map: map
+			});
+
+			const infoWindow = new google.maps.InfoWindow({
+				content: buildInfoWindowInput(lat, lng)});
+
+			editMarker.addListener('click', function(){
+				infowindow.open(map, editMarker);
+			});
+			//When the user closes the editable info window, close the marker
+
+			google.maps.event.addListener(infoWindow, 'closeclick', () => {
+				editMarker.setMap(null);
+			});
+
+			infoWindow.open(map, editMarker);
+		}
+
+		//Builds and returns HTML elements that show an editable textbox and a submit button
+
+		function buildInfoWindowInput(lat, lng){
+      		const textBox = document.createElement('textarea');
+      		const button = document.createElement('button');
+      		button.appendChild(document.createTextNode('Submit'));
+      		button.onclick = () => {
+        		postMarker(lat, lng, textBox.value);
+        		createMarkerForDisplay(lat, lng, textBox.value);
+        		editMarker.setMap(null);
+      		};
+      		const containerDiv = document.createElement('div');
+      		containerDiv.appendChild(textBox);
+      		containerDiv.appendChild(document.createElement('br'));
+      		containerDiv.appendChild(button);
+      		return containerDiv;
+    	}
+
 	</script>
+
+	<style>
+		#map{
+			width: 500px;
+			height: 500px;
+		}
+	</style>
 	<link rel="stylesheet" href="/css/google-map.css" />
 </head>
 <body onload="createMap();">
 	<div class="text-center page-header">
     <h1 class="display-4">Maps</h1>
-    <p><center>Here are a few places that you may want to explore!</center></p>
+    <p><center>Here are a few places that you may want to explore! Click on the map to create a marker...</center></p>
     </div>
 	<div id="map"></div>
 </body>
