@@ -9,7 +9,7 @@ function buildUserListItem(user) {
 
   userListItem.innerHTML = `<div class="media">
                               <a class="mx-3 my-2" href="/user-page.html?user=${user.email}">
-                                <img src="./images/aboutus-avatar-anqi.jpg" 
+                                <img src="${user.profileImageUrl}" 
                                      class="user-profile-image rounded-circle" 
                                      alt="...">
                               </a>

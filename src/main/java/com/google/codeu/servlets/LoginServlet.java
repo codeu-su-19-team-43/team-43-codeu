@@ -18,6 +18,7 @@ package com.google.codeu.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.codeu.Util;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.User;
 
@@ -53,6 +54,7 @@ public class LoginServlet extends HttpServlet {
       if (user == null) {
         user = new User();
         user.setEmail(userEmail);
+        user.setProfileImageUrl(Util.getDefaultProfileImageUrl());
         datastore.storeUser(user);
       }
 

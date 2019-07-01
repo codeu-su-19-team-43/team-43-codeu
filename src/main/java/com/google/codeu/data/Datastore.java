@@ -342,8 +342,14 @@ public class Datastore {
 
     if (userEntity.hasProperty("favouriteMessageIdsAsStrings")) {
       user.setFavouriteMessageIds(Util.convertStringsToUuids(
-              (List<String>) userEntity.getProperty("favouriteMessageIdsAsStrings")
+          (List<String>) userEntity.getProperty("favouriteMessageIdsAsStrings")
       ));
+    }
+
+    if (profileImageUrl == null) {
+      profileImageUrl = Util.getDefaultProfileImageUrl();
+      user.setProfileImageUrl(profileImageUrl);
+      storeUser(user);
     }
 
     return user;

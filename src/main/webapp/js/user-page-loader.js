@@ -87,7 +87,7 @@ function fetchBlobstoreUrlAndShowEditProfileImageLabel() {
     .then((imageUploadUrl) => {
       const messageForm = document.getElementById('profile-image-form');
       messageForm.action = imageUploadUrl;
-      document.getElementById('edit-profile-image').classList.add('display-block');
+      document.getElementById('edit-profile-image').classList.remove('hidden');
       document.getElementById('profile-image-upload-input').onchange = () => {
         document.getElementById('profile-image-form').submit();
       };
