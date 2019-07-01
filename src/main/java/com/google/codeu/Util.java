@@ -40,7 +40,7 @@ public class Util {
 
   /**  Get the url of the default profile image. */
   public static String getDefaultProfileImageUrl() {
-    return "./images/default-user-profile/" +
-        (int)(Math.random() * (DEFAULT_IMAGE_COUNT - 1) + 1) + ".jpg";
+    return "./images/default-user-profile/"
+        + (int)(Math.random() * (DEFAULT_IMAGE_COUNT - 1) + 1) + ".jpg";
   }
 }

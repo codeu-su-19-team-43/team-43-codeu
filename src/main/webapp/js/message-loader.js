@@ -363,10 +363,10 @@ function autoGrow(element) {
   element.style.height = `${element.scrollHeight}px`;
 }
 
-function getUserProfileUrl(user) {
+function getUserProfileUrl(email) {
   let userProflieImageUrl;
   $.ajaxSetup({ async: false });
-  $.getJSON(`/user-profile?user=${user}`, (user) => {
+  $.getJSON(`/user-profile?user=${email}`, (user) => {
     userProflieImageUrl = user.profileImageUrl;
   });
   $.ajaxSetup({ async: true });
