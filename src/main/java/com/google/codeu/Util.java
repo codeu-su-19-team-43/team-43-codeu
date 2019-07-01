@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 public class Util {
 
+  static final int DEFAULT_IMAGE_COUNT = 10;
+
   /**
    * Converts list of favourite IDs as strings to list of favourite IDs as UUIDs.
    */
@@ -34,5 +36,11 @@ public class Util {
       list.add(element);
     }
     return list;
+  }
+
+  /**  Get the url of the default profile image. */
+  public static String getDefaultProfileImageUrl() {
+    return "./images/default-user-profile/" +
+        (int)(Math.random() * (DEFAULT_IMAGE_COUNT - 1) + 1) + ".jpg";
   }
 }
