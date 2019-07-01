@@ -1,6 +1,8 @@
 .landing {
   height: 100vh;
+  min-height: 500px;
   background-image: url('../images/home-landing-image.jpg');
+  background-attachment: fixed;
   display: flex;
   align-items: center;
 }
@@ -27,4 +29,24 @@
 
 .landing-tagline > .font-weight-lightest {
   font-weight: 100;
+}
+
+.landing-icon {
+  width: 15%;
+  margin: 1em auto;
+}
+
+/*
+ * Extra utilities.
+ */
+.flex-equal > * {
+  -ms-flex: 1;
+  flex: 1;
+}
+
+@media (min-width: 768px) {
+  .flex-md-equal > * {
+    -ms-flex: 1;
+    flex: 1;
+  }
 }
