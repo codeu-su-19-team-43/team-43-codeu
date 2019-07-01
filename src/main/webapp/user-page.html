@@ -126,16 +126,31 @@ limitations under the License.
           class="hidden mb-5"
           enctype="multipart/form-data"
         >
-          Enter a new message:
-          <br />
-          <textarea name="message" id="message-input"></textarea>
-          <br />
-          Add an image to your message:
-          <br />
-          <span>Upload an image</span>
-          <input type="file" name="image" accept="image/*" />
-          <br />
-          <input type="submit" value="Submit" />
+          <div class="card">
+            <div class="card-header">
+              Create Post
+            </div>
+            <div class="card-body">
+              <textarea name="message" id="message-input"></textarea>
+              <label
+                class="upload-photo-button p-1 m-0 border-0 btn btn-default btn-file"
+                id="pload-photo"
+              >
+                <i class="fas fa-camera-retro"></i>
+                <p>Photo</p>
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  id="message-image-upload-input"
+                  style="display: none;"
+                />
+              </label>
+              <button type="submit" class="btn btn-sm btn-info mr-4">
+                Share
+              </button>
+            </div>
+          </div>
         </form>
 
         <ul class="nav nav-tabs content-tab" id="tab" role="tablist">
