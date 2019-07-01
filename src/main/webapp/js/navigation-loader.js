@@ -88,11 +88,34 @@ function buildNavigationLinks() {
   addLoginOrLogoutLinkToNavigation();
 }
 
-// Set transparency of navigationbar
+// Set transparency of navigation bar
 function setTransparency() {
   if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
     const navBar = document.getElementById('navigationBar');
     navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent navBarTransparent';
+  }
+}
+
+// Remove transparency of navigation bar in index.html on scrolling over landing page description
+function scrollTransparency() {
+  if (window.location.pathname !== '/index.html' && window.location.pathname !== '/') {
+    return;
+  }
+
+  let scrollStart = 0;
+  const landingPageDescription = $('.landing-page-description');
+  const offset = landingPageDescription.offset();
+  console.log(offset);
+  if (landingPageDescription.length) {
+    $(document).scroll(function changeTransparencyOnScroll() {
+      const navBar = document.getElementById('navigationBar');
+      scrollStart = $(this).scrollTop();
+      if (scrollStart > offset.top) {
+        navBar.className = 'navbar navbar-expand-lg d-flex fixed-top border-bottom shadow-sm navbar-light bg-light';
+      } else {
+        navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent navBarTransparent';
+      }
+    });
   }
 }
 
@@ -104,6 +127,7 @@ function loadNavigationBar() {
       document.body.insertBefore(navElement, document.body.firstChild);
       buildNavigationLinks();
       setTransparency();
+      scrollTransparency();
     });
   });
 }
