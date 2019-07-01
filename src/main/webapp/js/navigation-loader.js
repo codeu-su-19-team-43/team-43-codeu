@@ -105,7 +105,6 @@ function scrollTransparency() {
   let scrollStart = 0;
   const landingPageDescription = $('.landing-page-description');
   const offset = landingPageDescription.offset();
-  console.log(offset);
   if (landingPageDescription.length) {
     $(document).scroll(function changeTransparencyOnScroll() {
       const navBar = document.getElementById('navigationBar');
