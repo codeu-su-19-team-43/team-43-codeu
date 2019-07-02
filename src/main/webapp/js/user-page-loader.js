@@ -174,7 +174,7 @@ function fetchUserProfile() {
 function inputTextEditor() {
   const config = {
     removePlugins: ['ImageUpload', 'Heading'],
-    toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|']
+    toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|'],
   };
 
   // eslint-disable-next-line no-undef
