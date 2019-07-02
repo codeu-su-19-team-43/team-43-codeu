@@ -363,10 +363,21 @@ function autoGrow(element) {
   element.style.height = `${element.scrollHeight}px`;
 }
 
+function getUserProfileUrl(email) {
+  let userProflieImageUrl;
+  $.ajaxSetup({ async: false });
+  $.getJSON(`/user-profile?user=${email}`, (user) => {
+    userProflieImageUrl = user.profileImageUrl;
+  });
+  $.ajaxSetup({ async: true });
+
+  return userProflieImageUrl;
+}
+
 function buildCommentInput(messageId) {
   const commentFormHtml = `<li class="media">
                             <a class="mr-3 my-2" href="#">
-                              <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
+                              <img src="${getUserProfileUrl(userEmail)}" class="comment-image rounded-circle" alt="...">
                             </a>
                             <div class="media-body">
                               <div id="comment-input-container" class="comment-input-container">
@@ -399,7 +410,7 @@ function buildCommentInput(messageId) {
 function buildCommentItem(comment) {
   return `<li class="media">
             <a class="mr-3 my-2" href="#">
-              <img src="./images/aboutus-avatar-anqi.jpg" class="comment-image rounded-circle" alt="...">
+              <img src="${getUserProfileUrl(comment.user)}" class="comment-image rounded-circle" alt="...">
             </a>
             <div class="media-body">
               <div class="d-flex justify-content-between mt-1">
