@@ -125,18 +125,18 @@ limitations under the License.
           class="hidden mb-5"
           enctype="multipart/form-data"
         >
-          <div class="card">
-            <div class="card-header">
-              Create Post
-            </div>
-            <div class="card-body">
-              <textarea name="message" id="message-input"></textarea>
+          <div>
+            <textarea name="message" id="message-input" rows="10"></textarea>
+            <div
+              id="buttons-container"
+              class="buttons-container d-flex justify-content-between p-1 border-top-0 border card-footer"
+            >
               <label
-                class="upload-photo-button p-1 m-0 border-0 btn btn-default btn-file"
-                id="pload-photo"
+                id="upload-photo-button"
+                class="btn btn-default btn-file btn-light btn-sm font-weight-light border-right mb-0 rounded-0"
               >
-                <i class="fas fa-camera-retro"></i>
-                <p>Photo</p>
+                <i class="fas fa-camera-retro mr-1"></i>
+                Photo
                 <input
                   type="file"
                   name="image"
@@ -145,7 +145,20 @@ limitations under the License.
                   style="display: none;"
                 />
               </label>
-              <button type="submit" class="btn btn-sm btn-info mr-4">
+              <button
+                id="location-button"
+                class="btn btn-light btn-sm font-weight-light border-right rounded-0"
+                onclick=""
+              >
+                <i class="fas fa-map-marker-alt mr-1"></i>
+                Location
+              </button>
+              <button
+                type="submit"
+                id="submit-button"
+                class="btn btn-info btn-sm rounded-0 font-weight-bolder"
+              >
+                <i class="fas fa-podcast mr-1"></i>
                 Share
               </button>
             </div>
