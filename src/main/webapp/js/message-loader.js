@@ -588,3 +588,21 @@ function fetchMessagesByImageLabels(imageLabels) {
   });
   buildMessagesDivFromUrl(url, 'message-cards-container');
 }
+
+/** Build messages div with given sort criteria */
+function onSelectSetSortCriteria() {
+  const sortCriteria = $(this).val();
+
+  let url = window.location.pathname.replace('.html', '');
+  const parameterStartIdx = window.location.href.indexOf('?');
+  if (parameterStartIdx !== -1) {
+    url += window.location.href.substring(parameterStartIdx);
+  }
+
+  buildMessagesDivFromUrl(url, 'message-cards-container', sortCriteria);
+}
+
+/** Listen for sort menu changes and trigger sorting function */
+$(document).ready(() => {
+  $('#sortCriteriaMenu').change(onSelectSetSortCriteria);
+});
