@@ -68,6 +68,10 @@ public class UserProfileServlet extends HttpServlet {
     user.setWebsite(Jsoup.clean(request.getParameter("website"), Whitelist.basic()));
     user.setAboutMe(Jsoup.clean(request.getParameter("aboutme"), Whitelist.basic()));
 
+    // TODO: Validate language code before setting it
+    user.setLangCodeForTranslation(Jsoup.clean(request.getParameter("langCodeForTranslation"),
+            Whitelist.basic()));
+
     datastore.storeUser(user);
     
     response.sendRedirect("/user-page.html?user=" + userEmail);
