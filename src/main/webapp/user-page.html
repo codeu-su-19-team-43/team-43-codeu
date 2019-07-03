@@ -125,19 +125,44 @@ limitations under the License.
           class="hidden mb-5"
           enctype="multipart/form-data"
         >
-          Enter a new message:
-          <br />
-          <textarea name="message" id="message-input"></textarea>
-          <br />
-          Add an image to your message:
-          <br />
-          <span>Upload an image</span>
-          <input type="file" name="image" accept="image/*" />
-          <br />
-          <span>Paste image URL</span>
-          <input type="text" name="imageUrl" id="image-url" />
-          <br />
-          <input type="submit" value="Submit" />
+          <div>
+            <textarea name="message" id="message-input" rows="10"></textarea>
+            <div
+              id="buttons-container"
+              class="buttons-container d-flex justify-content-between p-1 border-top-0 border card-footer"
+            >
+              <label
+                id="upload-photo-button"
+                class="btn btn-default btn-file btn-light btn-sm font-weight-light border-right mb-0 rounded-0"
+              >
+                <i class="fas fa-camera-retro mr-1"></i>
+                Photo
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  id="message-image-upload-input"
+                  style="display: none;"
+                />
+              </label>
+              <button
+                id="location-button"
+                class="btn btn-light btn-sm font-weight-light border-right rounded-0"
+                disabled
+              >
+                <i class="fas fa-map-marker-alt mr-1"></i>
+                Location
+              </button>
+              <button
+                type="submit"
+                id="submit-button"
+                class="btn btn-info btn-sm rounded-0 font-weight-bolder"
+              >
+                <i class="fas fa-share-square mr-1"></i>
+                Share
+              </button>
+            </div>
+          </div>
         </form>
 
         <ul class="nav nav-tabs content-tab" id="tab" role="tablist">
