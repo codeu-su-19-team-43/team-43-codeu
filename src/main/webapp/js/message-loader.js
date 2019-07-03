@@ -533,12 +533,42 @@ function buildMessageDiv(message) {
   return cardContainer;
 }
 
-function buildMessagesDivFromUrl(url, parentId) {
+/** Gets message property to sort on and sort order based on criteria.  */
+function getSortParameters(sortCriteria) {
+  let sortProperty = '';
+  let sortOrder = '';
+  if (sortCriteria === 'Least Recent') {
+    sortProperty = 'timestamp';
+    sortOrder = 'asc';
+  } else if (sortCriteria === 'Positive to Negative') {
+    sortProperty = 'sentimentScore';
+    sortOrder = 'desc';
+  } else if (sortCriteria === 'Negative to Positive') {
+    sortProperty = 'sentimentScore';
+    sortOrder = 'asc';
+  } else {
+    sortProperty = 'timestamp';
+    sortOrder = 'desc';
+  }
+
+  return { sortProperty, sortOrder };
+}
+
+function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
   fetch(url)
     .then(response => response.json())
-    .then((messages) => {
+    .then((messagesJson) => {
+      let messages = messagesJson;
+
+      if (sortCriteria) {
+        const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
+        // eslint-disable-next-line no-undef
+        messages = _.orderBy(messages, [sortProperty], [sortOrder]);
+      }
+
       const messagesContainer = document.getElementById(parentId);
       messagesContainer.innerHTML = '';
+
       messages.forEach((message) => {
         const messageDiv = buildMessageDiv(message);
         messagesContainer.appendChild(messageDiv);
@@ -572,3 +602,21 @@ function fetchMessagesByImageLabels(imageLabels) {
   });
   buildMessagesDivFromUrl(url, 'message-cards-container');
 }
+
+/** Build messages div with given sort criteria */
+function onSelectSetSortCriteria() {
+  const sortCriteria = $(this).val();
+
+  let url = window.location.pathname.replace('.html', '');
+  const parameterStartIdx = window.location.href.indexOf('?');
+  if (parameterStartIdx !== -1) {
+    url += window.location.href.substring(parameterStartIdx);
+  }
+
+  buildMessagesDivFromUrl(url, 'message-cards-container', sortCriteria);
+}
+
+/** Listen for sort menu changes and trigger sorting function */
+$(document).ready(() => {
+  $('#sortCriteriaMenu').change(onSelectSetSortCriteria);
+});

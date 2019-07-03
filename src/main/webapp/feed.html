@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script
-      src="js/header-loader.js"
-      onload="loadHeader('Message Feed')"
-    ></script>
+    <script src="js/header-loader.js" onload="loadHeader('Message Feed')"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
     <script src="js/feed-page-loader.js"></script>
     <link rel="stylesheet" href="/css/message.css" />
     <link rel="stylesheet" href="/css/feed-page.css" />
@@ -56,25 +54,39 @@
     </div>
 
     <div id="content-container">
-      <div class="search-container border-bottom pb-4 mb-5">
-        <div class="search-bar mb-3">
-          <input
-            type="text"
-            class="searchText font-weight-lighter"
-            placeholder="Search"
-            onfocus="this.placeholder = ''"
-            onblur="this.placeholder = 'Search'"
-            id="search-input"
-          />
-          <button
-            type="submit"
-            class="searchButton"
-            onclick="onClickSearchButton()"
-          >
-            <i class="fa fa-search"></i>
-          </button>
+      <div class="search-sort-container border-bottom pb-4 mb-5">
+        <div class="d-flex justify-content-between">
+          <div class="search-bar mb-3">
+            <input
+              type="text"
+              class="searchText font-weight-lighter"
+              placeholder="Search by image label"
+              onfocus="this.placeholder = ''"
+              onblur="this.placeholder = 'Search by image label'"
+              id="search-input"
+            />
+            <button
+              type="submit"
+              class="searchButton"
+              onclick="onClickSearchButton()">
+              <i class="fa fa-search"></i>
+            </button>
+          </div>
+          <div class="sort-menu input-group mb-3">
+            <select class="custom-select" id="sortCriteriaMenu">
+              <option selected>Choose sort criteria</option>
+              <option value="Most Recent">Most Recent (default)</option>
+              <option value="Least Recent">Least Recent</option>
+              <option value="Positive to Negative">Positive to Negative</option>
+              <option value="Negative to Positive">Negative to Positive</option>
+            </select>
+            <div class="input-group-append">
+              <label class="input-group-text bg-info text-light sort-menu-label" for="sortCriteriaMenu">
+                Sort By
+              </label>
+            </div>
+          </div>
         </div>
-
         <div
           class="search-tag-container d-flex flex-wrap"
           id="search-tag-container"

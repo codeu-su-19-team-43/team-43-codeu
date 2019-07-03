@@ -2,7 +2,7 @@ body > .page-header {
   margin: 7em 0em 4em 0em;
 }
 
-.search-container {
+.search-sort-container {
   width: 85%;
   margin: auto;
 }
@@ -22,11 +22,11 @@ body > .page-header {
   width: 100%;
   border: 2px solid rgb(23, 162, 184);
   border-right: none;
-  padding: 5px;
+  padding: 15px;
   height: 36px;
   border-radius: 5px 0 0 5px;
   outline: none;
-  color: rgb(23, 162, 184, 0.9);
+  color: rgba(23, 162, 184, 0.9);
 }
 
 .searchTerm:focus{
@@ -52,6 +52,19 @@ body > .page-header {
 .message-container {
   width: 86.5%;;
   margin: auto;
+}
+
+.sort-menu {
+  padding-left: 15px;
+  width: 350px;
+}
+
+.custom-select {
+  border: 2px solid rgb(23, 162, 184);
+}
+
+.sort-menu-label {
+  border: none;
 }
 
 @media (min-width: 30em) {
