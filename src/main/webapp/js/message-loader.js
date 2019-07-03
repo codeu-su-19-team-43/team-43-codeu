@@ -388,6 +388,18 @@ function getUserProfileUrl(email) {
   return userProflieImageUrl;
 }
 
+function getUsername(email) {
+  let username;
+  $.ajaxSetup({ async: false });
+  $.getJSON(`/user-profile?user=${email}`, (user) => {
+    // eslint-disable-next-line prefer-destructuring
+    username = user.username;
+  });
+  $.ajaxSetup({ async: true });
+
+  return (username != null && username !== '') ? username : email;
+}
+
 function buildCommentInput(messageId) {
   const commentFormHtml = `<li class="media">
                             <a class="mr-3 my-2" href="#">
