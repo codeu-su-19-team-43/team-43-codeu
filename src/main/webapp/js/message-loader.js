@@ -16,16 +16,31 @@ function fetchUserEmail() {
 
 fetchUserEmail();
 
-function getIconTypeUsingSentimentScore(sentimentScore) {
-  const iconClassNames = ['sentiment-score-icon', 'fas'];
+function getBadgeUsingSentimentScore(sentimentScore) {
+  const sentimentScoreBadge = document.createElement('span');
   if (sentimentScore > 0.5) {
-    iconClassNames.push('fa-laugh-beam');
+    sentimentScoreBadge.classList.add('badge', 'badge-pill', 'badge-success');
+    sentimentScoreBadge.appendChild(document.createTextNode(
+      'Positive',
+    ));
   } else if (sentimentScore < -0.5) {
-    iconClassNames.push('fa-frown');
+    sentimentScoreBadge.classList.add('badge', 'badge-pill', 'badge-danger');
+    sentimentScoreBadge.appendChild(document.createTextNode(
+      'Negative',
+    ));
   } else {
-    iconClassNames.push('fa-meh-blank');
+    sentimentScoreBadge.classList.add('badge', 'badge-pill', 'badge-secondary');
+    sentimentScoreBadge.appendChild(document.createTextNode(
+      'Neutral',
+    ));
   }
-  return iconClassNames;
+
+  const scoreText = Math.trunc(sentimentScore * 100) / 100;
+  sentimentScoreBadge.appendChild(
+    document.createTextNode(` (${scoreText.toString()})`),
+  );
+
+  return sentimentScoreBadge;
 }
 
 function getTextForTts(message) {
@@ -79,20 +94,18 @@ function buildInfoDiv(message) {
   infoDiv.classList.add('d-flex', 'justify-content-between', 'align-items-center');
 
   const sentimentScoreDiv = document.createElement('div');
-  const sentimentScoreIcon = document.createElement('i');
-  sentimentScoreIcon.classList.add(...getIconTypeUsingSentimentScore(message.sentimentScore));
-  sentimentScoreDiv.appendChild(sentimentScoreIcon);
-  const sentimentScore = Math.trunc(message.sentimentScore * 100) / 100;
-  sentimentScoreDiv.appendChild(document.createTextNode(sentimentScore));
+  const sentimentScoreBadge = getBadgeUsingSentimentScore(message.sentimentScore);
+  sentimentScoreDiv.appendChild(sentimentScoreBadge);
 
   infoDiv.appendChild(sentimentScoreDiv);
 
+  const iconGroupDiv = document.createElement('div');
   const textToSpeechIcon = document.createElement('i');
-  textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon');
+  textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon', 'mr-2');
   textToSpeechIcon.addEventListener('click', () => {
     playTtsAudio(getTextForTts(message));
   });
-  infoDiv.appendChild(textToSpeechIcon);
+  iconGroupDiv.appendChild(textToSpeechIcon);
 
   const translateIcon = document.createElement('i');
   translateIcon.classList.add('fas', 'fa-language', 'translate-icon');
@@ -100,7 +113,8 @@ function buildInfoDiv(message) {
   const translateResultDivId = `translateCollapseDiv-${message.id}`;
   translateIcon.setAttribute('data-toggle', 'collapse');
   translateIcon.setAttribute('data-target', `#${translateResultDivId}`);
-  infoDiv.appendChild(translateIcon);
+  iconGroupDiv.appendChild(translateIcon);
+  infoDiv.appendChild(iconGroupDiv);
 
   const translateResult = document.createElement('div');
   translateResult.classList.add('collapse');
