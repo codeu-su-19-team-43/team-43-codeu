@@ -5,7 +5,7 @@ $.ajax({
 });
 
 let userEmail = null;
-let langCodeForTranslation = 'es';
+let langCodeForTranslation = 'es'; // default to Spanish on empty or invalid language code
 
 function fetchUserEmail() {
   $.ajaxSetup({ async: false });

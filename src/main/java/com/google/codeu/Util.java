@@ -1,12 +1,34 @@
 package com.google.codeu;
 
+import com.google.cloud.translate.Language;
+import com.google.cloud.translate.TranslateOptions;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Util {
 
-  static final int DEFAULT_IMAGE_COUNT = 10;
+  public static final int DEFAULT_IMAGE_COUNT = 10;
+  public static final String DEFAULT_LANG_CODE_FOR_TRANSLATION = "es";
+
+  private static final List<String> VALID_LANGUAGE_CODES = getValidTranslationLangCodes();
+
+  /**
+   * Returns a list with valid language translation codes for Google Cloud Translation.
+   */
+  private static List<String> getValidTranslationLangCodes() {
+    List<Language> supportedLanguages = TranslateOptions.getDefaultInstance().getService()
+            .listSupportedLanguages();
+
+    List<String> validLanguageCodes = new ArrayList<>();
+    for (Language lang: supportedLanguages) {
+      validLanguageCodes.add(lang.getCode());
+    }
+
+    return validLanguageCodes;
+  }
 
   /**
    * Converts list of favourite IDs as strings to list of favourite IDs as UUIDs.
@@ -28,7 +50,9 @@ public class Util {
     return uuids.stream().map(UUID::toString).collect(Collectors.toList());
   }
 
-  /**  Toggle the existence of a string in a list. */
+  /**
+   * Toggle the existence of a string in a list.
+   */
   public static List<String> toggleStringInList(List<String> list, String element) {
     if (list.contains(element)) {
       list.remove(element);
@@ -38,9 +62,18 @@ public class Util {
     return list;
   }
 
-  /**  Get the url of the default profile image. */
+  /**
+   * Get the url of the default profile image.
+   */
   public static String getDefaultProfileImageUrl() {
     return "./images/default-user-profile/"
         + (int)(Math.random() * (DEFAULT_IMAGE_COUNT - 1) + 1) + ".jpg";
+  }
+
+  /**
+   * Check if string is a valid language code for Google Cloud Translation.
+   */
+  public static boolean checkIfValidLanguageCode(String langCode) {
+    return VALID_LANGUAGE_CODES.contains(langCode);
   }
 }
