@@ -388,18 +388,6 @@ function getUserProfileUrl(email) {
   return userProflieImageUrl;
 }
 
-function getUsername(email) {
-  let username;
-  $.ajaxSetup({ async: false });
-  $.getJSON(`/user-profile?user=${email}`, (user) => {
-    // eslint-disable-next-line prefer-destructuring
-    username = user.username;
-  });
-  $.ajaxSetup({ async: true });
-
-  return (username == null || username !== '') ? email : username;
-}
-
 function buildCommentInput(messageId) {
   const commentFormHtml = `<li class="media">
                             <a class="mr-3 my-2" href="#">
@@ -435,12 +423,12 @@ function buildCommentInput(messageId) {
 
 function buildCommentItem(comment) {
   return `<li class="media">
-            <a class="mr-3 my-2" href="/user-page.html?user=${comment.user}">
+            <a class="mr-3 my-2" href="#">
               <img src="${getUserProfileUrl(comment.user)}" class="comment-image rounded-circle" alt="...">
             </a>
             <div class="media-body">
               <div class="d-flex justify-content-between mt-1">
-                <a href="/user-page.html?user=${comment.user}"><p class="mb-0 font-weight-normal comment-username">${getUsername(comment.user)}</p></a>
+                <a href="#"><p class="mb-0 font-weight-normal comment-username">${comment.user}</p></a>
                 <p class="card-text mb-0 comment-time-container">
                   <small class="text-muted">${getTimeText(comment.timestamp)}</small>  
                 </p>
