@@ -99,12 +99,13 @@ function buildInfoDiv(message) {
 
   infoDiv.appendChild(sentimentScoreDiv);
 
+  const iconGroupDiv = document.createElement('div');
   const textToSpeechIcon = document.createElement('i');
-  textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon');
+  textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon', 'mr-2');
   textToSpeechIcon.addEventListener('click', () => {
     playTtsAudio(getTextForTts(message));
   });
-  infoDiv.appendChild(textToSpeechIcon);
+  iconGroupDiv.appendChild(textToSpeechIcon);
 
   const translateIcon = document.createElement('i');
   translateIcon.classList.add('fas', 'fa-language', 'translate-icon');
@@ -112,7 +113,8 @@ function buildInfoDiv(message) {
   const translateResultDivId = `translateCollapseDiv-${message.id}`;
   translateIcon.setAttribute('data-toggle', 'collapse');
   translateIcon.setAttribute('data-target', `#${translateResultDivId}`);
-  infoDiv.appendChild(translateIcon);
+  iconGroupDiv.appendChild(translateIcon);
+  infoDiv.appendChild(iconGroupDiv);
 
   const translateResult = document.createElement('div');
   translateResult.classList.add('collapse');
