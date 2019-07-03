@@ -173,8 +173,10 @@ function fetchUserProfile() {
 
 function inputTextEditor() {
   const config = {
-    removePlugins: ['ImageUpload', 'Heading'], toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|'],
+    removePlugins: ['ImageUpload', 'Heading'],
+    toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|'],
   };
+
   // eslint-disable-next-line no-undef
   ClassicEditor.create(document.getElementById('message-input'), config);
 }

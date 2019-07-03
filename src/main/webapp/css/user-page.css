@@ -96,12 +96,20 @@ body > .page-header {
 }
 
 #message-input {
-  height: 100px;
+  height: 800px;
   width: 100%;
 }
 
-#image-url {
-  width: 100%;
+.buttons-container {
+  border-color: rgb(196, 196, 196) !important;
+}
+
+.buttons-container > * {
+  width: 33.333%;
+}
+
+.buttons-container > *:hover {
+  cursor: pointer;
 }
 
 .content-tab > li > a {
