@@ -6,8 +6,11 @@ function fetchImageLabels() {
     parameterImageLabels.forEach((parameterImageLabel) => {
       const searchTagContainer = document.getElementById('search-tag-container');
       const imageLabelButton = document.createElement('div');
+      const uriEncodedParameterImageLabel = encodeURIComponent(parameterImageLabel);
       imageLabelButton.innerHTML = `<button type="button" class="btn btn-info btn-sm mr-2 mb-2 pr-1 imageLabelButton">
-                                      <span class="mr-1">${parameterImageLabel}</span>  <span onClick="onClickImageLabelCancelButton('${parameterImageLabel}')">&times;</span>
+                                      <span class="mr-1">${parameterImageLabel}</span>  <span onClick="onClickImageLabelCancelButton('${uriEncodedParameterImageLabel}')">
+                                        <i class="fas fa-times-circle"></i>
+                                      </span>
                                     </button>`;
       searchTagContainer.appendChild(imageLabelButton);
     });
