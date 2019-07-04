@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <script
-      src="js/header-loader.js"
-      onload="loadHeader('Community Page')"
-    ></script>
-    <script src="/js/community-page-loader.js"></script>
-    <link rel="stylesheet" href="/css/community-page.css" />
-  </head>
-  <body onload="buildUI()">
-    <div class="text-center page-header">
-      <h1 class="display-4">PhotoBook Community</h1>
-      <p class="font-weight-lighter">
-        Meet the people who share the same passion for photography as you!
-      </p>
+
+<head>
+  <title>Community</title>
+  <script src="js/header-loader.js" onload="loadHeader('Community Page')"></script>
+  <script src="/js/community-page-loader.js"></script>
+  <link rel="stylesheet" href="/css/community-page.css" />
+</head>
+
+<body onload="buildUI()">
+  <div class="text-center page-header">
+    <h1 class="display-4">PhotoBook Community</h1>
+    <p class="font-weight-lighter">
+      Meet the people who share the same passion for photography as you!
+    </p>
+  </div>
+  <div id="content" class="content-container">
+    <div class="card-columns" id="user-card-container">
+      Loading...
     </div>
-    <div id="content" class="content-container">
-      <div class="card-columns" id="user-card-container">
-        Loading...
-      </div>
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>
