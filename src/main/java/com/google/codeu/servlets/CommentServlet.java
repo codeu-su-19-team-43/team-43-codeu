@@ -2,6 +2,7 @@ package com.google.codeu.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.codeu.Util;
 import com.google.codeu.data.Comment;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.Message;
@@ -87,6 +88,8 @@ public class CommentServlet extends HttpServlet {
     String rawUserText = requestBody.getUserText();
     String userText = Jsoup.clean(rawUserText, Whitelist.basic());
     Comment comment = new Comment(user, userText);
+
+    comment.setSentimentScore(Util.getSentimentScoreOfText(rawUserText));
 
     datastore.addCommentToMessage(messageId, comment);
   }

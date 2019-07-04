@@ -21,8 +21,19 @@ public class Comment {
   private String user;
   private long timestamp;
   private String text;
+  private double sentimentScore;
 
   public Comment(String user, String text) {
     this(UUID.randomUUID(), user, System.currentTimeMillis(), text);
+  }
+
+  /**
+   * Constructs a new {@link Comment}.
+   */
+  public Comment(UUID id, String user, long timestamp, String text) {
+    this.id = id;
+    this.user = user;
+    this.timestamp = timestamp;
+    this.text = text;
   }
 }
