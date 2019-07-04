@@ -455,6 +455,25 @@ function buildCommentInput(messageId) {
   return commentFormHtml;
 }
 
+function buildCommentSentimentIndicator(sentimentScore) {
+  const sentimentScoreText = Math.trunc(sentimentScore * 100) / 100;
+  if (sentimentScore > 0.5) {
+    return `<span class="badge badge-pill badge-success sentiment-score-indicator">
+              <small>${sentimentScoreText}</small>
+            </span>`;
+  }
+
+  if (sentimentScore < -0.5) {
+    return `<span class="badge badge-pill badge-danger sentiment-score-indicator">
+              <small>${sentimentScoreText}</small>
+            </span>`;
+  }
+
+  return `<span class="badge badge-pill badge-secondary sentiment-score-indicator">
+            <small>${sentimentScoreText}</small>
+          </span>`;
+}
+
 function buildCommentItem(comment) {
   return `<li class="media">
             <a class="mr-3 my-2" href="/user-page.html?user=${comment.user}">
@@ -467,7 +486,10 @@ function buildCommentItem(comment) {
                   <small class="text-muted">${getTimeText(comment.timestamp)}</small>  
                 </p>
               </div>
-              <p class="font-weight-light comment-text mb-0">${comment.text}</p>
+              <div class="d-flex justify-content-between mt-1">
+                <p class="font-weight-light comment-text mb-0">${comment.text}</p>
+                ${comment.sentimentScore ? buildCommentSentimentIndicator(comment.sentimentScore) : ''}
+              </div>
             </div>
           </li>`;
 }

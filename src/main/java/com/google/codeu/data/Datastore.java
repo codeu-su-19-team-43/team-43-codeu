@@ -59,8 +59,8 @@ public class Datastore {
     messageEntity.setProperty("sentimentScore", message.getSentimentScore());
     messageEntity.setProperty("commentIdsAsStrings",
             Util.convertUuidsToStrings(message.getCommentIds()));
-    messageEntity.setProperty("favouritedUserEmails",message.getFavouritedUserEmails());
-    messageEntity.setProperty("likedUserEmails",message.getLikedUserEmails());
+    messageEntity.setProperty("favouritedUserEmails", message.getFavouritedUserEmails());
+    messageEntity.setProperty("likedUserEmails", message.getLikedUserEmails());
     datastore.put(messageEntity);
   }
 
@@ -214,6 +214,7 @@ public class Datastore {
     commentEntity.setProperty("user", comment.getUser());
     commentEntity.setProperty("text", comment.getText());
     commentEntity.setProperty("timestamp", comment.getTimestamp());
+    commentEntity.setProperty("sentimentScore", comment.getSentimentScore());
 
     datastore.put(commentEntity);
   }
@@ -284,7 +285,14 @@ public class Datastore {
     String user = (String) entity.getProperty("user");
     long timestamp = (long) entity.getProperty("timestamp");
     String text = (String) entity.getProperty("text");
-    return new Comment(commentId, user, timestamp, text);
+
+    Comment comment = new Comment(commentId, user, timestamp, text);
+
+    if (entity.hasProperty("sentimentScore")) {
+      comment.setSentimentScore((double) entity.getProperty("sentimentScore"));
+    }
+
+    return comment;
   }
 
   /**
