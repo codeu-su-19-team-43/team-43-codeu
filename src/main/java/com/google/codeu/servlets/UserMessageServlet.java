@@ -13,9 +13,6 @@ import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.cloud.language.v1.Document;
-import com.google.cloud.language.v1.LanguageServiceClient;
-import com.google.cloud.language.v1.Sentiment;
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.BatchAnnotateImagesResponse;
@@ -24,6 +21,7 @@ import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Feature.Type;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.codeu.Util;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.Marker;
 import com.google.codeu.data.Message;
@@ -130,18 +128,8 @@ public class UserMessageServlet extends HttpServlet {
       }
     }
 
-    // Set text for sentiment analysis.
-    Document doc = Document.newBuilder().setContent(rawUserText)
-            .setType(Document.Type.HTML).build();
-
-    // Perform sentiment analysis.
-    LanguageServiceClient languageService = LanguageServiceClient.create();
-    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
-    double sentimentScore = sentiment.getScore();
-    languageService.close();
-
     // Store sentiment score in message.
-    message.setSentimentScore(sentimentScore);
+    message.setSentimentScore(Util.getSentimentScoreOfText(rawUserText));
 
     // Create empty list for comments.
     List<UUID> commentIds = new ArrayList<>();
