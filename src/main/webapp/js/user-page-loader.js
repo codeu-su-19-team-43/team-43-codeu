@@ -47,7 +47,7 @@ function setPageTitle() {
 function loadProfileForm() {
   const url = `/user-profile?user=${parameterUsername}`;
   fetch(url).then(response => response.json()).then((userProfile) => {
-    const profileForm = document.getElementById('profile-form');
+    const profileForm = document.getElementById('profile-form-container');
 
     profileElements.reverse().forEach((element) => {
       const inputGroup = document.createElement('div');
@@ -141,6 +141,7 @@ function fetchUserProfile() {
   fetch(url).then(response => response.json()).then((userProfile) => {
     if (userProfile != null) {
       const profileContainer = document.getElementById('profile-detail-container');
+      profileContainer.innerHTML = '';
 
       if ('username' in userProfile && userProfile.username != null && userProfile.username !== '') {
         document.getElementById('username').innerHTML = userProfile.username;
@@ -150,6 +151,8 @@ function fetchUserProfile() {
 
       if ('aboutMe' in userProfile && userProfile.aboutMe != null && userProfile.aboutMe !== '') {
         document.getElementById('aboutme').innerHTML = userProfile.aboutMe;
+      } else {
+        document.getElementById('aboutme').innerHTML = '';
       }
 
       profileElements.forEach((element) => {
@@ -186,6 +189,7 @@ function inputTextEditor() {
   // eslint-disable-next-line no-undef
   ClassicEditor.create(document.getElementById('message-input'), config);
 }
+
 /** Fetches data and populates the UI of the page. */
 // eslint-disable-next-line no-unused-vars
 function buildUI() {

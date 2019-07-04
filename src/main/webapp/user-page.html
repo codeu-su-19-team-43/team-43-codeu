@@ -16,131 +16,237 @@ limitations under the License.
 
 <!DOCTYPE html>
 <html>
+  <head>
+    <script src="js/header-loader.js" onload="loadHeader('User Page')"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+    <script src="js/user-page-loader.js"></script>
+    <link rel="stylesheet" href="/css/user-page.css" />
+    <link rel="stylesheet" href="/css/message.css" />
+    <script>
+      function onClickEditProfileButton() {
+        document.getElementById("edit-profile-button").classList.add("hidden");
+        document
+          .getElementById("profile-info-container")
+          .classList.add("hidden");
+        document
+          .getElementById("profile-form-container")
+          .classList.remove("hidden");
+      }
 
-<head>
-  <script src="js/header-loader.js" onload="loadHeader('User Page')"></script>
-  <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
-  <script src="js/user-page-loader.js"></script>
-  <link rel="stylesheet" href="/css/user-page.css" />
-  <link rel="stylesheet" href="/css/message.css" />
-  <script>
-    function onClickEditProfileButton() {
-      document.getElementById("edit-profile-button").classList.add("hidden");
-      document
-        .getElementById("profile-info-container")
-        .classList.add("hidden");
-      document
-        .getElementById("profile-form-container")
-        .classList.remove("hidden");
-    }
+      function onCancelEditProfileButton() {
+        document
+          .getElementById("profile-form-container")
+          .classList.add("hidden");
+        document
+          .getElementById("edit-profile-button")
+          .classList.remove("hidden");
+        document
+          .getElementById("profile-info-container")
+          .classList.remove("hidden");
+      }
 
-    function onCancelEditProfileButton() {
-      document
-        .getElementById("profile-form-container")
-        .classList.add("hidden");
-      document
-        .getElementById("edit-profile-button")
-        .classList.remove("hidden");
-      document
-        .getElementById("profile-info-container")
-        .classList.remove("hidden");
-    }
-  </script>
-</head>
+      function onClickSubmitProfileButton() {
+        const profile = {
+          aboutme: document.getElementById("aboutme-input").value,
+          username: document.getElementById("username-input").value,
+          location: document.getElementById("location-input").value,
+          organization: document.getElementById("organization-input").value,
+          website: document.getElementById("website-input").value,
+          langCodeForTranslation: document.getElementById(
+            "language-for-translation-input"
+          ).value
+        };
+        $.ajax({
+          contentType: "application/json",
+          data: JSON.stringify(profile),
+          processData: false,
+          type: "POST",
+          url: "/user-profile"
+        }).done(() => {
+          onCancelEditProfileButton();
+          fetchUserProfile();
+        });
+      }
+    </script>
+  </head>
 
-<body onload="buildUI();">
-  <div class="content-container mt-7 pt-4">
-    <div class="left-container pr-4 position-sticky">
-      <form id="profile-image-form" method="POST" class="mb-5" enctype="multipart/form-data">
-        <div class="profile-image-container">
-          <img id="user-profile-image" alt="User Profile Image" class="rounded border" />
-          <label class="edit-profile-image p-1 m-0 border-0 btn btn-default btn-file hidden" id="edit-profile-image">
-            <i class="fas fa-pencil-alt fa-2x"></i>
-            <input type="file" name="image" accept="image/*" id="profile-image-upload-input" style="display: none;" />
-          </label>
-        </div>
-      </form>
+  <body onload="buildUI();">
+    <div class="content-container mt-7 pt-4">
+      <div class="left-container pr-4 position-sticky">
+        <form
+          id="profile-image-form"
+          method="POST"
+          class="mb-5"
+          enctype="multipart/form-data"
+        >
+          <div class="profile-image-container">
+            <img
+              id="user-profile-image"
+              alt="User Profile Image"
+              class="rounded border"
+            />
+            <label
+              class="edit-profile-image p-1 m-0 border-0 btn btn-default btn-file hidden"
+              id="edit-profile-image"
+            >
+              <i class="fas fa-pencil-alt fa-2x"></i>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                id="profile-image-upload-input"
+                style="display: none;"
+              />
+            </label>
+          </div>
+        </form>
 
-      <div class="profile-container mt-5" id="profile-container">
-        <div id="profile-info-container">
-          <div class="border-bottom pb-3 pl-1">
-            <h4 class="card-title" id="username"></h4>
-            <h6 class="font-weight-lighter text-muted" id="aboutme"></h6>
+        <div class="profile-container mt-5" id="profile-container">
+          <div id="profile-info-container">
+            <div class="border-bottom pb-3 pl-1">
+              <h4 class="card-title" id="username"></h4>
+              <h6 class="font-weight-lighter text-muted" id="aboutme"></h6>
+            </div>
+
+            <div
+              class="font-weight-lighter mt-3"
+              id="profile-detail-container"
+            ></div>
           </div>
 
-          <div class="font-weight-lighter mt-3" id="profile-detail-container"></div>
-        </div>
+          <button
+            class="btn btn-outline-info btn-sm hidden mt-3"
+            type="button"
+            id="edit-profile-button"
+            onclick="onClickEditProfileButton();"
+          >
+            Edit Profile
+          </button>
 
-        <button class="btn btn-outline-info btn-sm hidden mt-3" type="button" id="edit-profile-button"
-          onclick="onClickEditProfileButton();">
-          Edit Profile
-        </button>
-
-        <div id="profile-form-container" class="profileForm hidden">
-          <form action="/user-profile" method="POST" id="profile-form">
+          <div id="profile-form-container" class="profileForm hidden">
             <div class="button-container d-flex justify-content-center">
-              <button type="submit" class="btn btn-sm btn-info mr-4">
+              <button
+                type="button"
+                id="profile-submit-button"
+                class="btn btn-sm btn-info mr-4"
+                onclick="onClickSubmitProfileButton();"
+              >
                 Submit
               </button>
-              <button type="button" class="btn btn-sm btn-outline-info" onclick="onCancelEditProfileButton();">
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-info"
+                onclick="onCancelEditProfileButton();"
+              >
                 Cancel
               </button>
             </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="right-container pl-4">
-      <form id="message-form" method="POST" class="hidden mb-5" enctype="multipart/form-data">
-        <div>
-          <textarea name="message" id="message-input" rows="10"></textarea>
-          <div id="buttons-container"
-            class="buttons-container d-flex justify-content-between p-1 border-top-0 border card-footer">
-            <label id="upload-photo-button"
-              class="btn btn-default btn-file btn-light btn-sm font-weight-light border-right mb-0 rounded-0">
-              <i class="fas fa-camera-retro mr-1"></i>
-              Photo
-              <input type="file" name="image" accept="image/*" id="message-image-upload-input" style="display: none;" />
-            </label>
-            <button id="location-button" class="btn btn-light btn-sm font-weight-light border-right rounded-0" disabled>
-              <i class="fas fa-map-marker-alt mr-1"></i>
-              Location
-            </button>
-            <button type="submit" id="submit-button" class="btn btn-info btn-sm rounded-0 font-weight-bolder">
-              <i class="fas fa-share-square mr-1"></i>
-              Share
-            </button>
-          </div>
-        </div>
-      </form>
-
-      <ul class="nav nav-tabs content-tab" id="tab" role="tablist">
-        <li class="nav-item">
-          <a class="nav-link active" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab"
-            aria-controls="gallery" aria-selected="true">Gallery</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" id="favourite-tab" data-toggle="tab" href="#favourite" role="tab"
-            aria-controls="favourite" aria-selected="false">Favourite</a>
-        </li>
-      </ul>
-      <div class="tab-content" id="tab-content">
-        <div class="tab-pane fade show active user-gallery-container-tab-pane" id="gallery" role="tabpanel"
-          aria-labelledby="gallery-tab">
-          <div id="user-gallery-container" class="card-columns user-gallery-container">
-            Loading...
-          </div>
-        </div>
-        <div class="tab-pane fade favourite-messages-container-tab-pane" id="favourite" role="tabpanel"
-          aria-labelledby="favourite-tab">
-          <div id="favourite-messages-container" class="card-columns favourite-messages-container">
-            Loading...
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</body>
 
+      <div class="right-container pl-4">
+        <form
+          id="message-form"
+          method="POST"
+          class="hidden mb-5"
+          enctype="multipart/form-data"
+        >
+          <div>
+            <textarea name="message" id="message-input" rows="10"></textarea>
+            <div
+              id="buttons-container"
+              class="buttons-container d-flex justify-content-between p-1 border-top-0 border card-footer"
+            >
+              <label
+                id="upload-photo-button"
+                class="btn btn-default btn-file btn-light btn-sm font-weight-light border-right mb-0 rounded-0"
+              >
+                <i class="fas fa-camera-retro mr-1"></i>
+                Photo
+                <input
+                  type="file"
+                  name="image"
+                  accept="image/*"
+                  id="message-image-upload-input"
+                  style="display: none;"
+                />
+              </label>
+              <button
+                id="location-button"
+                class="btn btn-light btn-sm font-weight-light border-right rounded-0"
+                disabled
+              >
+                <i class="fas fa-map-marker-alt mr-1"></i>
+                Location
+              </button>
+              <button
+                type="submit"
+                id="submit-button"
+                class="btn btn-info btn-sm rounded-0 font-weight-bolder"
+              >
+                <i class="fas fa-share-square mr-1"></i>
+                Share
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <ul class="nav nav-tabs content-tab" id="tab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              id="gallery-tab"
+              data-toggle="tab"
+              href="#gallery"
+              role="tab"
+              aria-controls="gallery"
+              aria-selected="true"
+              >Gallery</a
+            >
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              id="favourite-tab"
+              data-toggle="tab"
+              href="#favourite"
+              role="tab"
+              aria-controls="favourite"
+              aria-selected="false"
+              >Favourite</a
+            >
+          </li>
+        </ul>
+        <div class="tab-content" id="tab-content">
+          <div
+            class="tab-pane fade show active user-gallery-container-tab-pane"
+            id="gallery"
+            role="tabpanel"
+            aria-labelledby="gallery-tab"
+          >
+            <div
+              id="user-gallery-container"
+              class="card-columns user-gallery-container"
+            >
+              Loading...
+            </div>
+          </div>
+          <div
+            class="tab-pane fade favourite-messages-container-tab-pane"
+            id="favourite"
+            role="tabpanel"
+            aria-labelledby="favourite-tab"
+          >
+            <div
+              id="favourite-messages-container"
+              class="card-columns favourite-messages-container"
+            >
+              Loading...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
