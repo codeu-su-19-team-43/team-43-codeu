@@ -5,6 +5,7 @@ $.ajax({
 });
 
 let userEmail = null;
+let langCodeForTranslation = 'es'; // default to Spanish on empty or invalid language code
 
 function fetchUserEmail() {
   $.ajaxSetup({ async: false });
@@ -15,6 +16,20 @@ function fetchUserEmail() {
 }
 
 fetchUserEmail();
+
+function fetchLanguageForTranslation() {
+  if (userEmail !== null) {
+    $.ajaxSetup({ async: false });
+    $.getJSON(`/user-profile?user=${userEmail}`, (userProfile) => {
+      if (userProfile.langCodeForTranslation) {
+        langCodeForTranslation = userProfile.langCodeForTranslation.toString();
+      }
+    });
+    $.ajaxSetup({ async: true });
+  }
+}
+
+fetchLanguageForTranslation();
 
 function getBadgeUsingSentimentScore(sentimentScore) {
   const sentimentScoreBadge = document.createElement('span');
@@ -86,7 +101,9 @@ function getTranslatedText(text, languageCode) {
       text,
       languageCode,
     }),
-  }).then(response => response.text());
+  }).then(response => response.text())
+    .catch(error => `Error: ${error}. You probably set an invalid language code in your profile! 
+    Update it and try again.`);
 }
 
 function buildInfoDiv(message) {
@@ -119,7 +136,7 @@ function buildInfoDiv(message) {
   const translateResult = document.createElement('div');
   translateResult.classList.add('collapse');
   translateResult.setAttribute('id', translateResultDivId);
-  getTranslatedText(message.text, 'es').then((translatedText) => {
+  getTranslatedText(message.text, langCodeForTranslation).then((translatedText) => {
     translateResult.innerHTML = translatedText;
   });
 

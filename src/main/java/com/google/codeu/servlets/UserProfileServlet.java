@@ -2,6 +2,7 @@ package com.google.codeu.servlets;
 
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.codeu.Util;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.User;
 import com.google.gson.Gson;
@@ -62,11 +63,22 @@ public class UserProfileServlet extends HttpServlet {
       user = new User();
       user.setEmail(userEmail);
     }
+
     user.setUsername(Jsoup.clean(request.getParameter("username"), Whitelist.basic()));
     user.setLocation(Jsoup.clean(request.getParameter("location"), Whitelist.basic()));
     user.setOrganization(Jsoup.clean(request.getParameter("organization"), Whitelist.basic()));
     user.setWebsite(Jsoup.clean(request.getParameter("website"), Whitelist.basic()));
     user.setAboutMe(Jsoup.clean(request.getParameter("aboutme"), Whitelist.basic()));
+
+    // Validate language code before setting it in datastore
+    String langCodeForTranslation = Util.DEFAULT_LANG_CODE_FOR_TRANSLATION;
+    String givenlangCodeForTranslation = Jsoup.clean(request.getParameter("langCodeForTranslation"),
+            Whitelist.basic()).trim();
+    if (givenlangCodeForTranslation.equals("")
+            || Util.checkIfValidLanguageCode(givenlangCodeForTranslation)) {
+      langCodeForTranslation = givenlangCodeForTranslation;
+    }
+    user.setLangCodeForTranslation(langCodeForTranslation);
 
     datastore.storeUser(user);
     

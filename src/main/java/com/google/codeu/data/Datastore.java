@@ -29,9 +29,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.codeu.Util;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -301,6 +299,7 @@ public class Datastore {
     userEntity.setProperty("website", user.getWebsite());
     userEntity.setProperty("aboutMe", user.getAboutMe());
     userEntity.setProperty("profileImageUrl", user.getProfileImageUrl());
+    userEntity.setProperty("langCodeForTranslation", user.getLangCodeForTranslation());
     userEntity.setProperty("favouriteMessageIdsAsStrings",
             Util.convertUuidsToStrings(user.getFavouriteMessageIds()));
     datastore.put(userEntity);
@@ -337,8 +336,9 @@ public class Datastore {
     String location = (String) userEntity.getProperty("location");
     String organization = (String) userEntity.getProperty("organization");
     String website = (String) userEntity.getProperty("website");
+    String languageForTranslation = (String) userEntity.getProperty("langCodeForTranslation");
     User user = new User(email, username, location, organization, website,
-        aboutMe, profileImageUrl);
+        aboutMe, profileImageUrl, languageForTranslation);
 
     if (userEntity.hasProperty("favouriteMessageIdsAsStrings")) {
       user.setFavouriteMessageIds(Util.convertStringsToUuids(

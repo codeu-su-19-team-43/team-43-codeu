@@ -26,6 +26,12 @@ const profileElements = [
     icon: 'link',
     placeholder: 'Website',
   },
+  {
+    name: 'langCodeForTranslation',
+    id: 'language-for-translation-input',
+    icon: 'language',
+    placeholder: 'Language Code (default: es)',
+  },
 ];
 
 // URL must include ?user=XYZ parameter. If not, redirect to homepage.
