@@ -10,7 +10,9 @@ let langCodeForTranslation = 'es'; // default to Spanish on empty or invalid lan
 function fetchUserEmail() {
   $.ajaxSetup({ async: false });
   $.getJSON('/login-status', (loginStatus) => {
-    userEmail = loginStatus.username;
+    if (loginStatus.isLoggedIn) {
+      userEmail = loginStatus.username;
+    }
   });
   $.ajaxSetup({ async: true });
 }
@@ -395,14 +397,17 @@ function autoGrow(element) {
 }
 
 function getUserProfileUrl(email) {
-  let userProflieImageUrl;
-  $.ajaxSetup({ async: false });
-  $.getJSON(`/user-profile?user=${email}`, (user) => {
-    userProflieImageUrl = user.profileImageUrl;
-  });
-  $.ajaxSetup({ async: true });
+  if (email != null) {
+    let userProflieImageUrl;
+    $.ajaxSetup({ async: false });
+    $.getJSON(`/user-profile?user=${email}`, (user) => {
+      userProflieImageUrl = user.profileImageUrl;
+    });
+    $.ajaxSetup({ async: true });
 
-  return userProflieImageUrl;
+    return userProflieImageUrl;
+  }
+  return './images/default-user-profile/1.jpg';
 }
 
 function getUsername(email) {
