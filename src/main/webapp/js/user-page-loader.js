@@ -186,6 +186,10 @@ function inputTextEditor() {
   // eslint-disable-next-line no-undef
   ClassicEditor.create(document.getElementById('message-input'), config);
 }
+
+function goToMaps(){
+      window.location.href= "google-map.html";
+}
 /** Fetches data and populates the UI of the page. */
 // eslint-disable-next-line no-unused-vars
 function buildUI() {
