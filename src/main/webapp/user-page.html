@@ -65,6 +65,7 @@ limitations under the License.
         }).done(() => {
           onCancelEditProfileButton();
           fetchUserProfile();
+          reBuildUsername();
           rebuildTranslationText();
         });
       }
@@ -76,7 +77,6 @@ limitations under the License.
             const id = div.id;
             const messageId = id.replace("translateCollapseDiv-", "");
             $.getScript("/js/message-loader.js", () => {
-              // eslint-disable-next-line no-undef
               getTranslatedText(
                 document.getElementById(`text-${messageId}`).innerHTML,
                 document.getElementById("language-for-translation-input").value
@@ -89,6 +89,14 @@ limitations under the License.
           });
       }
 
+      function reBuildUsername() {
+        const usernameContainers = document.querySelectorAll(`[id='username']`);
+        usernameContainers.forEach(div => {
+          $.getScript("/js/message-loader.js", () => {
+            div.innerHTML = getUsername(new URLSearchParams(window.location.search).get('user'));
+          });
+        });
+      }
     </script>
   </head>
 

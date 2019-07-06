@@ -161,7 +161,7 @@ function buildUsernameDiv(message) {
   const usernameDiv = document.createElement('h5');
   usernameDiv.classList.add('card-title', 'mb-0');
   usernameDiv.id = 'username';
-  usernameDiv.appendChild(document.createTextNode(getUsername(message.user)));
+  usernameDiv.innerHTML = getUsername(message.user);
   return usernameDiv;
 }
 
