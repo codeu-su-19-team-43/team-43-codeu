@@ -1,8 +1,12 @@
 package com.google.codeu;
 
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 import com.google.cloud.translate.Language;
 import com.google.cloud.translate.TranslateOptions;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -75,5 +79,22 @@ public class Util {
    */
   public static boolean checkIfValidLanguageCode(String langCode) {
     return VALID_LANGUAGE_CODES.contains(langCode);
+  }
+
+  /**
+   * Analyse sentiment of text and return the sentiment score.
+   */
+  public static double getSentimentScoreOfText(String rawUserText) throws IOException {
+    // Set text for sentiment analysis.
+    Document doc = Document.newBuilder().setContent(rawUserText)
+            .setType(Document.Type.HTML).build();
+
+    // Perform sentiment analysis.
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    double sentimentScore = sentiment.getScore();
+    languageService.close();
+
+    return sentimentScore;
   }
 }
