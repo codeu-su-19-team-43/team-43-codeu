@@ -202,6 +202,7 @@ function buildLandmarkDiv(message) {
 
 function buildTextDiv(message) {
   const textDiv = document.createElement('p');
+  textDiv.id = `text-${message.id}`;
   textDiv.classList.add('card-text', 'border-top', 'pt-2');
   textDiv.innerHTML = message.text;
   return textDiv;
