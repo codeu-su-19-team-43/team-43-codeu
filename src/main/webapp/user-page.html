@@ -78,7 +78,11 @@ limitations under the License.
           onclick="onClickEditProfileButton();">
           Edit Profile
         </button>
-
+        <div class="font-weight-lighter mt-3">
+          <div class="text-center add-marker-manually">
+              <button type="button" class="btn btn-info" onclick="goToMaps()">Mark your places on the map manually!</button>
+          </div><br><br><br>
+        </div>
         <div id="profile-form-container" class="profileForm hidden">
           <form action="/user-profile" method="POST" id="profile-form">
             <div class="button-container d-flex justify-content-center">
@@ -141,9 +145,6 @@ limitations under the License.
             Loading...
           </div>
         </div>
-          <div class="text-center add-marker-manually">
-            <button type="button" onclick="goToMaps()">Mark your places on the map manually!</button>
-          </div><br><br><br>
       </div>
     </div>
   </div>
