@@ -333,12 +333,16 @@ function onClickLikeButton(messageId) {
       fetch(`/message?messageId=${messageId}`)
         .then(response => response.json())
         .then((message) => {
-          $(`#like-count-container-${messageId}`).html(
-            buildLikeCount(message),
-          );
-          $(`#like-action-container-${messageId}`).html(
-            buildLikeAction(message),
-          );
+          const likeCountContainers = document.querySelectorAll(`[id='like-count-container-${messageId}']`);
+          likeCountContainers.forEach((div) => {
+            // eslint-disable-next-line no-param-reassign
+            div.innerHTML = buildLikeCount(message);
+          });
+          const likeActionContainers = document.querySelectorAll(`[id='like-action-container-${messageId}']`);
+          likeActionContainers.forEach((div) => {
+            // eslint-disable-next-line no-param-reassign
+            div.innerHTML = buildLikeAction(message);
+          });
           toggleResponse(message);
         });
     });
@@ -359,12 +363,17 @@ function onClickFavouriteButton(messageId) {
       fetch(`/message?messageId=${messageId}`)
         .then(response => response.json())
         .then((message) => {
-          $(`#favourite-count-container-${messageId}`).html(
-            buildFavouriteCount(message),
-          );
-          $(`#favourite-action-container-${messageId}`).html(
-            buildFavouriteAction(message),
-          );
+          const favCountContainers = document.querySelectorAll(`[id='favourite-count-container-${messageId}']`);
+          favCountContainers.forEach((div) => {
+            // eslint-disable-next-line no-param-reassign
+            div.innerHTML = buildFavouriteCount(message);
+          });
+          const favActionContainers = document.querySelectorAll(`[id='favourite-action-container-${messageId}']`);
+          favActionContainers.forEach((div) => {
+            // eslint-disable-next-line no-param-reassign
+            div.innerHTML = buildFavouriteAction(message);
+          });
+
           toggleResponse(message);
         });
     });
