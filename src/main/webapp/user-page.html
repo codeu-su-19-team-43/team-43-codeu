@@ -21,6 +21,7 @@ limitations under the License.
   <script src="js/header-loader.js" onload="loadHeader('User Page')"></script>
   <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
   <script src="js/user-page-loader.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&libraries=places&callback=initMap" async defer></script>
   <link rel="stylesheet" href="/css/user-page.css" />
   <link rel="stylesheet" href="/css/message.css" />
   <script>
@@ -45,10 +46,21 @@ limitations under the License.
         .getElementById("profile-info-container")
         .classList.remove("hidden");
     }
-    function goToMaps() {
-      window.location.href = 'google-map.html';
+
+    function initMap() {
+      var input = document.getElementById('searchMapInput');
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.addListener('place_changed', function(){
+        var place = autocomplete.getPlace();
+      });
     }
   </script>
+  <style type="text/css">
+    .mapControls {
+      margin-right: 10px;
+      margin-right: 10px;
+    }
+  </style>
 </head>
 
 <body onload="buildUI();">
@@ -78,11 +90,7 @@ limitations under the License.
           onclick="onClickEditProfileButton();">
           Edit Profile
         </button>
-        <div class="font-weight-lighter mt-3">
-          <div class="text-center add-marker-manually">
-              <button type="button" class="btn btn-info" onclick="goToMaps()">Mark your places on the map manually!</button>
-          </div><br><br><br>
-        </div>
+
         <div id="profile-form-container" class="profileForm hidden">
           <form action="/user-profile" method="POST" id="profile-form">
             <div class="button-container d-flex justify-content-center">
@@ -110,10 +118,7 @@ limitations under the License.
               Photo
               <input type="file" name="image" accept="image/*" id="message-image-upload-input" style="display: none;" />
             </label>
-            <button id="location-button" class="btn btn-light btn-sm font-weight-light border-right rounded-0" disabled>
-              <i class="fas fa-map-marker-alt mr-1"></i>
-              Location
-            </button>
+            <input id="searchMapInput" class="mapControls" type="text" placeholder="Add location to map!">
             <button type="submit" id="submit-button" class="btn btn-info btn-sm rounded-0 font-weight-bolder">
               <i class="fas fa-share-square mr-1"></i>
               Share
