@@ -75,32 +75,20 @@ limitations under the License.
           .forEach(div => {
             const id = div.id;
             const messageId = id.replace("translateCollapseDiv-", "");
-            getTranslatedText(
-              document.getElementById(`text-${messageId}`).innerHTML,
-              document.getElementById("language-for-translation-input").value
-            ).then(translatedText => {
-              document.getElementById(`translateCollapseDiv-${messageId}`).innerHTML = translatedText;
+            $.getScript("/js/message-loader.js", () => {
+              // eslint-disable-next-line no-undef
+              getTranslatedText(
+                document.getElementById(`text-${messageId}`).innerHTML,
+                document.getElementById("language-for-translation-input").value
+              ).then(translatedText => {
+                document.getElementById(
+                  `translateCollapseDiv-${messageId}`
+                ).innerHTML = translatedText;
+              });
             });
           });
       }
 
-      function getTranslatedText(text, languageCode) {
-        return fetch("/translate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            text,
-            languageCode
-          })
-        })
-          .then(response => response.text())
-          .catch(
-            error =>
-              `Error: ${error}. You probably set an invalid language code in your profile! Update it and try again.`
-          );
-      }
     </script>
   </head>
 
