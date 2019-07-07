@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
@@ -21,6 +23,17 @@ import org.jsoup.safety.Whitelist;
 public class UserProfileServlet extends HttpServlet {
   
   private Datastore datastore;
+
+  @Getter
+  @Setter
+  private class PostProfileRequestBody {
+    String username;
+    String location;
+    String organization;
+    String website;
+    String aboutme;
+    String langCodeForTranslation;
+  }
   
   @Override
   public void init() {
@@ -49,6 +62,11 @@ public class UserProfileServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
         throws IOException {
+
+    PostProfileRequestBody requestBody = new Gson().fromJson(
+        request.getReader(),
+        PostProfileRequestBody.class
+    );
           
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
@@ -64,15 +82,15 @@ public class UserProfileServlet extends HttpServlet {
       user.setEmail(userEmail);
     }
 
-    user.setUsername(Jsoup.clean(request.getParameter("username"), Whitelist.basic()));
-    user.setLocation(Jsoup.clean(request.getParameter("location"), Whitelist.basic()));
-    user.setOrganization(Jsoup.clean(request.getParameter("organization"), Whitelist.basic()));
-    user.setWebsite(Jsoup.clean(request.getParameter("website"), Whitelist.basic()));
-    user.setAboutMe(Jsoup.clean(request.getParameter("aboutme"), Whitelist.basic()));
+    user.setUsername(Jsoup.clean(requestBody.getUsername(), Whitelist.basic()));
+    user.setLocation(Jsoup.clean(requestBody.getLocation(), Whitelist.basic()));
+    user.setOrganization(Jsoup.clean(requestBody.getOrganization(), Whitelist.basic()));
+    user.setWebsite(Jsoup.clean(requestBody.getWebsite(), Whitelist.basic()));
+    user.setAboutMe(Jsoup.clean(requestBody.getAboutme(), Whitelist.basic()));
 
     // Validate language code before setting it in datastore
     String langCodeForTranslation = Util.DEFAULT_LANG_CODE_FOR_TRANSLATION;
-    String givenlangCodeForTranslation = Jsoup.clean(request.getParameter("langCodeForTranslation"),
+    String givenlangCodeForTranslation = Jsoup.clean(requestBody.getLangCodeForTranslation(),
             Whitelist.basic()).trim();
     if (givenlangCodeForTranslation.equals("")
             || Util.checkIfValidLanguageCode(givenlangCodeForTranslation)) {
