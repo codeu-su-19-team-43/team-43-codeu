@@ -139,7 +139,7 @@ public class UserMessageServlet extends HttpServlet {
         //Get the Location entered by the user
         imageLandmark = request.getParameter("mapLocation");
 
-        if (! imageLandmark.isEmpty()){
+        if (! imageLandmark.isEmpty()) {
           //convert the landmark to lat long
           JSONObject loc = getCoordinates(imageLandmark);
           imageLat = loc.getDouble("lat");
