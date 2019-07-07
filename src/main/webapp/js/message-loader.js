@@ -162,9 +162,9 @@ function getHourDiffFromNow(timeStamp) {
 function getTimeText(timestamp) {
   // eslint-disable-next-line no-nested-ternary, no-undef
   return getHourDiffFromNow(timestamp) < 24 ? moment(timestamp).fromNow()
-  // eslint-disable-next-line no-undef
-    : getHourDiffFromNow(timestamp) < (24 * 7) ? moment(timestamp).calendar()
     // eslint-disable-next-line no-undef
+    : getHourDiffFromNow(timestamp) < (24 * 7) ? moment(timestamp).calendar()
+      // eslint-disable-next-line no-undef
       : moment(timestamp).format('ll');
 }
 
@@ -627,7 +627,7 @@ function getLoadingElement() {
   );
 }
 
-function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
+function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria) {
   const messagesContainer = document.getElementById(parentId);
   messagesContainer.innerHTML = getLoadingElement();
 
@@ -636,33 +636,39 @@ function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
     .then((messagesJson) => {
       let messages = messagesJson;
 
-      if (sortCriteria) {
-        const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
-        // eslint-disable-next-line no-undef
-        messages = _.orderBy(messages, [sortProperty], [sortOrder]);
+      if (messages == null || messages.length === 0) {
+        messagesContainer.innerHTML = `<p class="text-muted ml-2 mt-2">${emptyHolderString}</p>`;
+      } else {
+        if (sortCriteria) {
+          const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
+          // eslint-disable-next-line no-undef
+          messages = _.orderBy(messages, [sortProperty], [sortOrder]);
+        }
+
+        messagesContainer.innerHTML = '';
+
+        messages.forEach((message) => {
+          const messageDiv = buildMessageDiv(message);
+          messagesContainer.appendChild(messageDiv);
+        });
       }
-
-      messagesContainer.innerHTML = '';
-
-      messages.forEach((message) => {
-        const messageDiv = buildMessageDiv(message);
-        messagesContainer.appendChild(messageDiv);
-      });
     });
 }
 
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchMessagesByUser(parameterUsername) {
-  buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container');
-  buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container');
+  buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
+    'Your gallery is empty. Post your first photo!');
+  buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
+    'Your favourite collection is empty. <br />Mark a photo as your favourite to view it here!');
 }
 
 /** Fetches all messages and add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchAllMessages() {
   const url = '/feed';
-  buildMessagesDivFromUrl(url, 'message-cards-container');
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'The world is empty. Be the one to post the first photo!');
 }
 
 /** Fetches messages for given image labels and add them to the page. */
@@ -675,7 +681,7 @@ function fetchMessagesByImageLabels(imageLabels) {
       url += '&';
     }
   });
-  buildMessagesDivFromUrl(url, 'message-cards-container');
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'No images found for this label. Be the one to post the first photo!');
 }
 
 /** Build messages div with given sort criteria */
@@ -688,7 +694,7 @@ function onSelectSetSortCriteria() {
     url += window.location.href.substring(parameterStartIdx);
   }
 
-  buildMessagesDivFromUrl(url, 'message-cards-container', sortCriteria);
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'No images found for this label. Be the one to post the first photo!', sortCriteria);
 }
 
 /** Listen for sort menu changes and trigger sorting function */
