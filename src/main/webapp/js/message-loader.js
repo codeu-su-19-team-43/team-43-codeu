@@ -19,6 +19,18 @@ function fetchUserEmail() {
 
 fetchUserEmail();
 
+function getUsername(email) {
+  let username;
+  $.ajaxSetup({ async: false });
+  $.getJSON(`/user-profile?user=${email}`, (user) => {
+    // eslint-disable-next-line prefer-destructuring
+    username = user.username;
+  });
+  $.ajaxSetup({ async: true });
+
+  return (username != null && username !== '') ? username : email;
+}
+
 function fetchLanguageForTranslation() {
   if (userEmail !== null) {
     $.ajaxSetup({ async: false });
@@ -148,7 +160,8 @@ function buildInfoDiv(message) {
 function buildUsernameDiv(message) {
   const usernameDiv = document.createElement('h5');
   usernameDiv.classList.add('card-title', 'mb-0');
-  usernameDiv.appendChild(document.createTextNode(message.user));
+  usernameDiv.id = 'username';
+  usernameDiv.innerHTML = getUsername(message.user);
   return usernameDiv;
 }
 
@@ -190,6 +203,7 @@ function buildLandmarkDiv(message) {
 
 function buildTextDiv(message) {
   const textDiv = document.createElement('p');
+  textDiv.id = `text-${message.id}`;
   textDiv.classList.add('card-text', 'border-top', 'pt-2');
   textDiv.innerHTML = message.text;
   return textDiv;
@@ -417,18 +431,6 @@ function getUserProfileUrl(email) {
     return userProflieImageUrl;
   }
   return './images/default-user-profile/1.jpg';
-}
-
-function getUsername(email) {
-  let username;
-  $.ajaxSetup({ async: false });
-  $.getJSON(`/user-profile?user=${email}`, (user) => {
-    // eslint-disable-next-line prefer-destructuring
-    username = user.username;
-  });
-  $.ajaxSetup({ async: true });
-
-  return (username != null && username !== '') ? username : email;
 }
 
 function buildCommentInput(messageId) {
