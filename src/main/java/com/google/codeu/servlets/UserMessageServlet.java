@@ -168,7 +168,9 @@ public class UserMessageServlet extends HttpServlet {
       JSONObject res = obj.getJSONArray("results").getJSONObject(0);
       JSONObject loc = res.getJSONObject("geometry").getJSONObject("location");
       return loc;
-    } catch(IOException e) { return null; }          // Always must return somethin
+    } catch(IOException e) { 
+        return null; 
+    }          // Always must return somethin
   }
 
   public static String getJsonByGoogle(String fullAddress) throws IOException {
@@ -177,16 +179,18 @@ public class UserMessageServlet extends HttpServlet {
       URL url = new URL(s);
       // Open the Connection 
       URLConnection conn = url.openConnection();
-      //This is Simple a byte array output stream that we will use to keep the output data from google. 
+      //This is Simple a byte array output stream 
       ByteArrayOutputStream output = new ByteArrayOutputStream(1024);
-      // copying the output data from Google which will be either in JSON or XML depending on your request URL that in which format you have requested.
+      // copying the output data from Google which will be either in JSON 
       IOUtils.copy(conn.getInputStream(), output);
       //close the byte array output stream now.
       output.close();
-
-      return output.toString(); // This returned String is JSON string from which you can retrieve all key value pair and can save it in POJO.
+      // This returned String is JSON string from which you can retrieve all key value pair
+      return output.toString(); 
       
-    } catch(IOException e) { return null; }        // Always must return something
+    } catch(IOException e) { 
+        return null; 
+    }       
   }
 
   /** Stores a marker in Datastore. */
