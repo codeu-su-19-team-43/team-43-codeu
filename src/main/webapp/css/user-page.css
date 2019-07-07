@@ -27,7 +27,7 @@ body > .page-header {
 }
 
 .right-container {
-  margin-left: 22em;
+  flex: 70%;
 }
 
 @media (min-width: 40em) {
@@ -71,7 +71,7 @@ body > .page-header {
 }
 
 .edit-profile-image i {
-  color: rgba(0, 0, 0, 0.55);
+	color: rgba(0, 0, 0, 0.55);
 }
 
 .profile-element > * {
