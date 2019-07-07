@@ -158,7 +158,9 @@ public class UserMessageServlet extends HttpServlet {
     response.sendRedirect("/user-page.html?user=" + user);
   }
 
-
+  /**
+  * Gets the lattitude and longitude for any address
+  */
   public JSONObject getCoordinates(String fullAddress) throws IOException {
     try {
       String str = getJsonByGoogle(fullAddress);
@@ -168,11 +170,14 @@ public class UserMessageServlet extends HttpServlet {
       JSONObject res = obj.getJSONArray("results").getJSONObject(0);
       JSONObject loc = res.getJSONObject("geometry").getJSONObject("location");
       return loc;
-    } catch(IOException e) { 
-        return null; 
+    } catch (IOException e) { 
+      return null; 
     }          // Always must return somethin
   }
 
+  /**
+  * Returns string from Google Maps Geocoding API
+  */
   public static String getJsonByGoogle(String fullAddress) throws IOException {
     try {
       String s = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&address=" + URLEncoder.encode(fullAddress, "UTF-8");
@@ -188,8 +193,8 @@ public class UserMessageServlet extends HttpServlet {
       // This returned String is JSON string from which you can retrieve all key value pair
       return output.toString(); 
       
-    } catch(IOException e) { 
-        return null; 
+    } catch (IOException e) { 
+      return null; 
     }       
   }
 
