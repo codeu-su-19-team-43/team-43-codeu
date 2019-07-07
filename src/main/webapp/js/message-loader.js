@@ -637,7 +637,7 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria)
       let messages = messagesJson;
 
       if (messages == null || messages.length === 0) {
-        messagesContainer.innerHTML = `<p class="text-muted ml-2 mt-2">${emptyHolderString}</p>`;
+        messagesContainer.innerHTML = `<p class="text-muted ml-3 mt-2 position-absolute">${emptyHolderString}</p>`;
       } else {
         if (sortCriteria) {
           const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
@@ -661,7 +661,7 @@ function fetchMessagesByUser(parameterUsername) {
   buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
     'Your gallery is empty. Post your first photo!');
   buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
-    'Your favourite collection is empty. <br />Mark a photo as your favourite to view it here!');
+    'Your favourite collection is empty. Mark a photo as your favourite to view it here!');
 }
 
 /** Fetches all messages and add them to the page. */
