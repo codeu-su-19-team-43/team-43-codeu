@@ -69,22 +69,6 @@ limitations under the License.
           rebuildTranslationText();
         });
       }
-    function initMap() {
-      var input = document.getElementById('searchMapInput');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-      autocomplete.addListener('place_changed', function(){
-        var place = autocomplete.getPlace();
-      });
-    }
-  </script>
-  <style type="text/css">
-    .mapControls {
-      margin-right: 10px;
-      margin-right: 10px;
-      height: 36px;
-    }
-  </style>
-</head>
 
       function rebuildTranslationText() {
         document
@@ -109,8 +93,18 @@ limitations under the License.
         const usernameContainers = document.querySelectorAll(`[id='username']`);
         usernameContainers.forEach(div => {
           $.getScript("/js/message-loader.js", () => {
-            div.innerHTML = getUsername(new URLSearchParams(window.location.search).get('user'));
+            div.innerHTML = getUsername(
+              new URLSearchParams(window.location.search).get("user")
+            );
           });
+        });
+      }
+
+      function initMap() {
+        var input = document.getElementById("searchMapInput");
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener("place_changed", function() {
+          var place = autocomplete.getPlace();
         });
       }
     </script>
@@ -218,14 +212,13 @@ limitations under the License.
                   style="display: none;"
                 />
               </label>
-              <button
-                id="location-button"
-                class="btn btn-light btn-sm font-weight-light border-right rounded-0"
-                disabled
-              >
-                <i class="fas fa-map-marker-alt mr-1"></i>
-                Location
-              </button>
+              <input
+                type="text"
+                name="mapLocation"
+                id="searchMapInput"
+                class="mapControls"
+                placeholder="Add location to map!"
+              />
               <button
                 type="submit"
                 id="submit-button"
@@ -235,7 +228,6 @@ limitations under the License.
                 Share
               </button>
             </div>
-            <input type="text" name="mapLocation" id="searchMapInput" class="mapControls" placeholder="Add location to map!">
           </div>
         </form>
 
