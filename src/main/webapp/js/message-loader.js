@@ -619,7 +619,18 @@ function getSortParameters(sortCriteria) {
   return { sortProperty, sortOrder };
 }
 
+function getLoadingElement() {
+  return (
+    `<div class="d-flex justify-content-start"><p>Loading...</p>
+        <div class="spinner-border mx-3" role="status"></div>
+    </div>`
+  );
+}
+
 function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
+  const messagesContainer = document.getElementById(parentId);
+  messagesContainer.innerHTML = getLoadingElement();
+
   fetch(url)
     .then(response => response.json())
     .then((messagesJson) => {
@@ -631,7 +642,6 @@ function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
         messages = _.orderBy(messages, [sortProperty], [sortOrder]);
       }
 
-      const messagesContainer = document.getElementById(parentId);
       messagesContainer.innerHTML = '';
 
       messages.forEach((message) => {
