@@ -21,6 +21,7 @@ limitations under the License.
   <script src="js/header-loader.js" onload="loadHeader('User Page')"></script>
   <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
   <script src="js/user-page-loader.js"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&libraries=places&callback=initMap" async defer></script>
   <link rel="stylesheet" href="/css/user-page.css" />
   <link rel="stylesheet" href="/css/message.css" />
   <script>
@@ -45,7 +46,22 @@ limitations under the License.
         .getElementById("profile-info-container")
         .classList.remove("hidden");
     }
+
+    function initMap() {
+      var input = document.getElementById('searchMapInput');
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.addListener('place_changed', function(){
+        var place = autocomplete.getPlace();
+      });
+    }
   </script>
+  <style type="text/css">
+    .mapControls {
+      margin-right: 10px;
+      margin-right: 10px;
+      height: 36px;
+    }
+  </style>
 </head>
 
 <body onload="buildUI();">
@@ -103,10 +119,7 @@ limitations under the License.
               Photo
               <input type="file" name="image" accept="image/*" id="message-image-upload-input" style="display: none;" />
             </label>
-            <button id="location-button" class="btn btn-light btn-sm font-weight-light border-right rounded-0" disabled>
-              <i class="fas fa-map-marker-alt mr-1"></i>
-              Location
-            </button>
+            <input type="text" name="mapLocation" id="searchMapInput" class="mapControls" placeholder="Add location to map!">
             <button type="submit" id="submit-button" class="btn btn-info btn-sm rounded-0 font-weight-bolder">
               <i class="fas fa-share-square mr-1"></i>
               Share
