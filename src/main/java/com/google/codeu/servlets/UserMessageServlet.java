@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
-import org.json.*;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
@@ -114,7 +114,8 @@ public class UserMessageServlet extends HttpServlet {
       message.setImageUrl(imageUrl);
 
       String imageLandmark;
-      double imageLat, imageLong;
+      double imageLat;
+      double imageLong;
 
       // Get the labels of the image that the user uploaded.
       byte[] blobBytes = getBlobBytes(blobKey);
@@ -129,8 +130,7 @@ public class UserMessageServlet extends HttpServlet {
         imageLandmark = imageLandmarks.get(0).getDescription();
         imageLat = imageLandmarks.get(0).getLocations(0).getLatLng().getLatitude();
         imageLong = imageLandmarks.get(0).getLocations(0).getLatLng().getLongitude();
-      }
-      else{
+      } else {
         //Get the Location entered by the user
         imageLandmark = request.getParameter("mapLocation");
         //convert the landmark to lat long
@@ -159,42 +159,35 @@ public class UserMessageServlet extends HttpServlet {
   }
 
 
-  public JSONObject getCoordinates(String fullAddress) throws IOException{
-    try{
-      String str = getJSONByGoogle(fullAddress);
+  public JSONObject getCoordinates(String fullAddress) throws IOException {
+    try {
+      String str = getJsonByGoogle(fullAddress);
       // build a JSON object
       JSONObject obj = new JSONObject(str);
       // get the first result
       JSONObject res = obj.getJSONArray("results").getJSONObject(0);
       JSONObject loc = res.getJSONObject("geometry").getJSONObject("location");
       return loc;
-    } catch(IOException e){
-        return null;            // Always must return something
-    }
+    } catch(IOException e) { return null; }          // Always must return somethin
   }
 
-  public static String getJSONByGoogle(String fullAddress) throws IOException {
-      try{
-        String s = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&address=" + URLEncoder.encode(fullAddress, "UTF-8");
-        URL url = new URL(s);
-        // Open the Connection 
-        URLConnection conn = url.openConnection();
+  public static String getJsonByGoogle(String fullAddress) throws IOException {
+    try {
+      String s = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&address=" + URLEncoder.encode(fullAddress, "UTF-8");
+      URL url = new URL(s);
+      // Open the Connection 
+      URLConnection conn = url.openConnection();
+      //This is Simple a byte array output stream that we will use to keep the output data from google. 
+      ByteArrayOutputStream output = new ByteArrayOutputStream(1024);
+      // copying the output data from Google which will be either in JSON or XML depending on your request URL that in which format you have requested.
+      IOUtils.copy(conn.getInputStream(), output);
+      //close the byte array output stream now.
+      output.close();
 
-        //This is Simple a byte array output stream that we will use to keep the output data from google. 
-        ByteArrayOutputStream output = new ByteArrayOutputStream(1024);
-
-        // copying the output data from Google which will be either in JSON or XML depending on your request URL that in which format you have requested.
-        IOUtils.copy(conn.getInputStream(), output);
-
-        //close the byte array output stream now.
-        output.close();
-
-        return output.toString(); // This returned String is JSON string from which you can retrieve all key value pair and can save it in POJO.
+      return output.toString(); // This returned String is JSON string from which you can retrieve all key value pair and can save it in POJO.
       
-      } catch(IOException e){
-        return null;            // Always must return something
-      }
-    }
+    } catch(IOException e) { return null; }        // Always must return something
+  }
 
   /** Stores a marker in Datastore. */
   public void storeMarker(Marker marker) {
