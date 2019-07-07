@@ -620,7 +620,11 @@ function getSortParameters(sortCriteria) {
 }
 
 function getLoadingElement() {
-  return 'Loading...';
+  return (
+    `<div class="d-flex justify-content-start"><p>Loading...</p>
+        <div class="spinner-border mx-3" role="status"></div>
+    </div>`
+  );
 }
 
 function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
