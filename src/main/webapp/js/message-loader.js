@@ -449,8 +449,8 @@ function buildCommentInput(messageId) {
                                     placeholder="Add a comment"
                                     onblur="this.placeholder='Add a comment'"
                                     onfocus="this.placeholder=''"
-                                    onkeyup="autoGrow(this)">
-                                  </textarea>
+                                    onkeyup="autoGrow(this)"
+                                    ></textarea>
                                   <div class="input-group-append">
                                     <button class="btn btn-light comment-post-button border" 
                                             type="button" 
