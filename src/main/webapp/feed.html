@@ -66,6 +66,11 @@
           </button>
         </div>
         <div class="sort-menu input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text bg-info text-light sort-menu-label" for="sortCriteriaMenu">
+              Sort By
+            </label>
+          </div>
           <select class="custom-select" id="sortCriteriaMenu">
             <option selected>Choose sort criteria</option>
             <option value="Most Recent">Most Recent (default)</option>
@@ -73,11 +78,6 @@
             <option value="Positive to Negative">Positive to Negative</option>
             <option value="Negative to Positive">Negative to Positive</option>
           </select>
-          <div class="input-group-append">
-            <label class="input-group-text bg-info text-light sort-menu-label" for="sortCriteriaMenu">
-              Sort By
-            </label>
-          </div>
         </div>
       </div>
       <div class="search-tag-container d-flex flex-wrap" id="search-tag-container"></div>
@@ -90,5 +90,4 @@
     </div>
   </div>
 </body>
-
 </html>

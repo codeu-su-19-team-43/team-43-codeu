@@ -69,6 +69,22 @@ limitations under the License.
           rebuildTranslationText();
         });
       }
+    function initMap() {
+      var input = document.getElementById('searchMapInput');
+      var autocomplete = new google.maps.places.Autocomplete(input);
+      autocomplete.addListener('place_changed', function(){
+        var place = autocomplete.getPlace();
+      });
+    }
+  </script>
+  <style type="text/css">
+    .mapControls {
+      margin-right: 10px;
+      margin-right: 10px;
+      height: 36px;
+    }
+  </style>
+</head>
 
       function rebuildTranslationText() {
         document
@@ -219,6 +235,7 @@ limitations under the License.
                 Share
               </button>
             </div>
+            <input type="text" name="mapLocation" id="searchMapInput" class="mapControls" placeholder="Add location to map!">
           </div>
         </form>
 

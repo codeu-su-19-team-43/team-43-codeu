@@ -22,6 +22,11 @@ limitations under the License.
   <script src="js/header-loader.js" onload="loadHeader('About Our Team')"></script>
   <script src="js/aboutus-loader.js"></script>
   <link rel="stylesheet" href="/css/about-us-page.css" />
+  <script>
+    function goToMaps(){
+      window.location.href= "google-map.html";
+    }
+  </script>
 </head>
 
 <body onload="buildUI()">
@@ -37,5 +42,4 @@ limitations under the License.
   </div>
   <div class="card-list d-flex justify-content-around px-4 flex-wrap" id="team-list"></div>
 </body>
-
 </html>
