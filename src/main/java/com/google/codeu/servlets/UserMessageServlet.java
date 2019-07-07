@@ -30,6 +30,11 @@ import com.google.protobuf.ByteString;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +45,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.apache.commons.io.IOUtils;
+import org.json.*;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
@@ -107,6 +113,9 @@ public class UserMessageServlet extends HttpServlet {
       String imageUrl = getUploadedFileUrl(blobKey);
       message.setImageUrl(imageUrl);
 
+      String imageLandmark;
+      double imageLat, imageLong;
+
       // Get the labels of the image that the user uploaded.
       byte[] blobBytes = getBlobBytes(blobKey);
 
@@ -117,15 +126,24 @@ public class UserMessageServlet extends HttpServlet {
 
       List<EntityAnnotation> imageLandmarks = getImageLandmarks(blobBytes);
       if (imageLandmarks != null && imageLandmarks.size() != 0) {
-        String imageLandmark = imageLandmarks.get(0).getDescription();
-        double imageLat = imageLandmarks.get(0).getLocations(0).getLatLng().getLatitude();
-        double imageLong = imageLandmarks.get(0).getLocations(0).getLatLng().getLongitude();
-        message.setImageLandmark(imageLandmark);
-        message.setImageLat(imageLat);
-        message.setImageLong(imageLong);
-        Marker marker = new Marker(imageLat, imageLong, imageLandmark);
-        storeMarker(marker);
+        imageLandmark = imageLandmarks.get(0).getDescription();
+        imageLat = imageLandmarks.get(0).getLocations(0).getLatLng().getLatitude();
+        imageLong = imageLandmarks.get(0).getLocations(0).getLatLng().getLongitude();
       }
+      else{
+        //Get the Location entered by the user
+        imageLandmark = request.getParameter("mapLocation");
+        //convert the landmark to lat long
+        JSONObject loc = getCoordinates(imageLandmark);
+        imageLat = loc.getDouble("lat");
+        imageLong = loc.getDouble("lng");
+
+      }
+      message.setImageLandmark(imageLandmark);
+      message.setImageLat(imageLat);
+      message.setImageLong(imageLong);
+      Marker marker = new Marker(imageLat, imageLong, imageLandmark);
+      storeMarker(marker);
     }
 
     // Store sentiment score in message.
@@ -139,6 +157,44 @@ public class UserMessageServlet extends HttpServlet {
 
     response.sendRedirect("/user-page.html?user=" + user);
   }
+
+
+  public JSONObject getCoordinates(String fullAddress) throws IOException{
+    try{
+      String str = getJSONByGoogle(fullAddress);
+      // build a JSON object
+      JSONObject obj = new JSONObject(str);
+      // get the first result
+      JSONObject res = obj.getJSONArray("results").getJSONObject(0);
+      JSONObject loc = res.getJSONObject("geometry").getJSONObject("location");
+      return loc;
+    } catch(IOException e){
+        return null;            // Always must return something
+    }
+  }
+
+  public static String getJSONByGoogle(String fullAddress) throws IOException {
+      try{
+        String s = "https://maps.googleapis.com/maps/api/geocode/json?&key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&address=" + URLEncoder.encode(fullAddress, "UTF-8");
+        URL url = new URL(s);
+        // Open the Connection 
+        URLConnection conn = url.openConnection();
+
+        //This is Simple a byte array output stream that we will use to keep the output data from google. 
+        ByteArrayOutputStream output = new ByteArrayOutputStream(1024);
+
+        // copying the output data from Google which will be either in JSON or XML depending on your request URL that in which format you have requested.
+        IOUtils.copy(conn.getInputStream(), output);
+
+        //close the byte array output stream now.
+        output.close();
+
+        return output.toString(); // This returned String is JSON string from which you can retrieve all key value pair and can save it in POJO.
+      
+      } catch(IOException e){
+        return null;            // Always must return something
+      }
+    }
 
   /** Stores a marker in Datastore. */
   public void storeMarker(Marker marker) {
