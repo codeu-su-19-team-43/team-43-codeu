@@ -619,7 +619,14 @@ function getSortParameters(sortCriteria) {
   return { sortProperty, sortOrder };
 }
 
+function getLoadingElement() {
+  return 'Loading...';
+}
+
 function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
+  const messagesContainer = document.getElementById(parentId);
+  messagesContainer.innerHTML = getLoadingElement();
+
   fetch(url)
     .then(response => response.json())
     .then((messagesJson) => {
@@ -631,7 +638,6 @@ function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
         messages = _.orderBy(messages, [sortProperty], [sortOrder]);
       }
 
-      const messagesContainer = document.getElementById(parentId);
       messagesContainer.innerHTML = '';
 
       messages.forEach((message) => {
