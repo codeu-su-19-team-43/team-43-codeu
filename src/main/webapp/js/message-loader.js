@@ -421,14 +421,14 @@ function autoGrow(element) {
 
 function getUserProfileUrl(email) {
   if (email != null) {
-    let userProflieImageUrl;
+    let userProfileImageUrl;
     $.ajaxSetup({ async: false });
     $.getJSON(`/user-profile?user=${email}`, (user) => {
-      userProflieImageUrl = user.profileImageUrl;
+      userProfileImageUrl = user.profileImageUrl;
     });
     $.ajaxSetup({ async: true });
 
-    return userProflieImageUrl;
+    return userProfileImageUrl;
   }
   return './images/default-user-profile/1.jpg';
 }
