@@ -28,6 +28,7 @@ body > .page-header {
 
 .right-container {
   margin-left: 22em;
+  width: 80%;
 }
 
 @media (min-width: 40em) {
