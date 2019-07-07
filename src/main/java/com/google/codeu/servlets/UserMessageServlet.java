@@ -159,7 +159,7 @@ public class UserMessageServlet extends HttpServlet {
   }
 
   /**
-  * Gets the lattitude and longitude for any address
+  * Gets the lattitude and longitude for any address.
   */
   public JSONObject getCoordinates(String fullAddress) throws IOException {
     try {
@@ -176,7 +176,7 @@ public class UserMessageServlet extends HttpServlet {
   }
 
   /**
-  * Returns string from Google Maps Geocoding API
+  * Returns string from Google Maps Geocoding API.
   */
   public static String getJsonByGoogle(String fullAddress) throws IOException {
     try {
