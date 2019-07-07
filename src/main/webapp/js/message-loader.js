@@ -442,8 +442,8 @@ function buildCommentInput(messageId) {
                               <div id="comment-input-container" class="comment-input-container">
                                 <div class="input-group input-group-sm mt-2">
                                   <textarea
-                                    name=${messageId}
-                                    id=${messageId}
+                                    name="comment-input-textarea-${messageId}"
+                                    id="comment-input-textarea-${messageId}"
                                     class=form-control
                                     type=text
                                     placeholder="Add a comment"
@@ -532,7 +532,19 @@ function onCommentPost(messageId) {
 
 // eslint-disable-next-line no-unused-vars
 function onClickCommentPostButton(messageId) {
-  const comment = { messageId, userText: document.getElementById(messageId).value };
+  const commentInputTextarea = document.getElementById(`comment-input-textarea-${messageId}`);
+
+  const comment = {
+    messageId,
+    userText: commentInputTextarea.value,
+  };
+
+  if (comment.userText === '' || comment.userText === null) {
+    commentInputTextarea.style.border = '1px solid red';
+    commentInputTextarea.placeholder = 'Please enter some text!';
+    return;
+  }
+
   $.ajax({
     contentType: 'application/json',
     data: JSON.stringify(comment),
