@@ -128,15 +128,15 @@ public class UserMessageServlet extends HttpServlet {
       //Get the Location entered by the user
       imageLandmark = request.getParameter("mapLocation");
       if (! imageLandmark.isEmpty()) {
-          //convert the landmark to lat long
-          JSONObject loc = getCoordinates(imageLandmark);
-          imageLat = loc.getDouble("lat");
-          imageLong = loc.getDouble("lng");
-          message.setImageLandmark(imageLandmark);
-          message.setImageLat(imageLat);
-          message.setImageLong(imageLong);
-          Marker marker = new Marker(imageLat, imageLong, imageLandmark);
-          storeMarker(marker);
+        //convert the landmark to lat long
+        JSONObject loc = getCoordinates(imageLandmark);
+        imageLat = loc.getDouble("lat");
+        imageLong = loc.getDouble("lng");
+        message.setImageLandmark(imageLandmark);
+        message.setImageLat(imageLat);
+        message.setImageLong(imageLong);
+        Marker marker = new Marker(imageLat, imageLong, imageLandmark);
+        storeMarker(marker);
       } else {
         List<EntityAnnotation> imageLandmarks = getImageLandmarks(blobBytes);
         if (imageLandmarks != null && imageLandmarks.size() != 0) {
