@@ -419,16 +419,28 @@ function autoGrow(element) {
   element.style.height = `${element.scrollHeight}px`;
 }
 
+// eslint-disable-next-line no-unused-vars
+function enablePostButton(commentInputTextArea, messageId) {
+  const commentPostButton = document.getElementById(`comment-post-button-${messageId}`);
+
+  commentInputTextArea.addEventListener('input', () => {
+    commentPostButton.disabled = true;
+    if (commentInputTextArea.value.length) {
+      commentPostButton.disabled = false;
+    }
+  });
+}
+
 function getUserProfileUrl(email) {
   if (email != null) {
-    let userProflieImageUrl;
+    let userProfileImageUrl;
     $.ajaxSetup({ async: false });
     $.getJSON(`/user-profile?user=${email}`, (user) => {
-      userProflieImageUrl = user.profileImageUrl;
+      userProfileImageUrl = user.profileImageUrl;
     });
     $.ajaxSetup({ async: true });
 
-    return userProflieImageUrl;
+    return userProfileImageUrl;
   }
   return './images/default-user-profile/1.jpg';
 }
@@ -442,19 +454,21 @@ function buildCommentInput(messageId) {
                               <div id="comment-input-container" class="comment-input-container">
                                 <div class="input-group input-group-sm mt-2">
                                   <textarea
-                                    name=${messageId}
-                                    id=${messageId}
+                                    name="comment-input-textarea-${messageId}"
+                                    id="comment-input-textarea-${messageId}"
                                     class=form-control
                                     type=text
                                     placeholder="Add a comment"
                                     onblur="this.placeholder='Add a comment'"
                                     onfocus="this.placeholder=''"
-                                    onkeyup="autoGrow(this)">
-                                  </textarea>
+                                    onkeyup="autoGrow(this)"
+                                    oninput="enablePostButton(this, '${messageId}')"
+                                    ></textarea>
                                   <div class="input-group-append">
                                     <button class="btn btn-light comment-post-button border" 
+                                            disabled="true"
                                             type="button" 
-                                            id="comment-post-button"
+                                            id="comment-post-button-${messageId}"
                                             onclick="onClickCommentPostButton('${messageId}');">
                                             Post
                                     </button>
@@ -532,7 +546,13 @@ function onCommentPost(messageId) {
 
 // eslint-disable-next-line no-unused-vars
 function onClickCommentPostButton(messageId) {
-  const comment = { messageId, userText: document.getElementById(messageId).value };
+  const commentInputTextarea = document.getElementById(`comment-input-textarea-${messageId}`);
+
+  const comment = {
+    messageId,
+    userText: commentInputTextarea.value,
+  };
+
   $.ajax({
     contentType: 'application/json',
     data: JSON.stringify(comment),
