@@ -482,6 +482,7 @@ function buildCommentInput(messageId) {
 
 function buildCommentSentimentIndicator(sentimentScore) {
   const sentimentScoreText = Math.trunc(sentimentScore * 100) / 100;
+
   if (sentimentScore > 0.5) {
     return `<span class="badge badge-pill badge-success sentiment-score-indicator">
               <small>${sentimentScoreText}</small>
@@ -513,7 +514,7 @@ function buildCommentItem(comment) {
               </div>
               <div class="d-flex justify-content-between mt-1">
                 <p class="font-weight-light comment-text mb-0">${comment.text}</p>
-                ${comment.sentimentScore ? buildCommentSentimentIndicator(comment.sentimentScore) : ''}
+                ${comment.sentimentScore !== null || comment.sentimentScore !== undefined ? buildCommentSentimentIndicator(comment.sentimentScore) : ''}
               </div>
             </div>
           </li>`;
