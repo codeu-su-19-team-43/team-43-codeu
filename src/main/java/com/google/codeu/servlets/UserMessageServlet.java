@@ -125,34 +125,31 @@ public class UserMessageServlet extends HttpServlet {
             .map(label -> label.getDescription()).collect(Collectors.toList());
       message.setImageLabels(imageLabelsList);
 
-      List<EntityAnnotation> imageLandmarks = getImageLandmarks(blobBytes);
-      if (imageLandmarks != null && imageLandmarks.size() != 0) {
-        imageLandmark = imageLandmarks.get(0).getDescription();
-        imageLat = imageLandmarks.get(0).getLocations(0).getLatLng().getLatitude();
-        imageLong = imageLandmarks.get(0).getLocations(0).getLatLng().getLongitude();
+      //Get the Location entered by the user
+      imageLandmark = request.getParameter("mapLocation");
+      if (! imageLandmark.isEmpty()) {
+        //convert the landmark to lat long
+        JSONObject loc = getCoordinates(imageLandmark);
+        imageLat = loc.getDouble("lat");
+        imageLong = loc.getDouble("lng");
         message.setImageLandmark(imageLandmark);
         message.setImageLat(imageLat);
         message.setImageLong(imageLong);
         Marker marker = new Marker(imageLat, imageLong, imageLandmark);
         storeMarker(marker);
       } else {
-        //Get the Location entered by the user
-        imageLandmark = request.getParameter("mapLocation");
-
-        if (! imageLandmark.isEmpty()) {
-          //convert the landmark to lat long
-          JSONObject loc = getCoordinates(imageLandmark);
-          imageLat = loc.getDouble("lat");
-          imageLong = loc.getDouble("lng");
+        List<EntityAnnotation> imageLandmarks = getImageLandmarks(blobBytes);
+        if (imageLandmarks != null && imageLandmarks.size() != 0) {
+          imageLandmark = imageLandmarks.get(0).getDescription();
+          imageLat = imageLandmarks.get(0).getLocations(0).getLatLng().getLatitude();
+          imageLong = imageLandmarks.get(0).getLocations(0).getLatLng().getLongitude();
           message.setImageLandmark(imageLandmark);
           message.setImageLat(imageLat);
           message.setImageLong(imageLong);
           Marker marker = new Marker(imageLat, imageLong, imageLandmark);
           storeMarker(marker);
         }
-
-      }
-      
+      }      
     }
 
     // Store sentiment score in message.
