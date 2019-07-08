@@ -175,9 +175,9 @@ function getHourDiffFromNow(timeStamp) {
 function getTimeText(timestamp) {
   // eslint-disable-next-line no-nested-ternary, no-undef
   return getHourDiffFromNow(timestamp) < 24 ? moment(timestamp).fromNow()
-  // eslint-disable-next-line no-undef
-    : getHourDiffFromNow(timestamp) < (24 * 7) ? moment(timestamp).calendar()
     // eslint-disable-next-line no-undef
+    : getHourDiffFromNow(timestamp) < (24 * 7) ? moment(timestamp).calendar()
+      // eslint-disable-next-line no-undef
       : moment(timestamp).format('ll');
 }
 
@@ -419,16 +419,28 @@ function autoGrow(element) {
   element.style.height = `${element.scrollHeight}px`;
 }
 
+// eslint-disable-next-line no-unused-vars
+function enablePostButton(commentInputTextArea, messageId) {
+  const commentPostButton = document.getElementById(`comment-post-button-${messageId}`);
+
+  commentInputTextArea.addEventListener('input', () => {
+    commentPostButton.disabled = true;
+    if (commentInputTextArea.value.length) {
+      commentPostButton.disabled = false;
+    }
+  });
+}
+
 function getUserProfileUrl(email) {
   if (email != null) {
-    let userProflieImageUrl;
+    let userProfileImageUrl;
     $.ajaxSetup({ async: false });
     $.getJSON(`/user-profile?user=${email}`, (user) => {
-      userProflieImageUrl = user.profileImageUrl;
+      userProfileImageUrl = user.profileImageUrl;
     });
     $.ajaxSetup({ async: true });
 
-    return userProflieImageUrl;
+    return userProfileImageUrl;
   }
   return './images/default-user-profile/1.jpg';
 }
@@ -442,19 +454,21 @@ function buildCommentInput(messageId) {
                               <div id="comment-input-container" class="comment-input-container">
                                 <div class="input-group input-group-sm mt-2">
                                   <textarea
-                                    name=${messageId}
-                                    id=${messageId}
+                                    name="comment-input-textarea-${messageId}"
+                                    id="comment-input-textarea-${messageId}"
                                     class=form-control
                                     type=text
                                     placeholder="Add a comment"
                                     onblur="this.placeholder='Add a comment'"
                                     onfocus="this.placeholder=''"
-                                    onkeyup="autoGrow(this)">
-                                  </textarea>
+                                    onkeyup="autoGrow(this)"
+                                    oninput="enablePostButton(this, '${messageId}')"
+                                    ></textarea>
                                   <div class="input-group-append">
                                     <button class="btn btn-light comment-post-button border" 
+                                            disabled="true"
                                             type="button" 
-                                            id="comment-post-button"
+                                            id="comment-post-button-${messageId}"
                                             onclick="onClickCommentPostButton('${messageId}');">
                                             Post
                                     </button>
@@ -532,7 +546,13 @@ function onCommentPost(messageId) {
 
 // eslint-disable-next-line no-unused-vars
 function onClickCommentPostButton(messageId) {
-  const comment = { messageId, userText: document.getElementById(messageId).value };
+  const commentInputTextarea = document.getElementById(`comment-input-textarea-${messageId}`);
+
+  const comment = {
+    messageId,
+    userText: commentInputTextarea.value,
+  };
+
   $.ajax({
     contentType: 'application/json',
     data: JSON.stringify(comment),
@@ -629,7 +649,7 @@ function getLoadingElement() {
   );
 }
 
-function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
+function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria) {
   const messagesContainer = document.getElementById(parentId);
   messagesContainer.innerHTML = getLoadingElement();
 
@@ -638,33 +658,39 @@ function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
     .then((messagesJson) => {
       let messages = messagesJson;
 
-      if (sortCriteria) {
-        const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
-        // eslint-disable-next-line no-undef
-        messages = _.orderBy(messages, [sortProperty], [sortOrder]);
+      if (messages == null || messages.length === 0) {
+        messagesContainer.innerHTML = `<p class="text-muted ml-3 mt-2 position-absolute">${emptyHolderString}</p>`;
+      } else {
+        if (sortCriteria) {
+          const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
+          // eslint-disable-next-line no-undef
+          messages = _.orderBy(messages, [sortProperty], [sortOrder]);
+        }
+
+        messagesContainer.innerHTML = '';
+
+        messages.forEach((message) => {
+          const messageDiv = buildMessageDiv(message);
+          messagesContainer.appendChild(messageDiv);
+        });
       }
-
-      messagesContainer.innerHTML = '';
-
-      messages.forEach((message) => {
-        const messageDiv = buildMessageDiv(message);
-        messagesContainer.appendChild(messageDiv);
-      });
     });
 }
 
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchMessagesByUser(parameterUsername) {
-  buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container');
-  buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container');
+  buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
+    'Your gallery is empty. Post your first photo!');
+  buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
+    'Your favourite collection is empty. Mark a photo as your favourite to view it here!');
 }
 
 /** Fetches all messages and add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchAllMessages() {
   const url = '/feed';
-  buildMessagesDivFromUrl(url, 'message-cards-container');
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'The PhotoBook universe is empty. Be the one to post the first photo!');
 }
 
 /** Fetches messages for given image labels and add them to the page. */
@@ -677,7 +703,7 @@ function fetchMessagesByImageLabels(imageLabels) {
       url += '&';
     }
   });
-  buildMessagesDivFromUrl(url, 'message-cards-container');
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'No images found for this label. Be the one to post the first photo!');
 }
 
 /** Build messages div with given sort criteria */
@@ -690,7 +716,7 @@ function onSelectSetSortCriteria() {
     url += window.location.href.substring(parameterStartIdx);
   }
 
-  buildMessagesDivFromUrl(url, 'message-cards-container', sortCriteria);
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'No images found for this label. Be the one to post the first photo!', sortCriteria);
 }
 
 /** Listen for sort menu changes and trigger sorting function */
