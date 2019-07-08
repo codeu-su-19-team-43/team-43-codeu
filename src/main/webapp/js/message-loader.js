@@ -670,7 +670,7 @@ function fetchMessagesByUser(parameterUsername) {
 // eslint-disable-next-line no-unused-vars
 function fetchAllMessages() {
   const url = '/feed';
-  buildMessagesDivFromUrl(url, 'message-cards-container', 'The world is empty. Be the one to post the first photo!');
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'The PhotoBook universe is empty. Be the one to post the first photo!');
 }
 
 /** Fetches messages for given image labels and add them to the page. */
