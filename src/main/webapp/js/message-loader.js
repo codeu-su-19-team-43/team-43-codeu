@@ -419,6 +419,18 @@ function autoGrow(element) {
   element.style.height = `${element.scrollHeight}px`;
 }
 
+// eslint-disable-next-line no-unused-vars
+function enablePostButton(commentInputTextArea, messageId) {
+  const commentPostButton = document.getElementById(`comment-post-button-${messageId}`);
+
+  commentInputTextArea.addEventListener('input', () => {
+    commentPostButton.disabled = true;
+    if (commentInputTextArea.value.length) {
+      commentPostButton.disabled = false;
+    }
+  });
+}
+
 function getUserProfileUrl(email) {
   if (email != null) {
     let userProfileImageUrl;
@@ -450,11 +462,13 @@ function buildCommentInput(messageId) {
                                     onblur="this.placeholder='Add a comment'"
                                     onfocus="this.placeholder=''"
                                     onkeyup="autoGrow(this)"
+                                    oninput="enablePostButton(this, '${messageId}')"
                                     ></textarea>
                                   <div class="input-group-append">
                                     <button class="btn btn-light comment-post-button border" 
+                                            disabled="true"
                                             type="button" 
-                                            id="comment-post-button"
+                                            id="comment-post-button-${messageId}"
                                             onclick="onClickCommentPostButton('${messageId}');">
                                             Post
                                     </button>
@@ -538,12 +552,6 @@ function onClickCommentPostButton(messageId) {
     messageId,
     userText: commentInputTextarea.value,
   };
-
-  if (comment.userText === '' || comment.userText === null) {
-    commentInputTextarea.style.border = '1px solid red';
-    commentInputTextarea.placeholder = 'Please enter some text!';
-    return;
-  }
 
   $.ajax({
     contentType: 'application/json',
