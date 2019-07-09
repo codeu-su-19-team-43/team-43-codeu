@@ -95,7 +95,8 @@ function fetchBlobstoreUrlAndShowEditProfileImageLabel() {
       messageForm.action = imageUploadUrl;
       document.getElementById('edit-profile-image').classList.remove('hidden');
       document.getElementById('profile-image-upload-input').onchange = () => {
-        document.getElementById('profile-image-form').submit();
+        document.getElementById('profile-image-modal-content').classList.remove('hidden');
+        // document.getElementById('profile-image-form').submit();
       };
     });
 }
