@@ -21,6 +21,24 @@ limitations under the License.
   <title>PhotoBook</title>
   <link rel="stylesheet" href="/css/home-page.css" />
   <script src="js/header-loader.js" onload="loadHeader('PhotoBook')"></script>
+  <style type="text/css">
+    #nextSection:after {
+      background: #ffffff;
+      opacity: 0.4;
+      position: absolute;
+      width: 140px;
+      height: 70px;
+      border-top-left-radius: 100px;
+      border-top-right-radius: 100px;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 0);
+      cursor: pointer;
+      text-align: center;
+      line-height: 120px;
+      content: '\25BC';
+    }
+  </style>
 </head>
 
 <body>
@@ -33,6 +51,7 @@ limitations under the License.
       </h3>
     </div>
   </div>
+  <div id="nextSection"></div>
   <div class="landing-page-description">
     <div class="d-md-flex flex-md-equal px-3">
       <div class="mr-md-3 pt-3 px-3 p-md-5 text-center overflow-hidden">
