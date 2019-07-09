@@ -94,10 +94,10 @@ function fetchBlobstoreUrlAndShowEditProfileImageLabel() {
       const messageForm = document.getElementById('profile-image-form');
       messageForm.action = imageUploadUrl;
       document.getElementById('edit-profile-image').classList.remove('hidden');
-      // document.getElementById('profile-image-upload-input').onchange = () => {
-      //   // document.getElementById('profile-image-modal-content').classList.remove('hidden');
-      //   // document.getElementById('profile-image-form').submit();
-      // };
+      $('#profile-image-modal').on('click', (event) => {
+        if (event.target !== this) return;
+        document.getElementById('profile-image-modal-content').classList.add('hidden');
+      });
     });
 }
 
