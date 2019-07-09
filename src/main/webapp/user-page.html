@@ -80,6 +80,19 @@ limitations under the License.
         });
       }
 
+      function displayUploadedImage(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+
+          reader.onload = function(e) {
+            document.getElementById("uploaded-image-container").classList.remove("hidden");
+            $("#uploaded-image").attr("src", e.target.result);
+          };
+
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+
       function initMap() {
         var input = document.getElementById("searchMapInput");
         var autocomplete = new google.maps.places.Autocomplete(input);
@@ -96,7 +109,7 @@ limitations under the License.
         <form id="profile-image-form" method="POST" class="mb-5" enctype="multipart/form-data">
           <div class="profile-image-container">
             <img id="user-profile-image" alt="User Profile Image" class="rounded border" />
-            <label class="edit-profile-image p-1 m-0 border-0 btn btn-default btn-file hidden" id="edit-profile-image" data-toggle="modal" data-target="#profile-image-modal">
+            <label class="edit-profile-image p-1 m-0 border-0 btn btn-default btn-file hidden" id="edit-profile-image">
               <i class="fas fa-pencil-alt fa-2x"></i>
               <input type="file" name="image" accept="image/*" id="profile-image-upload-input" style="display: none;" />
             </label>
@@ -109,6 +122,7 @@ limitations under the License.
               <h4 class="card-title" id="username"></h4>
               <h6 class="font-weight-lighter text-muted" id="aboutme"></h6>
             </div>
+
             <div class="font-weight-lighter mt-3" id="profile-detail-container"></div>
           </div>
 
@@ -126,6 +140,11 @@ limitations under the License.
               </button>
             </div>
           </div>
+          <div class="tab-pane fade favourite-messages-container-tab-pane" id="favourite" role="tabpanel" aria-labelledby="favourite-tab">
+            <div id="favourite-messages-container" class="card-columns favourite-messages-container">
+              Loading...
+            </div>
+          </div>
         </div>
       </div>
 
@@ -137,7 +156,7 @@ limitations under the License.
               <label id="upload-photo-button" class="btn btn-default btn-file btn-light btn-sm font-weight-light border-right mb-0 rounded-0">
                 <i class="fas fa-camera-retro mr-1"></i>
                 Photo
-                <input type="file" name="image" accept="image/*" id="message-image-upload-input" style="display: none;" />
+                <input type="file" name="image" accept="image/*" id="message-image-upload-input" style="display: none;" onchange="displayUploadedImage(this);" />
               </label>
               <input type="text" name="mapLocation" id="searchMapInput" class="mapControls" placeholder="Add location to map!" />
               <button type="submit" id="submit-button" class="btn btn-info btn-sm rounded-0 font-weight-bolder">
@@ -145,19 +164,18 @@ limitations under the License.
                 Share
               </button>
             </div>
+            <div class="hidden" id="uploaded-image-container">
+              <img id="uploaded-image" alt="Uploaded Image" class="img-thumbnail rounded-0 uploaded-image" />
+            </div>
           </div>
         </form>
 
         <ul class="nav nav-tabs content-tab" id="tab" role="tablist">
           <li class="nav-item">
-            <a class="nav-link active" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab" aria-controls="gallery" aria-selected="true">
-              Gallery
-            </a>
+            <a class="nav-link active" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab" aria-controls="gallery" aria-selected="true">Gallery</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="favourite-tab" data-toggle="tab" href="#favourite" role="tab" aria-controls="favourite" aria-selected="false">
-              Favourite
-            </a>
+            <a class="nav-link" id="favourite-tab" data-toggle="tab" href="#favourite" role="tab" aria-controls="favourite" aria-selected="false">Favourite</a>
           </li>
         </ul>
         <div class="tab-content" id="tab-content">
@@ -171,11 +189,6 @@ limitations under the License.
               Loading...
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </body>
-
   <div class="modal fade" id="profile-image-modal" tabindex="-1" role="dialog" aria-labelledby="profile-image-modal" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content hidden" id="profile-image-modal-content">
@@ -194,5 +207,5 @@ limitations under the License.
         </div>
       </div>
     </div>
-  </div>
+  </body>
 </html>

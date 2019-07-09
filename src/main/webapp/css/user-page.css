@@ -113,6 +113,10 @@ body > .page-header {
   cursor: pointer;
 }
 
+.uploaded-image {
+  width: 100%;
+}
+
 .content-tab > li > a {
   margin: 0 !important;
 }
