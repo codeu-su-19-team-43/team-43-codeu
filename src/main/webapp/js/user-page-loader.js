@@ -95,8 +95,9 @@ function fetchBlobstoreUrlAndShowEditProfileImageLabel() {
       messageForm.action = imageUploadUrl;
       document.getElementById('edit-profile-image').classList.remove('hidden');
       $('#profile-image-modal').on('click', (event) => {
-        if (event.target !== this) return;
-        document.getElementById('profile-image-modal-content').classList.add('hidden');
+        if (event.target === document.getElementById('profile-image-modal')) {
+          document.getElementById('profile-image-modal-content').classList.add('hidden');
+        }
       });
     });
 }
