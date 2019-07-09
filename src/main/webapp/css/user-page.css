@@ -75,6 +75,20 @@ body > .page-header {
   color: rgba(0, 0, 0, 0.55);
 }
 
+#uploaded-profile-image {
+  object-fit: cover;
+  width: 290px;
+  height: 290px;
+}
+
+.set-new-profile-picture-button {
+  width: 290px;
+}
+
+.modal-dialog {
+  width: 350px;
+}
+
 .profile-element > * {
   line-height: 1.8em;
 }
