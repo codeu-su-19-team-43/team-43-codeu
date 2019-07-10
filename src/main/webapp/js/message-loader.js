@@ -86,7 +86,7 @@ function getTextForTts(message) {
   return finalText.join('');
 }
 
-function playTtsAudio(text) {
+function playTtsAudio(textToSpeechIconId, text) {
   fetch('/a11y/tts', {
     method: 'POST',
     headers: {
@@ -101,6 +101,11 @@ function playTtsAudio(text) {
       audio.play()
         .catch((error) => {
           throw error.message;
+        }).finally(() => {
+          // make icon clickable after audio has stopped playing
+          audio.onended = () => {
+            $(textToSpeechIconId).removeClass('unclickable');
+          };
         });
     });
 }
@@ -132,10 +137,21 @@ function buildInfoDiv(message) {
 
   const iconGroupDiv = document.createElement('div');
   const textToSpeechIcon = document.createElement('i');
+  textToSpeechIcon.id = `text-to-speech-icon-${message.id}`;
   textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon', 'mr-2');
-  textToSpeechIcon.addEventListener('click', () => {
-    playTtsAudio(getTextForTts(message));
+
+  // listen for click events
+  const textToSpeechIconIdStr = `#${textToSpeechIcon.id}`;
+  textToSpeechIcon.addEventListener('click', (event) => {
+    // prevent click while audio is playing
+    if ($(textToSpeechIconIdStr).hasClass('unclickable')) {
+      event.preventDefault();
+    } else {
+      $(textToSpeechIconIdStr).addClass('unclickable');
+      playTtsAudio(textToSpeechIconIdStr, getTextForTts(message));
+    }
   });
+
   iconGroupDiv.appendChild(textToSpeechIcon);
 
   const translateIcon = document.createElement('i');
