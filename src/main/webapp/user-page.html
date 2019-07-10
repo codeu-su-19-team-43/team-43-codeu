@@ -43,7 +43,7 @@ limitations under the License.
           location: document.getElementById("location-input").value,
           organization: document.getElementById("organization-input").value,
           website: document.getElementById("website-input").value,
-          langCodeForTranslation: document.getElementById("language-for-translation-input").value
+          langCodeForTranslation: document.getElementById("language-for-translation-menu").value
         };
         $.ajax({
           contentType: "application/json",
@@ -54,7 +54,7 @@ limitations under the License.
         }).done(() => {
           onCancelEditProfileButton();
           fetchUserProfile();
-          reBuildUsername();
+          rebuildUsername();
           rebuildTranslationText();
         });
       }
@@ -64,14 +64,17 @@ limitations under the License.
           const id = div.id;
           const messageId = id.replace("translateCollapseDiv-", "");
           $.getScript("/js/message-loader.js", () => {
-            getTranslatedText(document.getElementById(`text-${messageId}`).innerHTML, document.getElementById("language-for-translation-input").value).then(translatedText => {
-              document.getElementById(`translateCollapseDiv-${messageId}`).innerHTML = translatedText;
-            });
+            const selectedLangCode = document.getElementById("language-for-translation-menu").value;
+            const langCode = selectedLangCode === '' ? 'es' : selectedLangCode;
+            getTranslatedText(document.getElementById(`text-${messageId}`).innerHTML, langCode)
+              .then(translatedText => {
+                document.getElementById(`translateCollapseDiv-${messageId}`).innerHTML = translatedText;
+              });
           });
         });
       }
 
-      function reBuildUsername() {
+      function rebuildUsername() {
         const usernameContainers = document.querySelectorAll(`[id='username']`);
         usernameContainers.forEach(div => {
           $.getScript("/js/message-loader.js", () => {
