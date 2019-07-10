@@ -35,7 +35,7 @@ function fetchLanguageForTranslation() {
   if (userEmail !== null) {
     $.ajaxSetup({ async: false });
     $.getJSON(`/user-profile?user=${userEmail}`, (userProfile) => {
-      if (userProfile.langCodeForTranslation) {
+      if (userProfile.langCodeForTranslation && userProfile.langCodeForTranslation !== '') {
         langCodeForTranslation = userProfile.langCodeForTranslation.toString();
       }
     });
