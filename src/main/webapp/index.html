@@ -21,7 +21,7 @@ limitations under the License.
     <link rel="stylesheet" href="/css/home-page.css" />
     <script src="js/header-loader.js" onload="loadHeader('PhotoBook')"></script>
     <style type="text/css">
-      #nextSection:after {
+      #nextSection::after {
         background: #ffffff;
         opacity: 0.4;
         position: absolute;
@@ -36,8 +36,15 @@ limitations under the License.
         text-align: center;
         line-height: 120px;
         content: "\25BC";
+        z-index: 99;
       }
+
     </style>
+    <script>
+      function onLinkClick() {
+        document.getElementById("landing-page-description").scrollIntoView({behavior: "smooth", });
+      }
+    </script>
   </head>
 
   <body>
@@ -79,10 +86,8 @@ limitations under the License.
         <h3 class="font-weight-lightest text-center">
           Shoot. Share. Explore.
         </h3>
-      </div>
-    </div> -->
-    <div id="nextSection"></div>
-    <div class="landing-page-description">
+    <div id="nextSection" onclick="onLinkClick();"></div>
+    <div class="landing-page-description" id="landing-page-description">
       <div class="d-md-flex flex-md-equal px-3">
         <div class="mr-md-3 pt-3 px-3 p-md-5 text-center overflow-hidden">
           <div class="my-3 py-3">
@@ -104,6 +109,17 @@ limitations under the License.
               Sharing your photographs has never been easier! Upload photographs from
               <a href="/user-page.html">your home page</a>
               with a click.
+            </p>
+          </div>
+        </div>
+        <div class="mr-md-3 pt-3 px-3 p-md-5 text-center overflow-hidden">
+          <div class="my-3 p-3">
+            <h5>Find The Best Photography Locations Around You</h5>
+            <img class="landing-icon" alt="location marker icon" src="images/home-page-maps-icon.png" />
+            <p class="text-justify px-3">
+              Explore the community's favourite photography locations on the
+              <a href="/google-map.html">map</a>
+              . You can even add your own!
             </p>
           </div>
         </div>

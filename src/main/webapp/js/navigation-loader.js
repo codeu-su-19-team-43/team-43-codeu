@@ -92,7 +92,7 @@ function buildNavigationLinks() {
 function setTransparency() {
   if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
     const navBar = document.getElementById('navigationBar');
-    navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent navBarTransparent';
+    navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent transparent-nav-bar';
   }
 }
 
@@ -103,19 +103,16 @@ function scrollTransparency() {
   }
 
   let scrollStart = 0;
-  const landingPageDescription = $('.landing-page-description');
-  const offset = landingPageDescription.offset();
-  if (landingPageDescription.length) {
-    $(document).scroll(function changeTransparencyOnScroll() {
-      const navBar = document.getElementById('navigationBar');
-      scrollStart = $(this).scrollTop();
-      if (scrollStart > offset.top) {
-        navBar.className = 'navbar navbar-expand-lg d-flex fixed-top border-bottom shadow-sm navbar-light bg-light';
-      } else {
-        navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent navBarTransparent';
-      }
-    });
-  }
+  const offset = 200;
+  $(document).scroll(function changeTransparencyOnScroll() {
+    const navBar = document.getElementById('navigationBar');
+    scrollStart = $(this).scrollTop();
+    if (scrollStart > offset) {
+      navBar.className = 'navbar navbar-expand-lg d-flex fixed-top shadow-sm navbar-light non-transparent-nav-bar';
+    } else {
+      navBar.className = 'navbar navbar-expand-lg d-flex fixed-top navbar-dark transparent transparent-nav-bar';
+    }
+  });
 }
 
 // eslint-disable-next-line no-unused-vars

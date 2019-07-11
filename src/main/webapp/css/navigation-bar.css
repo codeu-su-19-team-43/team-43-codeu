@@ -1,6 +1,14 @@
-nav.navBarTransparent {
+nav.transparent-nav-bar {
   background-color: rgba(255, 255, 255, 0) !important;
   border-bottom: 1px solid rgba(207, 203, 203, 0.4);
+  height: 4.5em;
+  transition: height 0.4s ease-out;
+}
+
+nav.non-transparent-nav-bar {
+  height: 3.5em;
+  transition: height 0.4s ease-out;
+  background-color: white !important;
 }
 
 .nav-link {
