@@ -39,7 +39,7 @@ body > .page-header {
   }
 }
 
-.card {
+.card-border {
   border-color: rgba(23, 162, 184, 0.2);
   border-width: 2px;
 }
