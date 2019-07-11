@@ -1,8 +1,14 @@
 .landing {
   height: 100vh;
   min-height: 500px;
-  background-image: url('../images/home-landing-image.jpg');
+  display: flex;
+  align-items: center;
+}
+
+.carousel-item {
   background-attachment: fixed;
+  height: 100vh;
+  min-height: 500px;
   display: flex;
   align-items: center;
 }
@@ -13,8 +19,13 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
+}
+
+.carousel-image {
+  height: 100vh;
+  object-fit: cover;
 }
 
 .landing > .landing-tagline {
