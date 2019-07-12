@@ -376,6 +376,8 @@ function onClickLikeButton(messageId) {
           toggleResponse(message);
         });
     });
+  } else {
+    $('#instructUserToLoginModal').modal('show');
   }
 }
 
@@ -407,6 +409,8 @@ function onClickFavouriteButton(messageId) {
           toggleResponse(message);
         });
     });
+  } else {
+    $('#instructUserToLoginModal').modal('show');
   }
 }
 
