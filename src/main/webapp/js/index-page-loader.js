@@ -1,38 +1,31 @@
 const carouselItems = [
   {
     active: true,
-    imageUrl: '../images/landing-carousel/greece-santorini.jpg',
+    imageUrl: 'images/landing-carousel/singapore.jpg',
+    location: 'Singapoer, Singapore',
   },
   {
-    imageUrl: '../images/landing-carousel/india-goa.jpg',
+    imageUrl: 'images/landing-carousel/greece-santorini.jpg',
+    location: 'Santorini, Greece',
   },
   {
-    imageUrl: '../images/landing-carousel/indonesia-bali.jpg',
+    imageUrl: 'images/landing-carousel/india-goa.jpg',
   },
   {
-    imageUrl: '../images/landing-carousel/singapore-jewel.jpg',
+    imageUrl: 'images/landing-carousel/indonesia-bali.jpg',
   },
   {
-    imageUrl: '../images/landing-carousel/spain-mallorca.jpg',
+    imageUrl: 'images/landing-carousel/spain-mallorca.jpg',
   },
 ];
 
 function buildCarouselItem(item) {
   const carouselItem = document.createElement('div');
   carouselItem.classList.add('carousel-item');
-  console.log(item.active);
   if (item.active != null && item.active) {
     carouselItem.classList.add('active');
   }
-  carouselItem.style.backgroundImage = `url(${item.imageUrl})`;
-  carouselItem.innerHTML = `<div class="landing-tagline" >
-                              <h1 class="display-4 text-center">
-                                <big><big>PhotoBook</big></big>
-                              </h1>
-                              <h3 class="font-weight-lightest text-center">
-                                Shoot. Share. Explore.
-                              </h3>
-                            </div >`;
+  carouselItem.innerHTML = `<img src="${item.imageUrl}" class="d-block w-100 carousel-image"/>`;
   return carouselItem;
 }
 

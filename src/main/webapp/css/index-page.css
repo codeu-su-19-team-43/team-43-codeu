@@ -5,21 +5,13 @@
   align-items: center;
 }
 
-.carousel-item {
-  background-attachment: fixed;
-  height: 100vh;
-  min-height: 500px;
-  display: flex;
-  align-items: center;
-}
-
 .landing > .landing-overlay {
   height: 100%;
   width: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.45);
   z-index: 1;
 }
 
@@ -28,10 +20,17 @@
   object-fit: cover;
 }
 
-.landing > .landing-tagline {
-  width: 80%;
+.carousel-control-prev, .carousel-control-next {
+  z-index: 3;
+}
+
+.landing-tagline {
+  width: 100%;
   margin: auto;
   z-index: 2;
+  position: absolute;
+  top: 40%;
+  left: 0;
 }
 
 .landing-tagline > * {
