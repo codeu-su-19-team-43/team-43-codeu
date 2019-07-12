@@ -660,7 +660,7 @@ function getSortParameters(sortCriteria) {
 
 function getLoadingElement() {
   return (
-    `<div class="d-flex justify-content-start"><p>Loading...</p>
+    `<div class="d-flex justify-content-start my-3"><p>Loading...</p>
         <div class="spinner-border mx-3" role="status"></div>
     </div>`
   );
