@@ -441,8 +441,11 @@ function enablePostButton(commentInputTextArea, messageId) {
 
   commentInputTextArea.addEventListener('input', () => {
     commentPostButton.disabled = true;
-    if (commentInputTextArea.value.length) {
-      commentPostButton.disabled = false;
+    if (commentInputTextArea.value) {
+      const commentText = commentInputTextArea.value.toString().trim();
+      if (commentText !== '') {
+        commentPostButton.disabled = false;
+      }
     }
   });
 }
