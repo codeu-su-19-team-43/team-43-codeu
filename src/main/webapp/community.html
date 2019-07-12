@@ -4,6 +4,7 @@
 <head>
   <title>Community</title>
   <script src="js/header-loader.js" onload="loadHeader('Community Page')"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
   <script src="/js/community-page-loader.js"></script>
   <link rel="stylesheet" href="/css/community-page.css" />
 </head>
@@ -16,6 +17,19 @@
     </p>
   </div>
   <div id="content" class="content-container">
+    <div class="community-metrics container mt-3 mb-6 pb-2">
+      <div class="row">
+        <div class="col-sm align-self-center">
+          <div id="user-with-most-likes"></div>
+        </div>
+        <div class="col-sm-5 align-self-center">
+          <div id="top-three-contributors"></div>
+        </div>
+        <div class="col-sm align-self-center">
+          <div id="user-with-most-favourites"></div>
+        </div>
+      </div>
+    </div>
     <div class="card-columns" id="user-card-container">
       Loading...
     </div>
