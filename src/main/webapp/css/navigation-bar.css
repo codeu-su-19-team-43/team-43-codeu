@@ -11,6 +11,20 @@ nav.non-transparent-nav-bar {
   background-color: white !important;
 }
 
+.transparent-nav-bar > div > ul > li > .nav-link {
+  color: white;
+}
+
+.non-transparent-nav-bar > div > ul > li > .nav-link {
+  color: black;
+}
+
 .nav-link {
+  font-size: 0.9em;
   margin: 0em 2em;
 }
+
+.active-link {
+  color: rgb(23, 162, 184) !important;
+}
+

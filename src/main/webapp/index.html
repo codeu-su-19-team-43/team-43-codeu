@@ -18,8 +18,9 @@ limitations under the License.
 <html>
   <head>
     <title>PhotoBook</title>
-    <link rel="stylesheet" href="/css/home-page.css" />
+    <link rel="stylesheet" href="/css/index-page.css" />
     <script src="js/header-loader.js" onload="loadHeader('PhotoBook')"></script>
+    <script src="js/index-page-loader.js"></script>
     <style type="text/css">
       #nextSection::after {
         background: #ffffff;
@@ -38,26 +39,34 @@ limitations under the License.
         content: "\25BC";
         z-index: 99;
       }
-
     </style>
     <script>
       function onLinkClick() {
-        document.getElementById("landing-page-description").scrollIntoView({behavior: "smooth", });
+        document.getElementById("landing-page-description").scrollIntoView({ behavior: "smooth" });
       }
     </script>
   </head>
 
-  <body>
-    <div class="landing">
+  <body onload="buildUI();">
+    <div id="landing-carousel" class="landing carousel slide" data-ride="carousel">
       <div class="landing-overlay"></div>
       <div class="landing-tagline">
-        <h1 class="display-4 text-center landing-page-title">
+        <h1 class="display-4 text-center">
           <big><big>PhotoBook</big></big>
         </h1>
         <h3 class="font-weight-lightest text-center">
           Shoot. Share. Explore.
         </h3>
       </div>
+      <div class="carousel-inner" id="carousel-container"></div>
+      <a class="carousel-control-prev" href="#landing-carousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#landing-carousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
     </div>
     <div id="nextSection" onclick="onLinkClick();"></div>
     <div class="landing-page-description" id="landing-page-description">
@@ -77,8 +86,8 @@ limitations under the License.
         <div class="mr-md-3 pt-3 px-3 p-md-5 text-center overflow-hidden">
           <div class="my-3 py-3">
             <h5>Share Your Photographs</h5>
-            <img class="landing-icon" alt="camera icon" src="images/home-page-camera-icon.png" />
-            <p class="text-justify px-3">
+            <img class="landing-icon" alt="camera icon" src="images/home-page-icon/camera.png" />
+            <p class="text-justify px-3 font-weight-lighter">
               Sharing your photographs has never been easier! Upload photographs from
               <a href="/user-page.html">your home page</a>
               with a click.
@@ -88,11 +97,10 @@ limitations under the License.
         <div class="mr-md-3 pt-3 px-3 p-md-5 text-center overflow-hidden">
           <div class="my-3 p-3">
             <h5>Find The Best Photography Locations Around You</h5>
-            <img class="landing-icon" alt="location marker icon" src="images/home-page-maps-icon.png" />
-            <p class="text-justify px-3">
+            <img class="landing-icon" alt="location marker icon" src="images/home-page-icon/maps.png" />
+            <p class="text-justify px-3 font-weight-lighter">
               Explore the community's favourite photography locations on the
-              <a href="/google-map.html">map</a>
-              . You can even add your own!
+              <a href="/google-map.html">map</a>. You can even add your own!
             </p>
           </div>
         </div>
@@ -101,23 +109,21 @@ limitations under the License.
         <div class="mr-md-3 pt-3 px-3 p-md-5 text-center overflow-hidden">
           <div class="my-3 py-3">
             <h5>Connect With The Community</h5>
-            <img class="landing-icon" alt="community icon" src="images/home-page-community-icon.png" />
-            <p class="text-justify px-3">
+            <img class="landing-icon" alt="community icon" src="images/home-page-icon/community.png" />
+            <p class="text-justify px-3 font-weight-lighter">
               View posts shared by the PhotoBook community on the
-              <a href="/feed.html">feed page</a>
-              . You can like, comment on, and save your favourite posts!
+              <a href="/feed.html">feed page</a>. You can like, comment on, and save your favourite posts!
             </p>
           </div>
         </div>
         <div class="mr-md-3 pt-3 px-3 p-md-5 text-center overflow-hidden">
           <div class="my-3 p-3">
             <h5>Get Insights</h5>
-            <img class="landing-icon" alt="insights icon" src="images/home-page-insights-icon.png" />
-            <p class="text-justify px-3">
+            <img class="landing-icon" alt="insights icon" src="images/home-page-icon/insights.png" />
+            <p class="text-justify px-3 font-weight-lighter">
               PhotoBook automatically categorizes your images and detects landmarks. Other features include sentiment analysis, text to speech generation and translation of message text. You can also
               explore some useful statistics on the
-              <a href="/charts.html">charts page</a>
-              .
+              <a href="/charts.html">charts page</a>.
             </p>
           </div>
         </div>
