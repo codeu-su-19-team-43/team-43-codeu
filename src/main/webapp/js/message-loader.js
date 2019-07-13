@@ -376,6 +376,8 @@ function onClickLikeButton(messageId) {
           toggleResponse(message);
         });
     });
+  } else {
+    $('#instructUserToLoginModal').modal('show');
   }
 }
 
@@ -407,6 +409,8 @@ function onClickFavouriteButton(messageId) {
           toggleResponse(message);
         });
     });
+  } else {
+    $('#instructUserToLoginModal').modal('show');
   }
 }
 
@@ -579,9 +583,13 @@ function onClickCommentPostButton(messageId) {
     processData: false,
     type: 'POST',
     url: '/comments',
-  }).done(() => {
-    $(`#comment-container-${messageId}`).html(buildCommentHtml(messageId));
-    onCommentPost(messageId);
+  }).done((response) => {
+    if (response.toString().trim() !== '') {
+      $('#instructUserToLoginModal').modal('show');
+    } else {
+      $(`#comment-container-${messageId}`).html(buildCommentHtml(messageId));
+      onCommentPost(messageId);
+    }
   });
 }
 
