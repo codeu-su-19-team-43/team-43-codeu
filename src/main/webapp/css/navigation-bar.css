@@ -1,13 +1,9 @@
 nav.transparent-nav-bar {
   background-color: rgba(255, 255, 255, 0) !important;
-  border-bottom: 1px solid rgba(207, 203, 203, 0.4);
-  height: 4.5em;
-  transition: height 0.4s ease-out;
+  min-height: 70px;
 }
 
 nav.non-transparent-nav-bar {
-  height: 3.5em;
-  transition: height 0.4s ease-out;
   background-color: white !important;
 }
 
@@ -28,3 +24,16 @@ nav.non-transparent-nav-bar {
   color: rgb(23, 162, 184) !important;
 }
 
+.transparent-nav-bar > .navbar-toggler {
+  background-color: rgba(255, 255, 255, 0.3);
+  /* (70px - button height 34px) / 2  */
+  margin-top: 18px !important;
+  margin-bottom: 18px !important;
+  padding: 9px 10px !important;
+}
+
+/* .navbar-brand {
+  padding: 0 15px;
+  height: 80px;
+  line-height: 80px;
+} */
