@@ -90,9 +90,13 @@ function buildNavigationLinks() {
 
 // Set transparency of navigation bar
 function setTransparency() {
+  const navBar = document.getElementById('navigationBar');
   if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-    const navBar = document.getElementById('navigationBar');
-    navBar.className = 'navbar navbar-expand-lg d-flex fixed-top transparent transparent-nav-bar';
+    navBar.classList.remove('shadow-sm', 'non-transparent-nav-bar');
+    navBar.classList.add('transparent-nav-bar');
+  } else {
+    navBar.classList.add('shadow-sm', 'non-transparent-nav-bar');
+    navBar.classList.remove('transparent-nav-bar');
   }
 }
 
@@ -108,9 +112,11 @@ function scrollTransparency() {
     const navBar = document.getElementById('navigationBar');
     scrollStart = $(this).scrollTop();
     if (scrollStart > offset) {
-      navBar.className = 'navbar navbar-expand-lg d-flex fixed-top shadow-sm non-transparent-nav-bar';
+      navBar.classList.add('shadow-sm', 'non-transparent-nav-bar');
+      navBar.classList.remove('transparent-nav-bar');
     } else {
-      navBar.className = 'navbar navbar-expand-lg d-flex fixed-top transparent transparent-nav-bar';
+      navBar.classList.remove('shadow-sm', 'non-transparent-nav-bar');
+      navBar.classList.add('transparent-nav-bar');
     }
   });
 }
@@ -118,14 +124,21 @@ function scrollTransparency() {
 // eslint-disable-next-line no-unused-vars
 function loadNavigationBar() {
   const navElement = document.createElement('div');
-  $(navElement).load('navigation-bar.html', () => {
-    $(document).ready(() => {
-      document.body.insertBefore(navElement, document.body.firstChild);
-      buildNavigationLinks();
-      setTransparency();
-      scrollTransparency();
-    });
-  });
-}
+  navElement.innerHTML = `<nav class="navbar navbar-expand-lg bg-light d-flex fixed-top px-5 transparent-nav-bar" id="navigationBar">
+                            <a class="navbar-brand" href="#">
+                              <img src="images/logo.png" width="30" height="30" alt="" />
+                              <div class="d-inline-block ml-4"><p class="brand-name m-0">PhotoBook</p></div>
+                            </a>
+                            <button class="navbar-toggler toggler-button" type="button" data-toggle="collapse" data-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                              <i class="fas fa-bars"></i>
+                            </button>
+                            <div class="collapse navbar-collapse" id="navbarContent">
+                              <ul class="navbar-nav ml-auto" id="navigation"></ul>
+                            </div>
+                          </nav>`;
 
-loadNavigationBar();
+  document.body.insertBefore(navElement, document.body.firstChild);
+  buildNavigationLinks();
+  setTransparency();
+  scrollTransparency();
+}

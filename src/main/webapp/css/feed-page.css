@@ -45,6 +45,10 @@ body > .page-header {
   font-size: 20px;
 }
 
+.custom-select {
+  color: rgb(23, 162, 184);
+}
+
 .imageLabelButton {
   border-radius: 2em;
 }
@@ -57,6 +61,7 @@ body > .page-header {
 .sort-menu {
   padding-left: 15px;
   width: 350px;
+  height: 36px;
 }
 
 .custom-select {
