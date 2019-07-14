@@ -1,13 +1,8 @@
 nav.transparent-nav-bar {
   background-color: rgba(255, 255, 255, 0) !important;
-  border-bottom: 1px solid rgba(207, 203, 203, 0.4);
-  height: 4.5em;
-  transition: height 0.4s ease-out;
 }
 
 nav.non-transparent-nav-bar {
-  height: 3.5em;
-  transition: height 0.4s ease-out;
   background-color: white !important;
 }
 
@@ -21,10 +16,24 @@ nav.non-transparent-nav-bar {
 
 .nav-link {
   font-size: 0.9em;
-  margin: 0em 2em;
+  margin: 0em 1em;
+  text-align: right;
 }
 
 .active-link {
   color: rgb(23, 162, 184) !important;
 }
 
+.transparent-nav-bar > .navbar-toggler {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.navbar-brand {
+  margin: 0em 1em;
+}
+
+.brand-name {
+  color: rgb(23, 162, 184);
+  font-size: 0.8em;
+  font-weight: 600;
+}

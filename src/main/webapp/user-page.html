@@ -17,7 +17,14 @@ limitations under the License.
 <!DOCTYPE html>
 <html>
   <head>
-    <script src="js/header-loader.js" onload="loadHeader('User Page')"></script>
+    <title>User Page</title>
+    <meta charset="UTF-8" />
+    <script src="js/jquery.js"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/css/navigation-bar.css" />
+    <script src="js/navigation-loader.js"></script>
     <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
     <script src="js/user-page-loader.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&libraries=places&callback=initMap" async defer></script>
@@ -65,11 +72,10 @@ limitations under the License.
           const messageId = id.replace("translateCollapseDiv-", "");
           $.getScript("/js/message-loader.js", () => {
             const selectedLangCode = document.getElementById("language-for-translation-menu").value;
-            const langCode = selectedLangCode === '' ? 'es' : selectedLangCode;
-            getTranslatedText(document.getElementById(`text-${messageId}`).innerHTML, langCode)
-              .then(translatedText => {
-                document.getElementById(`translateCollapseDiv-${messageId}`).innerHTML = translatedText;
-              });
+            const langCode = selectedLangCode === "" ? "es" : selectedLangCode;
+            getTranslatedText(document.getElementById(`text-${messageId}`).innerHTML, langCode).then(translatedText => {
+              document.getElementById(`translateCollapseDiv-${messageId}`).innerHTML = translatedText;
+            });
           });
         });
       }
@@ -120,10 +126,14 @@ limitations under the License.
           var place = autocomplete.getPlace();
         });
       }
+
+      function js_Load() {
+        document.body.style.visibility = "visible";
+      }
     </script>
   </head>
 
-  <body onload="buildUI();">
+  <body onload="buildUI(); loadNavigationBar(); js_Load();">
     <div class="content-container mt-7 pt-4">
       <div class="left-container pr-4 position-fixed">
         <form id="profile-image-form" method="POST" class="mb-5" enctype="multipart/form-data">
@@ -184,7 +194,7 @@ limitations under the License.
             <a class="nav-link active" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab" aria-controls="gallery" aria-selected="true">Gallery</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="favourite-tab" data-toggle="tab" href="#favourite" role="tab" aria-controls="favourite" aria-selected="false">Favourite</a>
+            <a class="nav-link" id="favourite-tab" data-toggle="tab" href="#favourite" role="tab" aria-controls="favourite" aria-selected="false">Favourites</a>
           </li>
         </ul>
         <div class="tab-content" id="tab-content">

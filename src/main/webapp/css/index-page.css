@@ -43,7 +43,7 @@
 
 .landing-icon {
   width: 4em;
-  margin: 1em auto;
+  margin: 2em auto;
 }
 
 /*
@@ -59,4 +59,17 @@
     -ms-flex: 1;
     flex: 1;
   }
+}
+
+.landing-page-description {
+  margin-top: -5vh;
+  padding-top: 5vh;
+}
+
+.website-intro {
+  height: 30vh;
+}
+
+.description-card {
+  min-height: 32.5vh;
 }
