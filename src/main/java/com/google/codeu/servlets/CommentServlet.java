@@ -79,7 +79,7 @@ public class CommentServlet extends HttpServlet {
 
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
-      response.sendRedirect("/index.html");
+      response.getWriter().println("Please log in!");
       return;
     }
 

@@ -2,7 +2,7 @@
 const teams = [
   {
     name: 'Aadyaa Maddi',
-    avatarPath: './images/aboutus-avatar-aadyaa.jpg',
+    avatarPath: 'images/aboutus-avatar/aadyaa.jpg',
     details: [
       {
         subTitle: 'Summer Feelz',
@@ -29,7 +29,7 @@ const teams = [
   },
   {
     name: 'Aditi Saini',
-    avatarPath: './images/aboutus-avatar-aditi.jpg',
+    avatarPath: './images/aboutus-avatar/aditi.jpg',
     details: [
       {
         subTitle: 'Summer Feelz',
@@ -57,7 +57,7 @@ const teams = [
   },
   {
     name: 'Anqi Tu',
-    avatarPath: './images/aboutus-avatar-anqi.jpg',
+    avatarPath: './images/aboutus-avatar/anqi.jpg',
     details: [
       {
         subTitle: 'Summer Feelz',
@@ -84,7 +84,7 @@ const teams = [
   },
   {
     name: 'Alexander Naberezhnov',
-    avatarPath: './images/aboutus-avatar-alexander.jpg',
+    avatarPath: './images/aboutus-avatar/alexander.jpg',
     details: [
       {
         subTitle: 'Summer Feelz',

@@ -27,7 +27,8 @@ body > .page-header {
 }
 
 .right-container {
-  flex: 70%;
+  margin-left: 22em;
+  width: 80%;
 }
 
 @media (min-width: 40em) {
@@ -71,7 +72,21 @@ body > .page-header {
 }
 
 .edit-profile-image i {
-	color: rgba(0, 0, 0, 0.55);
+  color: rgba(0, 0, 0, 0.55);
+}
+
+#uploaded-profile-image {
+  object-fit: cover;
+  width: 290px;
+  height: 290px;
+}
+
+.set-new-profile-picture-button {
+  width: 290px;
+}
+
+.modal-dialog {
+  width: 350px;
 }
 
 .profile-element > * {
@@ -110,6 +125,10 @@ body > .page-header {
 
 .buttons-container > *:hover {
   cursor: pointer;
+}
+
+.uploaded-image {
+  width: 100%;
 }
 
 .content-tab > li > a {

@@ -26,13 +26,30 @@ const profileElements = [
     icon: 'link',
     placeholder: 'Website',
   },
-  {
-    name: 'langCodeForTranslation',
-    id: 'language-for-translation-input',
-    icon: 'language',
-    placeholder: 'Language Code (default: es)',
-  },
 ];
+
+const supportedLangCodes = [
+  { text: 'Choose language for translation...', value: '' },
+  { text: 'Chinese', value: 'zh' },
+  { text: 'French', value: 'fr' },
+  { text: 'Hindi', value: 'hi' },
+  { text: 'Malay', value: 'ms' },
+  { text: 'Spanish', value: 'es' },
+  { text: 'Tamil', value: 'ta' },
+];
+
+function getLangTextFromLangCode(langCode) {
+  let langText = 'Spanish'; // return default if not found
+
+  for (let i = 0; i < supportedLangCodes.length; i += 1) {
+    if (supportedLangCodes[i].value === langCode) {
+      langText = supportedLangCodes[i].text;
+      break;
+    }
+  }
+
+  return langText;
+}
 
 // URL must include ?user=XYZ parameter. If not, redirect to homepage.
 if (!parameterUsername) {
@@ -44,11 +61,61 @@ function setPageTitle() {
   document.title = `${parameterUsername} - User Page`;
 }
 
+function getSelectMenuForLangCode(userProfile) {
+  const selectMenuDiv = document.createElement('div');
+  selectMenuDiv.classList.add('input-group', 'input-group-sm', 'mb-3');
+
+  // icon label for select menu
+  const selectMenuIconDiv = document.createElement('div');
+  selectMenuIconDiv.classList.add('input-group-prepend');
+  const selectMenuIconSpan = document.createElement('span');
+  selectMenuIconSpan.classList.add('input-group-text', 'icon-container');
+  const selectMenuIcon = document.createElement('i');
+  selectMenuIcon.classList.add('fas', 'fa-language');
+  selectMenuIconSpan.appendChild(selectMenuIcon);
+  selectMenuIconDiv.appendChild(selectMenuIconSpan);
+
+  selectMenuDiv.appendChild(selectMenuIconDiv);
+
+  // initialize select menu
+  const selectMenu = document.createElement('select');
+  selectMenu.classList.add('custom-select');
+  selectMenu.name = 'langCodeForTranslation';
+  selectMenu.id = 'language-for-translation-menu';
+
+  // get currently selected language code
+  let selectedLangCode = 'Choose language for translation...';
+  if (userProfile != null && userProfile.langCodeForTranslation != null && userProfile.langCodeForTranslation !== '') {
+    selectedLangCode = userProfile.langCodeForTranslation;
+  }
+
+  // select menu options
+  supportedLangCodes.forEach((supportedlangCode) => {
+    const option = document.createElement('option');
+
+    // auto select option with currently selected language code
+    if (supportedlangCode.value === selectedLangCode) {
+      option.setAttribute('selected', 'true');
+    }
+
+    option.value = supportedlangCode.value;
+    option.text = supportedlangCode.text;
+    selectMenu.appendChild(option);
+  });
+
+  selectMenuDiv.appendChild(selectMenu);
+  return selectMenuDiv;
+}
+
 function loadProfileForm() {
   const url = `/user-profile?user=${parameterUsername}`;
   fetch(url).then(response => response.json()).then((userProfile) => {
-    const profileForm = document.getElementById('profile-form');
+    const profileForm = document.getElementById('profile-form-container');
 
+    // add select menu for choosing language code
+    profileForm.insertBefore(getSelectMenuForLangCode(), profileForm.childNodes[1]);
+
+    // add rest of profile form elements
     profileElements.reverse().forEach((element) => {
       const inputGroup = document.createElement('div');
       inputGroup.innerHTML = `<div class="input-group input-group-sm mb-3">
@@ -69,6 +136,7 @@ function loadProfileForm() {
       profileForm.insertBefore(inputGroup, profileForm.childNodes[1]);
     });
 
+    // add input group for about me section
     const inputGroup = document.createElement('div');
     inputGroup.innerHTML = `<div class="input-group input-group-sm mb-3">
                               <textarea
@@ -94,9 +162,11 @@ function fetchBlobstoreUrlAndShowEditProfileImageLabel() {
       const messageForm = document.getElementById('profile-image-form');
       messageForm.action = imageUploadUrl;
       document.getElementById('edit-profile-image').classList.remove('hidden');
-      document.getElementById('profile-image-upload-input').onchange = () => {
-        document.getElementById('profile-image-form').submit();
-      };
+      $('#profile-image-modal').on('click', (event) => {
+        if (event.target === document.getElementById('profile-image-modal')) {
+          document.getElementById('profile-image-modal-content').classList.add('hidden');
+        }
+      });
     });
 }
 
@@ -141,6 +211,7 @@ function fetchUserProfile() {
   fetch(url).then(response => response.json()).then((userProfile) => {
     if (userProfile != null) {
       const profileContainer = document.getElementById('profile-detail-container');
+      profileContainer.innerHTML = '';
 
       if ('username' in userProfile && userProfile.username != null && userProfile.username !== '') {
         document.getElementById('username').innerHTML = userProfile.username;
@@ -150,6 +221,8 @@ function fetchUserProfile() {
 
       if ('aboutMe' in userProfile && userProfile.aboutMe != null && userProfile.aboutMe !== '') {
         document.getElementById('aboutme').innerHTML = userProfile.aboutMe;
+      } else {
+        document.getElementById('aboutme').innerHTML = '';
       }
 
       profileElements.forEach((element) => {
@@ -171,6 +244,16 @@ function fetchUserProfile() {
           }
         }
       });
+
+      const langProfileElementName = 'langCodeForTranslation';
+      if (langProfileElementName in userProfile && userProfile.langCodeForTranslation != null && userProfile.langCodeForTranslation !== '') {
+        const langProfileElement = document.createElement('div');
+        langProfileElement.innerHTML = `<div class="input-group mb-2 profile-element">
+                                         <span class="icon-container pr-1 pl-1 d-flex justify-content-center"><i class="detail-icon fas fa-language"></i></span>
+                                         <p class="profile-detail mb-0">${getLangTextFromLangCode(userProfile.langCodeForTranslation)}</p>
+                                        </div>`;
+        profileContainer.appendChild(langProfileElement);
+      }
     } else {
       document.getElementById('username').innerHTML = parameterUsername;
     }
@@ -186,6 +269,7 @@ function inputTextEditor() {
   // eslint-disable-next-line no-undef
   ClassicEditor.create(document.getElementById('message-input'), config);
 }
+
 /** Fetches data and populates the UI of the page. */
 // eslint-disable-next-line no-unused-vars
 function buildUI() {

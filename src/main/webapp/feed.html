@@ -66,6 +66,11 @@
           </button>
         </div>
         <div class="sort-menu input-group mb-3">
+          <div class="input-group-prepend">
+            <label class="input-group-text bg-info text-light sort-menu-label" for="sortCriteriaMenu">
+              Sort By
+            </label>
+          </div>
           <select class="custom-select" id="sortCriteriaMenu">
             <option selected>Choose sort criteria</option>
             <option value="Most Recent">Most Recent (default)</option>
@@ -73,11 +78,6 @@
             <option value="Positive to Negative">Positive to Negative</option>
             <option value="Negative to Positive">Negative to Positive</option>
           </select>
-          <div class="input-group-append">
-            <label class="input-group-text bg-info text-light sort-menu-label" for="sortCriteriaMenu">
-              Sort By
-            </label>
-          </div>
         </div>
       </div>
       <div class="search-tag-container d-flex flex-wrap" id="search-tag-container"></div>
@@ -85,7 +85,34 @@
 
     <div class="message-container mt-5">
       <div id="message-cards-container" class="card-columns">
-        Loading...
+        <div class="d-flex justify-content-start my-3">
+          <p>Loading...</p>
+          <div class="spinner-border mx-3" role="status"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for instructing users to login -->
+  <div class="modal fade" id="instructUserToLoginModal" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalTitle">Oops...</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <p>You must login to perform this action!</p>
+          <a class="btn btn-success" href="/login" role="button">
+            <i class="fab fa-google pr-2"></i>
+            Login with Google
+          </a>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-sm btn-outline-secondary" data-dismiss="modal">Never mind</button>
+        </div>
       </div>
     </div>
   </div>

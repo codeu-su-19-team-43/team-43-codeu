@@ -19,11 +19,23 @@ function fetchUserEmail() {
 
 fetchUserEmail();
 
+function getUsername(email) {
+  let username;
+  $.ajaxSetup({ async: false });
+  $.getJSON(`/user-profile?user=${email}`, (user) => {
+    // eslint-disable-next-line prefer-destructuring
+    username = user.username;
+  });
+  $.ajaxSetup({ async: true });
+
+  return (username != null && username !== '') ? username : email;
+}
+
 function fetchLanguageForTranslation() {
   if (userEmail !== null) {
     $.ajaxSetup({ async: false });
     $.getJSON(`/user-profile?user=${userEmail}`, (userProfile) => {
-      if (userProfile.langCodeForTranslation) {
+      if (userProfile.langCodeForTranslation && userProfile.langCodeForTranslation !== '') {
         langCodeForTranslation = userProfile.langCodeForTranslation.toString();
       }
     });
@@ -74,7 +86,7 @@ function getTextForTts(message) {
   return finalText.join('');
 }
 
-function playTtsAudio(text) {
+function playTtsAudio(textToSpeechIconId, text) {
   fetch('/a11y/tts', {
     method: 'POST',
     headers: {
@@ -89,6 +101,11 @@ function playTtsAudio(text) {
       audio.play()
         .catch((error) => {
           throw error.message;
+        }).finally(() => {
+          // make icon clickable after audio has stopped playing
+          audio.onended = () => {
+            $(textToSpeechIconId).removeClass('unclickable');
+          };
         });
     });
 }
@@ -120,10 +137,21 @@ function buildInfoDiv(message) {
 
   const iconGroupDiv = document.createElement('div');
   const textToSpeechIcon = document.createElement('i');
+  textToSpeechIcon.id = `text-to-speech-icon-${message.id}`;
   textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon', 'mr-2');
-  textToSpeechIcon.addEventListener('click', () => {
-    playTtsAudio(getTextForTts(message));
+
+  // listen for click events
+  const textToSpeechIconIdStr = `#${textToSpeechIcon.id}`;
+  textToSpeechIcon.addEventListener('click', (event) => {
+    // prevent click while audio is playing
+    if ($(textToSpeechIconIdStr).hasClass('unclickable')) {
+      event.preventDefault();
+    } else {
+      $(textToSpeechIconIdStr).addClass('unclickable');
+      playTtsAudio(textToSpeechIconIdStr, getTextForTts(message));
+    }
   });
+
   iconGroupDiv.appendChild(textToSpeechIcon);
 
   const translateIcon = document.createElement('i');
@@ -148,7 +176,8 @@ function buildInfoDiv(message) {
 function buildUsernameDiv(message) {
   const usernameDiv = document.createElement('h5');
   usernameDiv.classList.add('card-title', 'mb-0');
-  usernameDiv.appendChild(document.createTextNode(message.user));
+  usernameDiv.id = 'username';
+  usernameDiv.innerHTML = getUsername(message.user);
   return usernameDiv;
 }
 
@@ -162,9 +191,9 @@ function getHourDiffFromNow(timeStamp) {
 function getTimeText(timestamp) {
   // eslint-disable-next-line no-nested-ternary, no-undef
   return getHourDiffFromNow(timestamp) < 24 ? moment(timestamp).fromNow()
-  // eslint-disable-next-line no-undef
-    : getHourDiffFromNow(timestamp) < (24 * 7) ? moment(timestamp).calendar()
     // eslint-disable-next-line no-undef
+    : getHourDiffFromNow(timestamp) < (24 * 7) ? moment(timestamp).calendar()
+      // eslint-disable-next-line no-undef
       : moment(timestamp).format('ll');
 }
 
@@ -190,6 +219,7 @@ function buildLandmarkDiv(message) {
 
 function buildTextDiv(message) {
   const textDiv = document.createElement('p');
+  textDiv.id = `text-${message.id}`;
   textDiv.classList.add('card-text', 'border-top', 'pt-2');
   textDiv.innerHTML = message.text;
   return textDiv;
@@ -333,15 +363,21 @@ function onClickLikeButton(messageId) {
       fetch(`/message?messageId=${messageId}`)
         .then(response => response.json())
         .then((message) => {
-          $(`#like-count-container-${messageId}`).html(
-            buildLikeCount(message),
-          );
-          $(`#like-action-container-${messageId}`).html(
-            buildLikeAction(message),
-          );
+          const likeCountContainers = document.querySelectorAll(`[id='like-count-container-${messageId}']`);
+          likeCountContainers.forEach((div) => {
+            // eslint-disable-next-line no-param-reassign
+            div.innerHTML = buildLikeCount(message);
+          });
+          const likeActionContainers = document.querySelectorAll(`[id='like-action-container-${messageId}']`);
+          likeActionContainers.forEach((div) => {
+            // eslint-disable-next-line no-param-reassign
+            div.innerHTML = buildLikeAction(message);
+          });
           toggleResponse(message);
         });
     });
+  } else {
+    $('#instructUserToLoginModal').modal('show');
   }
 }
 
@@ -359,15 +395,22 @@ function onClickFavouriteButton(messageId) {
       fetch(`/message?messageId=${messageId}`)
         .then(response => response.json())
         .then((message) => {
-          $(`#favourite-count-container-${messageId}`).html(
-            buildFavouriteCount(message),
-          );
-          $(`#favourite-action-container-${messageId}`).html(
-            buildFavouriteAction(message),
-          );
+          const favCountContainers = document.querySelectorAll(`[id='favourite-count-container-${messageId}']`);
+          favCountContainers.forEach((div) => {
+            // eslint-disable-next-line no-param-reassign
+            div.innerHTML = buildFavouriteCount(message);
+          });
+          const favActionContainers = document.querySelectorAll(`[id='favourite-action-container-${messageId}']`);
+          favActionContainers.forEach((div) => {
+            // eslint-disable-next-line no-param-reassign
+            div.innerHTML = buildFavouriteAction(message);
+          });
+
           toggleResponse(message);
         });
     });
+  } else {
+    $('#instructUserToLoginModal').modal('show');
   }
 }
 
@@ -396,30 +439,33 @@ function autoGrow(element) {
   element.style.height = `${element.scrollHeight}px`;
 }
 
+// eslint-disable-next-line no-unused-vars
+function enablePostButton(commentInputTextArea, messageId) {
+  const commentPostButton = document.getElementById(`comment-post-button-${messageId}`);
+
+  commentInputTextArea.addEventListener('input', () => {
+    commentPostButton.disabled = true;
+    if (commentInputTextArea.value) {
+      const commentText = commentInputTextArea.value.toString().trim();
+      if (commentText !== '') {
+        commentPostButton.disabled = false;
+      }
+    }
+  });
+}
+
 function getUserProfileUrl(email) {
   if (email != null) {
-    let userProflieImageUrl;
+    let userProfileImageUrl;
     $.ajaxSetup({ async: false });
     $.getJSON(`/user-profile?user=${email}`, (user) => {
-      userProflieImageUrl = user.profileImageUrl;
+      userProfileImageUrl = user.profileImageUrl;
     });
     $.ajaxSetup({ async: true });
 
-    return userProflieImageUrl;
+    return userProfileImageUrl;
   }
   return './images/default-user-profile/1.jpg';
-}
-
-function getUsername(email) {
-  let username;
-  $.ajaxSetup({ async: false });
-  $.getJSON(`/user-profile?user=${email}`, (user) => {
-    // eslint-disable-next-line prefer-destructuring
-    username = user.username;
-  });
-  $.ajaxSetup({ async: true });
-
-  return (username != null && username !== '') ? username : email;
 }
 
 function buildCommentInput(messageId) {
@@ -431,19 +477,21 @@ function buildCommentInput(messageId) {
                               <div id="comment-input-container" class="comment-input-container">
                                 <div class="input-group input-group-sm mt-2">
                                   <textarea
-                                    name=${messageId}
-                                    id=${messageId}
+                                    name="comment-input-textarea-${messageId}"
+                                    id="comment-input-textarea-${messageId}"
                                     class=form-control
                                     type=text
                                     placeholder="Add a comment"
                                     onblur="this.placeholder='Add a comment'"
                                     onfocus="this.placeholder=''"
-                                    onkeyup="autoGrow(this)">
-                                  </textarea>
+                                    onkeyup="autoGrow(this)"
+                                    oninput="enablePostButton(this, '${messageId}')"
+                                    ></textarea>
                                   <div class="input-group-append">
                                     <button class="btn btn-light comment-post-button border" 
+                                            disabled="true"
                                             type="button" 
-                                            id="comment-post-button"
+                                            id="comment-post-button-${messageId}"
                                             onclick="onClickCommentPostButton('${messageId}');">
                                             Post
                                     </button>
@@ -457,6 +505,7 @@ function buildCommentInput(messageId) {
 
 function buildCommentSentimentIndicator(sentimentScore) {
   const sentimentScoreText = Math.trunc(sentimentScore * 100) / 100;
+
   if (sentimentScore > 0.5) {
     return `<span class="badge badge-pill badge-success sentiment-score-indicator">
               <small>${sentimentScoreText}</small>
@@ -488,7 +537,7 @@ function buildCommentItem(comment) {
               </div>
               <div class="d-flex justify-content-between mt-1">
                 <p class="font-weight-light comment-text mb-0">${comment.text}</p>
-                ${comment.sentimentScore ? buildCommentSentimentIndicator(comment.sentimentScore) : ''}
+                ${comment.sentimentScore !== null || comment.sentimentScore !== undefined ? buildCommentSentimentIndicator(comment.sentimentScore) : ''}
               </div>
             </div>
           </li>`;
@@ -521,16 +570,26 @@ function onCommentPost(messageId) {
 
 // eslint-disable-next-line no-unused-vars
 function onClickCommentPostButton(messageId) {
-  const comment = { messageId, userText: document.getElementById(messageId).value };
+  const commentInputTextarea = document.getElementById(`comment-input-textarea-${messageId}`);
+
+  const comment = {
+    messageId,
+    userText: commentInputTextarea.value,
+  };
+
   $.ajax({
     contentType: 'application/json',
     data: JSON.stringify(comment),
     processData: false,
     type: 'POST',
     url: '/comments',
-  }).done(() => {
-    $(`#comment-container-${messageId}`).html(buildCommentHtml(messageId));
-    onCommentPost(messageId);
+  }).done((response) => {
+    if (response.toString().trim() !== '') {
+      $('#instructUserToLoginModal').modal('show');
+    } else {
+      $(`#comment-container-${messageId}`).html(buildCommentHtml(messageId));
+      onCommentPost(messageId);
+    }
   });
 }
 
@@ -610,40 +669,56 @@ function getSortParameters(sortCriteria) {
   return { sortProperty, sortOrder };
 }
 
-function buildMessagesDivFromUrl(url, parentId, sortCriteria) {
+function getLoadingElement() {
+  return (
+    `<div class="d-flex justify-content-start my-3"><p>Loading...</p>
+        <div class="spinner-border mx-3" role="status"></div>
+    </div>`
+  );
+}
+
+function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria) {
+  const messagesContainer = document.getElementById(parentId);
+  messagesContainer.innerHTML = getLoadingElement();
+
   fetch(url)
     .then(response => response.json())
     .then((messagesJson) => {
       let messages = messagesJson;
 
-      if (sortCriteria) {
-        const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
-        // eslint-disable-next-line no-undef
-        messages = _.orderBy(messages, [sortProperty], [sortOrder]);
+      if (messages == null || messages.length === 0) {
+        messagesContainer.innerHTML = `<p class="text-muted ml-3 mt-2 position-absolute">${emptyHolderString}</p>`;
+      } else {
+        if (sortCriteria) {
+          const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
+          // eslint-disable-next-line no-undef
+          messages = _.orderBy(messages, [sortProperty], [sortOrder]);
+        }
+
+        messagesContainer.innerHTML = '';
+
+        messages.forEach((message) => {
+          const messageDiv = buildMessageDiv(message);
+          messagesContainer.appendChild(messageDiv);
+        });
       }
-
-      const messagesContainer = document.getElementById(parentId);
-      messagesContainer.innerHTML = '';
-
-      messages.forEach((message) => {
-        const messageDiv = buildMessageDiv(message);
-        messagesContainer.appendChild(messageDiv);
-      });
     });
 }
 
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchMessagesByUser(parameterUsername) {
-  buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container');
-  buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container');
+  buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
+    'Your gallery is empty. Post your first photo!');
+  buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
+    'Your favourite collection is empty. Mark a photo as your favourite to view it here!');
 }
 
 /** Fetches all messages and add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchAllMessages() {
   const url = '/feed';
-  buildMessagesDivFromUrl(url, 'message-cards-container');
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'The PhotoBook universe is empty. Be the one to post the first photo!');
 }
 
 /** Fetches messages for given image labels and add them to the page. */
@@ -656,7 +731,7 @@ function fetchMessagesByImageLabels(imageLabels) {
       url += '&';
     }
   });
-  buildMessagesDivFromUrl(url, 'message-cards-container');
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'No images found for this label. Be the one to post the first photo!');
 }
 
 /** Build messages div with given sort criteria */
@@ -669,7 +744,7 @@ function onSelectSetSortCriteria() {
     url += window.location.href.substring(parameterStartIdx);
   }
 
-  buildMessagesDivFromUrl(url, 'message-cards-container', sortCriteria);
+  buildMessagesDivFromUrl(url, 'message-cards-container', 'No images found for this label. Be the one to post the first photo!', sortCriteria);
 }
 
 /** Listen for sort menu changes and trigger sorting function */
