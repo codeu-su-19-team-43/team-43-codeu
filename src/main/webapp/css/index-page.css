@@ -11,7 +11,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.45);
+  background-color: rgba(0, 0, 0, 0.4);
   z-index: 1;
 }
 
@@ -35,17 +35,30 @@
 }
 
 .landing-tagline > * {
+  font-family: "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   color: rgba(245, 245, 245, 1);
-}
-
-.landing-tagline > .font-weight-lightest {
-  font-weight: 100;
 }
 
 .landing-icon {
   width: 3em;
   margin-bottom: 1.2em;
   margin-top: 0.8em;
+}
+
+.carousel-caption {
+  right: auto !important;
+  bottom: 5%;
+  left: 12%;
+}
+
+.location-text {
+  font-family: "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-size: 1.1em;
+  font-weight: 300;
+}
+
+.location-icon {
+  font-size: 1.2em !important;
 }
 
 /*
