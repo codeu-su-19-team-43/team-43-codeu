@@ -71,11 +71,10 @@ limitations under the License.
           const messageId = id.replace("translateCollapseDiv-", "");
           $.getScript("/js/message-loader.js", () => {
             const selectedLangCode = document.getElementById("language-for-translation-menu").value;
-            const langCode = selectedLangCode === '' ? 'es' : selectedLangCode;
-            getTranslatedText(document.getElementById(`text-${messageId}`).innerHTML, langCode)
-              .then(translatedText => {
-                document.getElementById(`translateCollapseDiv-${messageId}`).innerHTML = translatedText;
-              });
+            const langCode = selectedLangCode === "" ? "es" : selectedLangCode;
+            getTranslatedText(document.getElementById(`text-${messageId}`).innerHTML, langCode).then(translatedText => {
+              document.getElementById(`translateCollapseDiv-${messageId}`).innerHTML = translatedText;
+            });
           });
         });
       }
@@ -126,10 +125,14 @@ limitations under the License.
           var place = autocomplete.getPlace();
         });
       }
+
+      function js_Load() {
+        document.body.style.visibility = "visible";
+      }
     </script>
   </head>
 
-  <body onload="buildUI();">
+  <body onload="buildUI(); loadNavigationBar(); js_Load();">
     <div class="content-container mt-7 pt-4">
       <div class="left-container pr-4 position-fixed">
         <form id="profile-image-form" method="POST" class="mb-5" enctype="multipart/form-data">

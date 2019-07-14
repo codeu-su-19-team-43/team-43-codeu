@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <title>Charts</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" />
@@ -14,65 +13,67 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.js"></script>
     <script src="/js/charts-page-loader.js"></script>
     <script>
-        google.charts.load('current', { packages: ['corechart'] });
-        google.charts.setOnLoadCallback(drawSentimentScoresChart);
-        google.charts.setOnLoadCallback(drawUserMessageActivityChart);
-        google.charts.setOnLoadCallback(drawAllTimeTopImageLabelsChart);
-        google.charts.setOnLoadCallback(drawLocationVotesChart);
-        google.charts.setOnLoadCallback(drawPhotoCategoriesChart);
+      function js_Load() {
+        document.body.style.visibility = "visible";
+      }
+      google.charts.load("current", { packages: ["corechart"] });
+      google.charts.setOnLoadCallback(drawSentimentScoresChart);
+      google.charts.setOnLoadCallback(drawUserMessageActivityChart);
+      google.charts.setOnLoadCallback(drawAllTimeTopImageLabelsChart);
+      google.charts.setOnLoadCallback(drawLocationVotesChart);
+      google.charts.setOnLoadCallback(drawPhotoCategoriesChart);
     </script>
     <link rel="stylesheet" href="/css/charts-page.css" />
-</head>
+  </head>
 
-<body>
+  <body style="visibility: hidden;" onload="loadNavigationBar(); js_Load();">
     <div class="text-center page-header">
-        <h1 class="display-4">Charts</h1>
-        <p class="font-weight-lighter">
-            View some useful PhotoBook statistics here.
-        </p>
+      <h1 class="display-4">Charts</h1>
+      <p class="font-weight-lighter">
+        View some useful PhotoBook statistics here.
+      </p>
     </div>
     <div id="content">
-        <div class="card">
-            <div class="card-header">
-                <h5>Top 10 Image Labels (All Time)</h5>
-            </div>
-            <div class="card-body">
-                <div id="all-time-top-image-labels-chart"></div>
-            </div>
+      <div class="card">
+        <div class="card-header">
+          <h5>Top 10 Image Labels (All Time)</h5>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h5>Sentiment Analysis Of Messages</h5>
-            </div>
-            <div class="card-body">
-                <div id="sentiment-scores-chart"></div>
-            </div>
+        <div class="card-body">
+          <div id="all-time-top-image-labels-chart"></div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h5>User Message Activity By Day</h5>
-            </div>
-            <div class="card-body">
-                <div id="user-message-activity-chart"></div>
-            </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h5>Sentiment Analysis Of Messages</h5>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h5>Top Locations Of The Week</h5>
-            </div>
-            <div class="card-body">
-                <div id="location-votes-chart"></div>
-            </div>
+        <div class="card-body">
+          <div id="sentiment-scores-chart"></div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <h5>Number Of Photos According To Categories</h5>
-            </div>
-            <div class="card-body">
-                <div id="photo-categories-chart"></div>
-            </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h5>User Message Activity By Day</h5>
         </div>
+        <div class="card-body">
+          <div id="user-message-activity-chart"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h5>Top Locations Of The Week</h5>
+        </div>
+        <div class="card-body">
+          <div id="location-votes-chart"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <h5>Number Of Photos According To Categories</h5>
+        </div>
+        <div class="card-body">
+          <div id="photo-categories-chart"></div>
+        </div>
+      </div>
     </div>
-</body>
-
+  </body>
 </html>

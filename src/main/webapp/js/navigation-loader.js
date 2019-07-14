@@ -136,14 +136,9 @@ function loadNavigationBar() {
                               <ul class="navbar-nav ml-auto" id="navigation"></ul>
                             </div>
                           </nav>`;
-  $(navElement).load('navigation-bar.html', () => {
-    $(document).ready(() => {
-      document.body.insertBefore(navElement, document.body.firstChild);
-      buildNavigationLinks();
-      setTransparency();
-      scrollTransparency();
-    });
-  });
-}
 
-loadNavigationBar();
+  document.body.insertBefore(navElement, document.body.firstChild);
+  buildNavigationLinks();
+  setTransparency();
+  scrollTransparency();
+}
