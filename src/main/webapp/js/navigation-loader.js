@@ -48,31 +48,12 @@ function createLinkListItem(url, text) {
   return createListItem(link);
 }
 
-/**
- * Adds a login or logout link to the page, depending on whether the user is
- * already logged in.
- */
-// eslint-disable-next-line no-unused-vars
-function addLoginOrLogoutLinkToNavigation() {
-  const navigationElement = document.getElementById('navigation');
-
-  fetch('/login-status')
-    .then(response => response.json())
-    .then((loginStatus) => {
-      if (loginStatus.isLoggedIn) {
-        const userPageLink = createLinkListItem(`/user-page.html?user=${loginStatus.username}`, 'My Page');
-        const logoutLink = createLinkListItem('/logout', 'Logout');
-        navigationElement.insertBefore(userPageLink, navigationElement.childNodes[1]);
-        navigationElement.appendChild(logoutLink);
-      } else {
-        const loginLink = createLinkListItem('/login', 'Login');
-        navigationElement.appendChild(loginLink);
-      }
-    });
-}
-
 function buildNavigationLinks() {
-  const navigationElement = document.getElementById('navigation');
+  const navigationElement = document.getElementById('navbarContent');
+
+  const navBarList = document.createElement('ul');
+  navBarList.classList.add('navbar-nav', 'ml-auto');
+  navBarList.id = 'navigation';
 
   const links = [
     createLinkListItem('/', 'Home'),
@@ -83,9 +64,23 @@ function buildNavigationLinks() {
     createLinkListItem('/aboutus.html', 'About Us'),
   ];
 
-  links.forEach(link => navigationElement.appendChild(link));
+  links.forEach(link => navBarList.appendChild(link));
 
-  addLoginOrLogoutLinkToNavigation();
+  fetch('/login-status')
+    .then(response => response.json())
+    .then((loginStatus) => {
+      if (loginStatus.isLoggedIn) {
+        const userPageLink = createLinkListItem(`/user-page.html?user=${loginStatus.username}`, 'My Page');
+        const logoutLink = createLinkListItem('/logout', 'Logout');
+        navBarList.insertBefore(userPageLink, navBarList.childNodes[1]);
+        navBarList.appendChild(logoutLink);
+        navigationElement.appendChild(navBarList);
+      } else {
+        const loginLink = createLinkListItem('/login', 'Login');
+        navBarList.appendChild(loginLink);
+        navigationElement.appendChild(navBarList);
+      }
+    });
 }
 
 // Set transparency of navigation bar
@@ -133,7 +128,6 @@ function loadNavigationBar() {
                               <i class="fas fa-bars"></i>
                             </button>
                             <div class="collapse navbar-collapse" id="navbarContent">
-                              <ul class="navbar-nav ml-auto" id="navigation"></ul>
                             </div>
                           </nav>`;
 
