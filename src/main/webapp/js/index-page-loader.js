@@ -2,7 +2,7 @@ const carouselItems = [
   {
     active: true,
     imageUrl: 'images/landing-carousel/singapore.jpg',
-    location: 'Singapoer, Singapore',
+    location: 'Singapore, Singapore',
   },
   {
     imageUrl: 'images/landing-carousel/greece-santorini.jpg',
