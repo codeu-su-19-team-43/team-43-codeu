@@ -90,9 +90,13 @@ function buildNavigationLinks() {
 
 // Set transparency of navigation bar
 function setTransparency() {
+  const navBar = document.getElementById('navigationBar');
   if (window.location.pathname === '/' || window.location.pathname === '/index.html') {
-    const navBar = document.getElementById('navigationBar');
-    navBar.className = 'navbar navbar-expand-lg d-flex fixed-top transparent transparent-nav-bar';
+    navBar.classList.remove('shadow-sm', 'non-transparent-nav-bar');
+    navBar.classList.add('transparent-nav-bar');
+  } else {
+    navBar.classList.add('shadow-sm', 'non-transparent-nav-bar');
+    navBar.classList.remove('transparent-nav-bar');
   }
 }
 
@@ -108,9 +112,11 @@ function scrollTransparency() {
     const navBar = document.getElementById('navigationBar');
     scrollStart = $(this).scrollTop();
     if (scrollStart > offset) {
-      navBar.className = 'navbar navbar-expand-lg d-flex fixed-top shadow-sm non-transparent-nav-bar';
+      navBar.classList.add('shadow-sm', 'non-transparent-nav-bar');
+      navBar.classList.remove('transparent-nav-bar');
     } else {
-      navBar.className = 'navbar navbar-expand-lg d-flex fixed-top transparent transparent-nav-bar';
+      navBar.classList.remove('shadow-sm', 'non-transparent-nav-bar');
+      navBar.classList.add('transparent-nav-bar');
     }
   });
 }
