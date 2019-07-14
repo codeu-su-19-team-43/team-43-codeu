@@ -7,7 +7,7 @@ function getUserListHtml(user) {
             <a class="mx-3 my-2" href="/user-page.html?user=${user.email}">
               <img src="${user.profileImageUrl}" class="user-profile-image rounded-circle" alt="user profile image">
             </a>
-            <div class="media-body pt-1">
+            <div class="media-body pt-1 text-left">
               <a href="/user-page.html?user=${user.email}">
                 <p class="mt-1 mb-1 font-weight-normal username">
                   ${user.username != null && user.username !== '' ? user.username : user.email}
@@ -24,8 +24,7 @@ function getUserListHtml(user) {
 
 function buildUserListItem(user) {
   const userListItem = document.createElement('div');
-  userListItem.classList.add('card', 'card-border', 'border-right-0',
-    'border-top-0', 'border-bottom-0', 'rounded-0');
+  userListItem.classList.add('card', 'border-0');
 
   userListItem.innerHTML = getUserListHtml(user);
 
@@ -105,7 +104,7 @@ function buildTopThreeContributors(messages) {
           messageCount: contributor.messageCount,
         };
 
-        topThreeContributorsListHtml += `<li class="list-group-item">
+        topThreeContributorsListHtml += `<li class="list-group-item px-5">
                                            ${getUserListHtml(userWithMessageCount)}
                                          </li>`;
       }).then(() => {
@@ -141,9 +140,13 @@ function buildUserWithMostLikes(messages) {
       };
 
       userWithMostLikesDiv.innerHTML = `<div class="card text-center">
-                                          <div class="card-body">
+                                          <div class="card-body px-0 pb-0">
                                             <h5 class="card-title">Most Liked User</h5>
-                                            ${getUserListHtml(userWithNumLikes)}
+                                              <ul class="list-group list-group-flush">
+                                                <li class="list-group-item px-2">
+                                                  ${getUserListHtml(userWithNumLikes)}
+                                                </li>
+                                              </ul>
                                           </div>
                                        </div>`;
     });
@@ -169,9 +172,13 @@ function buildUserWithMostFavourites(messages) {
       };
 
       userWithMostFavouritesDiv.innerHTML = `<div class="card text-center">
-                                               <div class="card-body">
+                                               <div class="card-body px-0 pb-0">
                                                  <h5 class="card-title">Most Favourited User</h5>
-                                                 ${getUserListHtml(userWithNumFavourites)}
+                                                 <ul class="list-group list-group-flush">
+                                                  <li class="list-group-item px-2">
+                                                    ${getUserListHtml(userWithNumFavourites)}
+                                                  </li>
+                                                </ul>
                                                </div>
                                              </div>`;
     });
