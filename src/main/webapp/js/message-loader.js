@@ -655,10 +655,10 @@ function getSortParameters(sortCriteria) {
   if (sortCriteria === 'Least Recent') {
     sortProperty = 'timestamp';
     sortOrder = 'asc';
-  } else if (sortCriteria === 'Positive to Negative') {
+  } else if (sortCriteria === 'Most Positive') {
     sortProperty = 'sentimentScore';
     sortOrder = 'desc';
-  } else if (sortCriteria === 'Negative to Positive') {
+  } else if (sortCriteria === 'Most Negative') {
     sortProperty = 'sentimentScore';
     sortOrder = 'asc';
   } else {
