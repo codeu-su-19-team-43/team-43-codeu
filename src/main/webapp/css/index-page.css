@@ -20,7 +20,8 @@
   object-fit: cover;
 }
 
-.carousel-control-prev, .carousel-control-next {
+.carousel-control-prev,
+.carousel-control-next {
   z-index: 3;
 }
 
@@ -42,23 +43,17 @@
 }
 
 .landing-icon {
-  width: 4em;
-  margin: 2em auto;
+  width: 3em;
+  margin-bottom: 1.2em;
+  margin-top: 0.8em;
 }
 
 /*
  * Extra utilities.
  */
-.flex-equal > * {
+.flex-md-equal > * {
   -ms-flex: 1;
   flex: 1;
-}
-
-@media (min-width: 768px) {
-  .flex-md-equal > * {
-    -ms-flex: 1;
-    flex: 1;
-  }
 }
 
 .landing-page-description {
@@ -67,9 +62,14 @@
 }
 
 .website-intro {
-  height: 30vh;
+  height: 35vh;
 }
 
 .description-card {
-  min-height: 32.5vh;
+  min-height: 30vh;
+}
+
+.description-card-detail {
+  max-width: 35em;
+  margin: auto;
 }
