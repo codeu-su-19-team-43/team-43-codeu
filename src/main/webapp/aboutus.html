@@ -19,17 +19,22 @@ limitations under the License.
 
 <head>
   <title>About Us</title>
-  <script src="js/header-loader.js" onload="loadHeader('About Our Team')"></script>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+  <script src="js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="/css/navigation-bar.css" />
+  <script src="js/navigation-loader.js"></script>
   <script src="js/aboutus-loader.js"></script>
   <link rel="stylesheet" href="/css/about-us-page.css" />
   <script>
-    function goToMaps() {
-      window.location.href = "google-map.html";
+    function js_Load() {
+      document.body.style.visibility='visible';
     }
   </script>
 </head>
 
-<body onload="buildUI()">
+<body style="visibility: hidden;" onload="buildUI(); js_Load();">
   <div class="text-center page-header">
     <h1 class="display-4">Meet the Team</h1>
     <p class="font-weight-lighter">
