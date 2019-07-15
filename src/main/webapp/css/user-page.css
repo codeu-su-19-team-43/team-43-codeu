@@ -115,6 +115,10 @@ body > .page-header {
   width: 100%;
 }
 
+.ck-content {
+  height: 10em !important;
+}
+
 .buttons-container {
   border-color: rgb(196, 196, 196) !important;
 }
