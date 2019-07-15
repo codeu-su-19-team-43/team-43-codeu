@@ -120,7 +120,7 @@ function scrollTransparency() {
 function loadNavigationBar() {
   const navElement = document.createElement('div');
   navElement.innerHTML = `<nav class="navbar navbar-expand-lg bg-light d-flex fixed-top px-5 transparent-nav-bar" id="navigationBar">
-                            <a class="navbar-brand" href="#">
+                            <a class="navbar-brand" href="/">
                               <img src="images/logo.png" width="30" height="30" alt="" />
                               <div class="d-inline-block ml-4"><p class="brand-name m-0">PhotoBook</p></div>
                             </a>
