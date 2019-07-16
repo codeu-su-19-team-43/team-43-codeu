@@ -1,12 +1,12 @@
 #map {
 	display: block;
     width: 100vw;
-    height: calc(100vh - 17em);
+    height: calc(100vh - 14em);
     border: thin solid black;
     margin-left: auto;
     margin-right: auto;
 }
 
 .page-header {
-    margin: 7em 0 4em 0;
+    margin: 7em 0 0 0;
 }
