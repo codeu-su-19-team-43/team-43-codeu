@@ -95,7 +95,7 @@
             lng: lng
           },
           map: map, 
-        
+          animation: google.maps.Animation.DROP
           // icon: image
         });
 
@@ -136,7 +136,7 @@
           },
           map: map,
           draggable: true, 
-          
+          animation: google.maps.Animation.DROP
         });
 
         const infoWindow = new google.maps.InfoWindow({
@@ -158,6 +158,13 @@
         infoWindow.open(map, editMarker);
       }
 
+      function toggleBounce() {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
 
       // Builds and returns HTML elements that show an editable textbox and a submit button
       function buildInfoWindowInput(lat, lng) {
