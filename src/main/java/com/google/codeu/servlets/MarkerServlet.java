@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 /**
 Returns UFO data as a JSON array, e.g. [{"lat": 38, "lng":-122}]
@@ -36,6 +38,16 @@ public class MarkerServlet extends HttpServlet {
     response.getOutputStream().println(json);
   }
 
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) {
+    double lat = Double.parseDouble(request.getParameter("lat"));
+    double lng = Double.parseDouble(request.getParameter("lng"));
+    String content = Jsoup.clean(request.getParameter("content"), Whitelist.none());
+
+    Marker marker = new Marker(lat, lng, content);
+    storeMarker(marker);
+  }
+
   /** Fetches markers from Datastore. */
   private List<Marker> getMarkers() {
     List<Marker> markers = new ArrayList<>();
@@ -53,6 +65,17 @@ public class MarkerServlet extends HttpServlet {
       markers.add(marker);
     }
     return markers;
+  }
+
+  /** Stores a marker in Datastore. */
+  public void storeMarker(Marker marker) {
+    Entity markerEntity = new Entity("Marker");
+    markerEntity.setProperty("lat", marker.getLat());
+    markerEntity.setProperty("lng", marker.getLng());
+    markerEntity.setProperty("content", marker.getContent());
+
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    datastore.put(markerEntity);
   }
 
 }
