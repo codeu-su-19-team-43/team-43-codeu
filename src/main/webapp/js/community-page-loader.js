@@ -94,9 +94,11 @@ function buildTopThreeContributors(messages) {
   const topThreeContributorsDiv = document.getElementById('top-three-contributors');
 
   let topThreeContributorsListHtml = '';
+
+  let fetchSequence = Promise.resolve();
   topThreeContributors.forEach((contributor) => {
     const url = `/user-profile?user=${contributor.user}`;
-    fetch(url)
+    fetchSequence = fetchSequence.then(() => fetch(url))
       .then(response => response.json())
       .then((user) => {
         const userWithMessageCount = {
@@ -107,16 +109,18 @@ function buildTopThreeContributors(messages) {
         topThreeContributorsListHtml += `<li class="list-group-item px-5">
                                            ${getUserListHtml(userWithMessageCount)}
                                          </li>`;
-      }).then(() => {
-        topThreeContributorsDiv.innerHTML = `<div class="card text-center">
-                                               <div class="card-body px-0 pb-0">
-                                                 <h5 class="card-title">Top Three Contributors</h5>
-                                                 <ul class="list-group list-group-flush">
-                                                   ${topThreeContributorsListHtml}
-                                                 </ul>
-                                               </div>
-                                             </div>`;
       });
+  });
+
+  fetchSequence.then(() => {
+    topThreeContributorsDiv.innerHTML = `<div class="card text-center">
+                                           <div class="card-body px-0 pb-0">
+                                             <h5 class="card-title">Top Three Contributors</h5>
+                                             <ul class="list-group list-group-flush">
+                                               ${topThreeContributorsListHtml}
+                                             </ul>
+                                           </div>
+                                         </div>`;
   });
 }
 
