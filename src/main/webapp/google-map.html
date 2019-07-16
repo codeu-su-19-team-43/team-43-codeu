@@ -25,7 +25,7 @@
             lat: 1.3483,
             lng: 103.681
           },
-          zoom: 8
+          zoom: 4
         });
 
         infoWindow = new google.maps.InfoWindow();
@@ -172,8 +172,8 @@
         const button = document.createElement("button");
         button.appendChild(document.createTextNode("Submit"));
         button.onclick = () => {
-          postMarker(lat, lng, textBox.value);
           createMarkerForDisplay(lat, lng, textBox.value);
+          postMarker(lat, lng, textBox.value);
           editMarker.setMap(null);
         };
         const containerDiv = document.createElement("div");
