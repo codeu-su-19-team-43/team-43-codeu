@@ -95,7 +95,7 @@
             lng: lng
           },
           map: map, 
-          draggable: true
+        
           // icon: image
         });
 
@@ -106,6 +106,8 @@
         marker.addListener("click", () => {
           infoWindow.open(map, marker);
         });
+
+        marker.addListener('click', toggleBounce);
       }
 
       // Sends the marker at the backend for saving
@@ -133,7 +135,8 @@
             lng: lng
           },
           map: map,
-          draggable: true
+          draggable: true, 
+          
         });
 
         const infoWindow = new google.maps.InfoWindow({
@@ -144,6 +147,9 @@
           infowindow.open(map, editMarker);
         });
 
+        editMarker.addListener('click', toggleBounce);
+
+
         // When the user closes the editable info window, close the marker
         google.maps.event.addListener(infoWindow, "closeclick", () => {
           editMarker.setMap(null);
@@ -151,6 +157,7 @@
 
         infoWindow.open(map, editMarker);
       }
+
 
       // Builds and returns HTML elements that show an editable textbox and a submit button
       function buildInfoWindowInput(lat, lng) {
