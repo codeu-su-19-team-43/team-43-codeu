@@ -679,7 +679,7 @@ function getLoadingElement() {
 
 function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria) {
   const messagesContainer = document.getElementById(parentId);
-  messagesContainer.innerHTML = getLoadingElement();
+  // messagesContainer.innerHTML = getLoadingElement();
 
   fetch(url)
     .then(response => response.json())
@@ -695,8 +695,6 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria)
           messages = _.orderBy(messages, [sortProperty], [sortOrder]);
         }
 
-        messagesContainer.innerHTML = '';
-
         messages.forEach((message) => {
           const messageDiv = buildMessageDiv(message);
           messagesContainer.appendChild(messageDiv);
@@ -707,7 +705,7 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria)
 
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
-function fetchMessagesByUser(parameterUsername) {
+async function fetchMessagesByUser(parameterUsername) {
   buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
     'Your gallery is empty. Post your first photo!');
   buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',

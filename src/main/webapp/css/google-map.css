@@ -1,7 +1,7 @@
 #map {
 	display: block;
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh - 17em);
     border: thin solid black;
     margin-left: auto;
     margin-right: auto;

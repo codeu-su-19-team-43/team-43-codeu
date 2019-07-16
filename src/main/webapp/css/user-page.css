@@ -110,26 +110,50 @@ body > .page-header {
   font-weight: 200;
 }
 
-#message-input {
+#upload-photo-button {
+  height: 7em;
+  line-height: 6em;
+}
+
+.upload-photo-container > .upload-photo-button :hover {
+  cursor: pointer !important;
+}
+
+.image-location-input, .image-location-input-icon-container {
+  height: 3em !important;
+}
+
+/* #message-input {
   height: 800px;
   width: 100%;
-}
+} */
 
 .ck-content {
   height: 10em !important;
 }
 
+.ck-content > p {
+  font-size: 0.95em !important;
+}
+
+.ck-placeholder {
+  color: rgba(128, 128, 128, 0.5);
+  font-weight: 200;
+  font-size: 0.95em !important;
+} 
+
 .buttons-container {
   border-color: rgb(196, 196, 196) !important;
+  background-color: white !important;
 }
 
-.buttons-container > * {
+/* .buttons-container > * {
   width: 33.333%;
-}
+} */
 
-.buttons-container > *:hover {
+/* .buttons-container > *:hover {
   cursor: pointer;
-}
+} */
 
 .uploaded-image {
   width: 100%;
