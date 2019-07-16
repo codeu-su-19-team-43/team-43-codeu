@@ -238,8 +238,9 @@ function onMouseOutImageDiv(element) {
 function buildImageDiv(message) {
   let imageDivHtml = '<div class="card mb-0 border-0" id="image-container" onmouseenter="onMouseEnterImageDiv(this)" onmouseleave="onMouseOutImageDiv(this)">';
 
-  imageDivHtml += `<img class="card-img-top border-bottom" 
-                        src=${message.imageUrl} 
+  imageDivHtml += `<img class="lazy card-img-top border-bottom"
+                        src="/images/placeholder.png"
+                        data-src=${message.imageUrl} 
                         alt=${message.imageLabels[0]}>`;
 
   let labelHtml = '<div id="image-label-container" class="card-footer p-1 border-top-0 image-label-container hidden">';
