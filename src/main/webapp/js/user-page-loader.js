@@ -120,7 +120,7 @@ function loadProfileForm() {
       const inputGroup = document.createElement('div');
       inputGroup.innerHTML = `<div class="input-group input-group-sm mb-3">
                                 <div class="input-group-prepend">
-                                  <span class="input-group-text icon-container"><i class="fas fa-${element.icon}"></i></span>
+                                  <span class="input-group-text icon-container"><i class="fas fa-${element.icon} mx-auto"></i></span>
                                 </div>
                                 <input
                                   name=${element.name}

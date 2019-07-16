@@ -672,15 +672,18 @@ function getSortParameters(sortCriteria) {
 
 function getLoadingElement() {
   return (
-    `<div class="d-flex justify-content-start my-3"><p>Loading...</p>
-        <div class="spinner-border mx-3" role="status"></div>
+    `<div class="d-flex justify-content-start my-3">
+      <p>Loading...</p>
+      <div class="spinner-border mx-3" role="status"></div>
     </div>`
   );
 }
 
 function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria) {
   const messagesContainer = document.getElementById(parentId);
-  // messagesContainer.innerHTML = getLoadingElement();
+  if (parentId !== 'user-gallery-container') {
+    messagesContainer.innerHTML = getLoadingElement();
+  }
 
   fetch(url)
     .then(response => response.json())
@@ -688,8 +691,16 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria)
       let messages = messagesJson;
 
       if (messages == null || messages.length === 0) {
-        messagesContainer.innerHTML = `<p class="text-muted ml-3 mt-2 position-absolute">${emptyHolderString}</p>`;
+        if (parentId === 'user-gallery-container') {
+          $('.ck-placeholder').attr('data-placeholder', emptyHolderString);
+        } else {
+          messagesContainer.innerHTML = `<p class="text-muted ml-3 mt-2 position-absolute font-weight-lighter">${emptyHolderString}</p>`;
+        }
       } else {
+        if (parentId !== 'user-gallery-container') {
+          messagesContainer.innerHTML = '';
+        }
+
         if (sortCriteria) {
           const { sortProperty, sortOrder } = getSortParameters(sortCriteria);
           // eslint-disable-next-line no-undef
@@ -708,7 +719,7 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria)
 // eslint-disable-next-line no-unused-vars
 async function fetchMessagesByUser(parameterUsername) {
   buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
-    'Your gallery is empty. Post your first photo!');
+    'Your gallery is empty. Post your first photo and share about its story!');
   buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
     'Your favourite collection is empty. Mark a photo as your favourite to view it here!');
 }
