@@ -25,7 +25,7 @@
             lat: 1.3483,
             lng: 103.681
           },
-          zoom: 8
+          zoom: 4
         });
 
         infoWindow = new google.maps.InfoWindow();
@@ -94,7 +94,8 @@
             lat: lat,
             lng: lng
           },
-          map: map
+          map: map, 
+          animation: google.maps.Animation.DROP
           // icon: image
         });
 
@@ -105,6 +106,8 @@
         marker.addListener("click", () => {
           infoWindow.open(map, marker);
         });
+
+        marker.addListener('click', toggleBounce);
       }
 
       // Sends the marker at the backend for saving
@@ -131,7 +134,9 @@
             lat: lat,
             lng: lng
           },
-          map: map
+          map: map,
+          draggable: true, 
+          animation: google.maps.Animation.DROP
         });
 
         const infoWindow = new google.maps.InfoWindow({
@@ -142,6 +147,9 @@
           infowindow.open(map, editMarker);
         });
 
+        editMarker.addListener('click', toggleBounce);
+
+
         // When the user closes the editable info window, close the marker
         google.maps.event.addListener(infoWindow, "closeclick", () => {
           editMarker.setMap(null);
@@ -150,14 +158,22 @@
         infoWindow.open(map, editMarker);
       }
 
+      function toggleBounce() {
+        if (marker.getAnimation() !== null) {
+          marker.setAnimation(null);
+        } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        }
+      }
+
       // Builds and returns HTML elements that show an editable textbox and a submit button
       function buildInfoWindowInput(lat, lng) {
         const textBox = document.createElement("textarea");
         const button = document.createElement("button");
         button.appendChild(document.createTextNode("Submit"));
         button.onclick = () => {
-          postMarker(lat, lng, textBox.value);
           createMarkerForDisplay(lat, lng, textBox.value);
+          postMarker(lat, lng, textBox.value);
           editMarker.setMap(null);
         };
         const containerDiv = document.createElement("div");
