@@ -2,11 +2,6 @@ body > .page-header {
   margin: 7em 0em 4em 0em;
 }
 
-.search-sort-container {
-  width: 85%;
-  margin: auto;
-}
-
 .search-bar {
   width: 350px;
   position: relative;
@@ -54,8 +49,8 @@ body > .page-header {
 }
 
 .message-container {
-  width: 86.5%;;
-  margin: auto;
+  margin-left: -0.5em;
+  margin-right: -0.5em;
 }
 
 .sort-menu {
