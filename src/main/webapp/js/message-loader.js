@@ -679,7 +679,7 @@ function getLoadingElement() {
   );
 }
 
-function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria) {
+function buildMessagesDivFromUrl(url, parentId, emptyHolderContent, sortCriteria) {
   const messagesContainer = document.getElementById(parentId);
   if (parentId !== 'user-gallery-container') {
     messagesContainer.innerHTML = getLoadingElement();
@@ -692,9 +692,9 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria)
 
       if (messages == null || messages.length === 0) {
         if (parentId === 'user-gallery-container') {
-          $('.ck-placeholder').attr('data-placeholder', emptyHolderString);
+          document.getElementById('add-post-text').innerHTML = emptyHolderContent;
         } else {
-          messagesContainer.innerHTML = `<p class="text-muted ml-3 mt-2 position-absolute font-weight-lighter">${emptyHolderString}</p>`;
+          messagesContainer.innerHTML = emptyHolderContent;
         }
       } else {
         if (parentId !== 'user-gallery-container') {
@@ -719,16 +719,22 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderString, sortCriteria)
 // eslint-disable-next-line no-unused-vars
 async function fetchMessagesByUser(parameterUsername) {
   buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
-    'Your gallery is empty. Post your first photo and share about its story!');
+    'Your gallery is empty. <br> Post your first photo and share about its story!');
   buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
-    'Your favourite collection is empty. Mark a photo as your favourite to view it here!');
+    `<p class="text-muted ml-3 mt-4 position-absolute font-weight-lighter">
+      Your favourite collection is empty. Mark a photo as your favourite to view it here!
+    </p>`);
+}
+
+function buildFeedPageEmptyHolder(string) {
+  return `<p class="text-muted ml-3 mt-0 position-absolute font-weight-lighter">${string}</p>`;
 }
 
 /** Fetches all messages and add them to the page. */
 // eslint-disable-next-line no-unused-vars
 function fetchAllMessages() {
   const url = '/feed';
-  buildMessagesDivFromUrl(url, 'message-cards-container', 'The PhotoBook universe is empty. Be the one to post the first photo!');
+  buildMessagesDivFromUrl(url, 'message-cards-container', buildFeedPageEmptyHolder('The PhotoBook universe is empty. Be the one to post the first photo!'));
 }
 
 /** Fetches messages for given image labels and add them to the page. */
@@ -741,7 +747,7 @@ function fetchMessagesByImageLabels(imageLabels) {
       url += '&';
     }
   });
-  buildMessagesDivFromUrl(url, 'message-cards-container', 'No images found for this label. Be the one to post the first photo!');
+  buildMessagesDivFromUrl(url, 'message-cards-container', buildFeedPageEmptyHolder('No images found for this label. Be the one to post the first photo!'));
 }
 
 /** Build messages div with given sort criteria */
@@ -754,7 +760,7 @@ function onSelectSetSortCriteria() {
     url += window.location.href.substring(parameterStartIdx);
   }
 
-  buildMessagesDivFromUrl(url, 'message-cards-container', 'No images found for this label. Be the one to post the first photo!', sortCriteria);
+  buildMessagesDivFromUrl(url, 'message-cards-container', buildFeedPageEmptyHolder('No images found for this label. Be the one to post the first photo!'), sortCriteria);
 }
 
 /** Listen for sort menu changes and trigger sorting function */

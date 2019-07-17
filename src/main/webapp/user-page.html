@@ -147,6 +147,14 @@ limitations under the License.
         document.getElementById("submit-button").classList.add("disabled");
       }
 
+      function onClickMessageFormOverlay() {
+        $("#message-form-overlay").animate({
+          opacity: "-=1"
+        }, 200, function() {
+          $("#message-form-overlay").remove();
+        });
+      }
+
       function js_Load() {
         document.body.style.visibility = "visible";
       }
@@ -202,7 +210,13 @@ limitations under the License.
             <div id="user-gallery-container" class="card-columns user-gallery-container">
               <form id="message-form" method="POST" class="hidden mb-5" enctype="multipart/form-data">
                 <div class="card p-2 border-0">
-                  <div class="border">
+                  <div class="border position-relative">
+                    <div class="message-form-overlay" id="message-form-overlay" onclick="onClickMessageFormOverlay();">
+                      <div class="justify-content-center message-form-overlay-texts mx-auto">
+                        <p class="text-center add-post-icon">+</p>
+                        <p class="text-center" id="add-post-text">Click me to add photo!</p>
+                      </div>
+                    </div>
                     <div>
                       <div class="card mb-0 border-0 p-2 upload-photo-container" id="upload-photo-container">
                         <label id="upload-photo-button" class="btn btn-default btn-file btn-light btn-sm font-weight-light mb-0 rounded-0 w-100 align-middle upload-photo-button">
@@ -218,7 +232,7 @@ limitations under the License.
                               <span class="mt-1 mr-3 close-uploaded-image-icon">&times;</span>
                             </button>
                           </div>
-                          <img id="uploaded-image" alt="Uploaded Image" class="border-bottom rounded-0 uploaded-image p-0"/>
+                          <img id="uploaded-image" alt="Uploaded Image" class="border-bottom rounded-0 uploaded-image p-0" />
                         </div>
                         <div class="input-group input-group-sm pb-3 pt-1 image-location-input-container">
                           <div class="input-group-prepend">
@@ -246,8 +260,7 @@ limitations under the License.
             </div>
           </div>
           <div class="tab-pane fade favourite-messages-container-tab-pane" id="favourite" role="tabpanel" aria-labelledby="favourite-tab">
-            <div id="favourite-messages-container" class="card-columns favourite-messages-container">
-            </div>
+            <div id="favourite-messages-container" class="card-columns favourite-messages-container"></div>
           </div>
         </div>
       </div>
