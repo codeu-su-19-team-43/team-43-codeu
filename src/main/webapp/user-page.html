@@ -91,13 +91,16 @@ limitations under the License.
         });
       }
 
-      function displayUploadedMessageImage(input) {
+      function onChangeMessageImageUploadInput(input) {
         if (input.files && input.files[0]) {
           var reader = new FileReader();
 
           reader.onload = function(e) {
+            document.getElementById("upload-photo-container").classList.add("d-none");
             document.getElementById("uploaded-image-container").classList.remove("hidden");
             $("#uploaded-image").attr("src", e.target.result);
+            document.getElementById("submit-button").disabled = false;
+            document.getElementById("submit-button").classList.remove("disabled");
           };
 
           reader.readAsDataURL(input.files[0]);
@@ -126,6 +129,29 @@ limitations under the License.
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.addListener("place_changed", function() {
           var place = autocomplete.getPlace();
+        });
+      }
+
+      function onMouseEnterUploadedImage() {
+        document.getElementById("uploaded-image-overlay").classList.remove("hidden");
+      }
+
+      function onMouseOutUploadedImage() {
+        document.getElementById("uploaded-image-overlay").classList.add("hidden");
+      }
+
+      function onClickRemoveUploadedImageButton() {
+        document.getElementById("uploaded-image-container").classList.add("hidden");
+        document.getElementById("upload-photo-container").classList.remove("d-none");
+        document.getElementById("submit-button").disabled = true;
+        document.getElementById("submit-button").classList.add("disabled");
+      }
+
+      function onClickMessageFormOverlay() {
+        $("#message-form-overlay").animate({
+          opacity: "-=1"
+        }, 200, function() {
+          $("#message-form-overlay").remove();
         });
       }
 
@@ -171,26 +197,6 @@ limitations under the License.
         </div>
       </div>
       <div class="right-container pl-4 mt-2">
-        <form id="message-form" method="POST" class="hidden mb-5" enctype="multipart/form-data">
-          <div>
-            <textarea name="message" id="message-input" rows="10"></textarea>
-            <div id="buttons-container" class="buttons-container d-flex justify-content-between p-1 border-top-0 border card-footer">
-              <label id="upload-photo-button" class="btn btn-default btn-file btn-light btn-sm font-weight-light border-right mb-0 rounded-0">
-                <i class="fas fa-camera-retro mr-1"></i>
-                Photo
-                <input type="file" name="image" accept="image/*" id="message-image-upload-input" style="display: none;" onchange="displayUploadedMessageImage(this);" />
-              </label>
-              <input type="text" name="mapLocation" id="searchMapInput" class="mapControls" placeholder="Add location to map!" />
-              <button type="submit" id="submit-button" class="btn btn-info btn-sm rounded-0 font-weight-bolder">
-                <i class="fas fa-share-square mr-1"></i>
-                Share
-              </button>
-            </div>
-            <div class="hidden" id="uploaded-image-container">
-              <img id="uploaded-image" alt="Uploaded Image" class="img-thumbnail rounded-0 uploaded-image" />
-            </div>
-          </div>
-        </form>
         <ul class="nav nav-tabs content-tab" id="tab" role="tablist">
           <li class="nav-item">
             <a class="nav-link active" id="gallery-tab" data-toggle="tab" href="#gallery" role="tab" aria-controls="gallery" aria-selected="true">Gallery</a>
@@ -202,40 +208,80 @@ limitations under the License.
         <div class="tab-content" id="tab-content">
           <div class="tab-pane fade show active user-gallery-container-tab-pane" id="gallery" role="tabpanel" aria-labelledby="gallery-tab">
             <div id="user-gallery-container" class="card-columns user-gallery-container">
-              <div class="d-flex justify-content-start my-3">
-                <p>Loading...</p>
-                <div class="spinner-border mx-3" role="status"></div>
-              </div>
+              <form id="message-form" method="POST" class="hidden mb-5" enctype="multipart/form-data">
+                <div class="card p-2 border-0">
+                  <div class="border position-relative">
+                    <div class="message-form-overlay" id="message-form-overlay" onclick="onClickMessageFormOverlay();">
+                      <div class="justify-content-center message-form-overlay-texts mx-auto">
+                        <p class="text-center add-post-icon">+</p>
+                        <p class="text-center" id="add-post-text">Click me to add photo!</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div class="card mb-0 border-0 p-2 upload-photo-container" id="upload-photo-container">
+                        <label id="upload-photo-button" class="btn btn-default btn-file btn-light btn-sm font-weight-light mb-0 rounded-0 w-100 align-middle upload-photo-button">
+                          <i class="fas fa-camera-retro mr-1"></i>
+                          Upload Photo
+                          <input type="file" name="image" accept="image/*" id="message-image-upload-input" style="display: none;" onchange="onChangeMessageImageUploadInput(this);" />
+                        </label>
+                      </div>
+                      <div class="hidden" id="uploaded-image-container">
+                        <div class="position-relative" onmouseenter="onMouseEnterUploadedImage()" onmouseleave="onMouseOutUploadedImage()">
+                          <div class="uploaded-image-overlay p-0 hidden" id="uploaded-image-overlay">
+                            <button type="button" class="close" aria-label="Close" onclick="onClickRemoveUploadedImageButton();">
+                              <span class="mt-1 mr-3 close-uploaded-image-icon">&times;</span>
+                            </button>
+                          </div>
+                          <img id="uploaded-image" alt="Uploaded Image" class="border-bottom rounded-0 uploaded-image p-0" />
+                        </div>
+                        <div class="input-group input-group-sm pb-3 pt-1 image-location-input-container">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text px-3 image-location-input-icon-container">
+                              <i class="fas fa-map-pin mx-auto"></i>
+                            </span>
+                          </div>
+                          <input type="text" name="mapLocation" class="form-control mapControls image-location-input" id="searchMapInput" placeholder="Add location (Optional)" />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body p-0">
+                      <div>
+                        <textarea name="message" id="message-input" rows="10" placeholder="Share more about this photo's story ..."></textarea>
+                        <div id="buttons-container" class="buttons-container d-flex justify-content-between p-1 border-top-0 border card-footer">
+                          <button type="submit" id="submit-button" class="btn btn-info btn-sm rounded-0 font-weight-bolder w-100 message-submit-button disabled" disabled="true">
+                            Post
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
           <div class="tab-pane fade favourite-messages-container-tab-pane" id="favourite" role="tabpanel" aria-labelledby="favourite-tab">
-            <div id="favourite-messages-container" class="card-columns favourite-messages-container">
-              <div class="d-flex justify-content-start my-3">
-                <p>Loading...</p>
-                <div class="spinner-border mx-3" role="status"></div>
-              </div>
-            </div>
+            <div id="favourite-messages-container" class="card-columns favourite-messages-container"></div>
           </div>
         </div>
       </div>
     </div>
 
-  <script type="text/javascript">
-    document.addEventListener("DOMContentLoaded", function() {
-      yall({
-        observeChanges: true,
-        events: {
-          load: function (event) {
-            if (!event.target.classList.contains("lazy") && event.target.nodeName === "IMG") {
-              event.target.classList.add("yall-loaded");
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function() {
+        yall({
+          observeChanges: true,
+          events: {
+            load: function(event) {
+              if (!event.target.classList.contains("lazy") && event.target.nodeName === "IMG") {
+                event.target.classList.add("yall-loaded");
+              }
             }
-          }
-        },
-        threshold: 100,
-        idleLoadTimeout: 400
+          },
+          threshold: 100,
+          idleLoadTimeout: 400
+        });
       });
-    });
-  </script>
+    </script>
   </body>
 
   <!-- Modal for showing uploaded profile image -->

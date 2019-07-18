@@ -120,7 +120,7 @@ function loadProfileForm() {
       const inputGroup = document.createElement('div');
       inputGroup.innerHTML = `<div class="input-group input-group-sm mb-3">
                                 <div class="input-group-prepend">
-                                  <span class="input-group-text icon-container"><i class="fas fa-${element.icon}"></i></span>
+                                  <span class="input-group-text icon-container"><i class="fas fa-${element.icon} mx-auto"></i></span>
                                 </div>
                                 <input
                                   name=${element.name}
@@ -231,12 +231,12 @@ function fetchUserProfile() {
             const profileElement = document.createElement('div');
             if (element.name === 'website') {
               profileElement.innerHTML = `<div class="input-group mb-2 profile-element">
-                                            <span class="icon-container pr-1 pl-1 d-flex justify-content-center"><i class="fas fa-${element.icon}"></i></span>
+                                            <span class="icon-container pr-1 pl-1 d-flex justify-content-center"><i class="fas fa-${element.icon} mx-auto"></i></span>
                                             <a href=${userProfile[element.name]}>${userProfile[element.name]}</a>
                                           </div>`;
             } else {
               profileElement.innerHTML = `<div class="input-group mb-2 profile-element">
-                                            <span class="icon-container pr-1 pl-1 d-flex justify-content-center"><i class="detail-icon fas fa-${element.icon}"></i></span>
+                                            <span class="icon-container pr-1 pl-1 d-flex justify-content-center"><i class="detail-icon fas fa-${element.icon} mx-auto"></i></span>
                                             <p class="profile-detail mb-0">${userProfile[element.name]}</p>
                                           </div>`;
             }
@@ -260,7 +260,7 @@ function fetchUserProfile() {
   });
 }
 
-function inputTextEditor() {
+function buildInputTextEditor() {
   const config = {
     removePlugins: ['ImageUpload', 'Heading'],
     toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|'],
@@ -277,10 +277,9 @@ function buildUI() {
   showMessageFormAndEditProfileButtonIfViewingSelf();
   $.getScript('/js/message-loader.js', () => {
     // eslint-disable-next-line no-undef
-    fetchMessagesByUser(parameterUsername);
+    fetchMessagesByUser(parameterUsername).then(buildInputTextEditor());
   });
   fetchProfileImage();
   fetchUserProfile();
-  inputTextEditor();
   loadProfileForm();
 }
