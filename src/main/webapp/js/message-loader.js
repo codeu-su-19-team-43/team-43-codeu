@@ -1,9 +1,3 @@
-$.ajax({
-  async: false,
-  url: '/js/moment.min.js',
-  dataType: 'script',
-});
-
 let userEmail = null;
 let langCodeForTranslation = 'es'; // default to Spanish on empty or invalid language code
 
@@ -20,15 +14,14 @@ function fetchUserEmail() {
 fetchUserEmail();
 
 function getUsername(email) {
-  let username;
-  $.ajaxSetup({ async: false });
-  $.getJSON(`/user-profile?user=${email}`, (user) => {
-    // eslint-disable-next-line prefer-destructuring
-    username = user.username;
-  });
-  $.ajaxSetup({ async: true });
-
-  return (username != null && username !== '') ? username : email;
+  const url = `/user-profile?user=${email}`;
+  return fetch(url)
+    .then(response => response.json())
+    .then((user) => {
+      // eslint-disable-next-line prefer-destructuring
+      const username = user.username;
+      return (username !== undefined && username !== '') ? username : email;
+    });
 }
 
 function fetchLanguageForTranslation() {
@@ -177,7 +170,11 @@ function buildUsernameDiv(message) {
   const usernameDiv = document.createElement('h5');
   usernameDiv.classList.add('card-title', 'mb-0');
   usernameDiv.id = 'username';
-  usernameDiv.innerHTML = getUsername(message.user);
+
+  getUsername(message.user).then((username) => {
+    usernameDiv.innerHTML = username;
+  });
+
   return usernameDiv;
 }
 
@@ -456,23 +453,21 @@ function enablePostButton(commentInputTextArea, messageId) {
 }
 
 function getUserProfileUrl(email) {
-  if (email != null) {
-    let userProfileImageUrl;
-    $.ajaxSetup({ async: false });
-    $.getJSON(`/user-profile?user=${email}`, (user) => {
-      userProfileImageUrl = user.profileImageUrl;
-    });
-    $.ajaxSetup({ async: true });
-
-    return userProfileImageUrl;
+  if (email === null || email === undefined || email === '') {
+    return './images/default-user-profile/1.jpg';
   }
-  return './images/default-user-profile/1.jpg';
+
+  const url = `/user-profile?user=${email}`;
+  return fetch(url)
+    .then(response => response.json())
+    .then(user => user.profileImageUrl);
 }
 
 function buildCommentInput(messageId) {
-  const commentFormHtml = `<li class="media">
+  return getUserProfileUrl(userEmail).then((userProfileImageUrl) => {
+    const commentFormHtml = `<li class="media">
                             <a class="mr-3 my-2" href="#">
-                              <img src="${getUserProfileUrl(userEmail)}" class="comment-image rounded-circle" alt="...">
+                              <img src="${userProfileImageUrl}" class="comment-image rounded-circle" alt="...">
                             </a>
                             <div class="media-body">
                               <div id="comment-input-container" class="comment-input-container">
@@ -501,7 +496,8 @@ function buildCommentInput(messageId) {
                               </div>
                             </div>
                           </li>`;
-  return commentFormHtml;
+    return commentFormHtml;
+  });
 }
 
 function buildCommentSentimentIndicator(sentimentScore) {
@@ -525,13 +521,15 @@ function buildCommentSentimentIndicator(sentimentScore) {
 }
 
 function buildCommentItem(comment) {
-  return `<li class="media">
+  return getUsername(comment.user).then(username => getUserProfileUrl(comment.user)
+    .then((userProfileUrl) => {
+      const commentHtml = `<li class="media">
             <a class="mr-3 my-2" href="/user-page.html?user=${comment.user}">
-              <img src="${getUserProfileUrl(comment.user)}" class="comment-image rounded-circle" alt="...">
+              <img src="${userProfileUrl}" class="comment-image rounded-circle" alt="...">
             </a>
             <div class="media-body">
               <div class="d-flex justify-content-between mt-1">
-                <a href="/user-page.html?user=${comment.user}"><p class="mb-0 font-weight-normal comment-username">${getUsername(comment.user)}</p></a>
+                <a href="/user-page.html?user=${comment.user}"><p class="mb-0 font-weight-normal comment-username">${username}</p></a>
                 <p class="card-text mb-0 comment-time-container">
                   <small class="text-muted">${getTimeText(comment.timestamp)}</small>  
                 </p>
@@ -542,20 +540,35 @@ function buildCommentItem(comment) {
               </div>
             </div>
           </li>`;
+
+      return commentHtml;
+    }));
 }
 
 function buildCommentHtml(messageId) {
   let commentHtml = `<ul class="list-unstyled comment-list mb-0" id="comment-list-${messageId}">`;
-  commentHtml += buildCommentInput(messageId);
 
-  $.ajaxSetup({ async: false });
-  $.getJSON(`/comments?messageId=${messageId}`, (comments) => {
-    comments.forEach((comment) => { commentHtml += buildCommentItem(comment); });
+  return buildCommentInput(messageId).then((commentInput) => {
+    commentHtml += commentInput;
+
+    const url = `/comments?messageId=${messageId}`;
+    return fetch(url)
+      .then(response => response.json())
+      .then((comments) => {
+        let commentSequence = Promise.resolve();
+        comments.forEach((comment) => {
+          commentSequence = commentSequence.then(() => buildCommentItem(comment))
+            .then((commentItemHtml) => {
+              commentHtml += commentItemHtml;
+            });
+        });
+
+        return commentSequence.then(() => {
+          commentHtml += '</ul>';
+          return commentHtml;
+        });
+      });
   });
-  $.ajaxSetup({ async: true });
-
-  commentHtml += '</ul>';
-  return commentHtml;
 }
 
 function onCommentPost(messageId) {
@@ -588,7 +601,10 @@ function onClickCommentPostButton(messageId) {
     if (response.toString().trim() !== '') {
       $('#instructUserToLoginModal').modal('show');
     } else {
-      $(`#comment-container-${messageId}`).html(buildCommentHtml(messageId));
+      buildCommentHtml(messageId).then((commentHtml) => {
+        $(`#comment-container-${messageId}`).html(commentHtml);
+      });
+
       onCommentPost(messageId);
     }
   });
@@ -599,7 +615,10 @@ function buildCommentDiv(messageId) {
   commentDiv.classList.add('px-2', 'py-1', 'border-top', 'collapse', 'comment-container');
   commentDiv.id = `comment-container-${messageId}`;
 
-  commentDiv.innerHTML = buildCommentHtml(messageId);
+  buildCommentHtml(messageId).then((commentHtml) => {
+    commentDiv.innerHTML = commentHtml;
+  });
+
   return commentDiv;
 }
 

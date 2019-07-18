@@ -15,6 +15,24 @@
   z-index: 1;
 }
 
+#nextSection::after {
+  background: #ffffff;
+  opacity: 0.4;
+  position: absolute;
+  width: 140px;
+  height: 70px;
+  border-top-left-radius: 100px;
+  border-top-right-radius: 100px;
+  bottom: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
+  cursor: pointer;
+  text-align: center;
+  line-height: 120px;
+  content: "\25BC";
+  z-index: 99;
+}
+
 .carousel-image {
   height: 100vh;
   object-fit: cover;
