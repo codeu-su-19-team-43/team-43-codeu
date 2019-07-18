@@ -89,7 +89,9 @@ limitations under the License.
         const usernameContainers = document.querySelectorAll(`[id='username']`);
         usernameContainers.forEach(div => {
           $.getScript("/js/message-loader.js", () => {
-            div.innerHTML = getUsername(new URLSearchParams(window.location.search).get("user"));
+            this.getUsername(new URLSearchParams(window.location.search).get("user")).then((username) => {
+              div.innerHTML = username;
+            });
           });
         });
       }
