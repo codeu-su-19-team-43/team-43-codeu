@@ -1,9 +1,3 @@
-$.ajax({
-  async: false,
-  url: '/js/moment.min.js',
-  dataType: 'script',
-});
-
 let userEmail = null;
 let langCodeForTranslation = 'es'; // default to Spanish on empty or invalid language code
 
