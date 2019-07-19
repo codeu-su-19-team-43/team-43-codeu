@@ -454,7 +454,7 @@ function enablePostButton(commentInputTextArea, messageId) {
 
 function getUserProfileUrl(email) {
   if (email === null || email === undefined || email === '') {
-    return './images/default-user-profile/1.jpg';
+    return Promise.resolve('./images/default-user-profile/1.jpg');
   }
 
   const url = `/user-profile?user=${email}`;
