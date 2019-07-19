@@ -1,13 +1,12 @@
 let map;
+let marker;
+let google;
 // let editMarker; // Editable marker that displays when a user clicks in the map
 
 function toggleBounce() {
-  // eslint-disable-next-line no-undef
   if (marker.getAnimation() !== null) {
-    // eslint-disable-next-line no-undef
     marker.setAnimation(null);
   } else {
-    // eslint-disable-next-line no-undef
     marker.setAnimation(google.maps.Animation.BOUNCE);
   }
 }
