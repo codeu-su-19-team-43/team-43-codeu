@@ -30,7 +30,6 @@ import com.google.protobuf.ByteString;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -136,7 +135,7 @@ public class UserMessageServlet extends HttpServlet {
         message.setImageLat(imageLat);
         message.setImageLong(imageLong);
         Marker marker = new Marker(imageLat, imageLong, imageLandmark);
-        storeMarker(marker);
+        datastore.storeMarker(marker);
       } else {
         List<EntityAnnotation> imageLandmarks = getImageLandmarks(blobBytes);
         if (imageLandmarks != null && imageLandmarks.size() != 0) {
@@ -147,7 +146,7 @@ public class UserMessageServlet extends HttpServlet {
           message.setImageLat(imageLat);
           message.setImageLong(imageLong);
           Marker marker = new Marker(imageLat, imageLong, imageLandmark);
-          storeMarker(marker);
+          datastore.storeMarker(marker);
         }
       }      
     }
@@ -202,18 +201,6 @@ public class UserMessageServlet extends HttpServlet {
     } catch (IOException e) { 
       return null; 
     }       
-  }
-
-  /** Stores a marker in Datastore. */
-  public void storeMarker(Marker marker) {
-    Entity markerEntity = new Entity("Marker");
-    markerEntity.setProperty("lat", marker.getLat());
-    markerEntity.setProperty("lng", marker.getLng());
-    markerEntity.setProperty("content", marker.getContent());
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    datastore.put(markerEntity);
-
   }
 
   /**
