@@ -63,24 +63,27 @@
         See all messages posted by the PhotoBook community here!
       </p>
     </div>
-
     <div id="content-container" class="px-5">
-      <div class="search-sort-container border-bottom pb-4 mb-5">
-        <div class="d-flex justify-content-between">
-          <div class="search-bar mb-3">
-            <input
-              type="text"
-              class="searchText font-weight-lighter"
-              placeholder="Search by image label"
-              onfocus="this.placeholder = ''"
-              onblur="this.placeholder = 'Search by image label'"
-              id="search-input"
-            />
-            <button type="submit" class="searchButton" onclick="onClickSearchButton()">
-              <i class="fa fa-search"></i>
-            </button>
-          </div>
-          <div class="sort-menu input-group mb-3">
+      <div class="search-container border-bottom pb-4 mb-4">
+        <div class="search-bar mx-auto mb-3 d-flex justify-content-center">
+          <input
+            type="text"
+            class="searchText font-weight-lighter"
+            placeholder="Search by image label"
+            onfocus="this.placeholder = ''"
+            onblur="this.placeholder = 'Search by image label'"
+            id="search-input"
+          />
+          <button type="submit" class="searchButton" onclick="onClickSearchButton()">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+        <div class="search-tag-container d-flex flex-wrap" id="search-tag-container"></div>
+      </div>
+
+      <div class="message-container mt-4">
+        <div class="sort-container d-flex mb-5">
+          <div class="sort-menu input-group ml-auto mr-2">
             <div class="input-group-prepend">
               <label class="input-group-text bg-info text-light sort-menu-label font-weight-lighter" for="sortCriteriaMenu">
                 Sort By
@@ -94,11 +97,7 @@
             </select>
           </div>
         </div>
-        <div class="search-tag-container d-flex flex-wrap" id="search-tag-container"></div>
-      </div>
-
-      <div class="message-container mt-5">
-        <div id="message-cards-container" class="card-columns">
+        <div id="message-cards-container" class="card-columns"></div>
       </div>
     </div>
 
@@ -131,7 +130,7 @@
         yall({
           observeChanges: true,
           events: {
-            load: function (event) {
+            load: function(event) {
               if (!event.target.classList.contains("lazy") && event.target.nodeName === "IMG") {
                 event.target.classList.add("yall-loaded");
               }
