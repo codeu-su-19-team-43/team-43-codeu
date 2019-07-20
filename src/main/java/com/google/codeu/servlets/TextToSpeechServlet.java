@@ -81,10 +81,10 @@ public class TextToSpeechServlet extends HttpServlet {
             input, voice, audioConfig
     );
 
-    // Get audio content from the API response.
+    // Get audio description from the API response.
     ByteString audioContents = synthesizeSpeechResponse.getAudioContent();
 
-    // Set audio content for servlet response.
+    // Set audio description for servlet response.
     response.setContentType("audio/mpeg");
     try (
             ServletOutputStream output = response.getOutputStream();

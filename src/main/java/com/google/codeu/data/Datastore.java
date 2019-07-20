@@ -19,6 +19,7 @@ package com.google.codeu.data;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -29,6 +30,7 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.codeu.Util;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -506,32 +508,60 @@ public class Datastore {
   }
 
   /** Fetches markers from Datastore. */
-  public List<Marker> getMarkers() {
-    List<Marker> markers = new ArrayList<>();
-
+  public List<MapLocation> getMapLocations() {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query = new Query("Marker");
+    Query query = new Query("MapLocation");
     PreparedQuery results = datastore.prepare(query);
 
-    for (Entity entity : results.asIterable()) {
-      double lat = (double) entity.getProperty("lat");
-      double lng = (double) entity.getProperty("lng");
-      String content = (String) entity.getProperty("content");
+    List<MapLocation> mapLocations = new ArrayList<>();
 
-      Marker marker = new Marker(lat, lng, content);
-      markers.add(marker);
+    for (Entity entity : results.asIterable()) {
+      try {
+        MapLocation mapLocation = convertMarkerFromEntity(entity);
+        mapLocations.add(mapLocation);
+      } catch (Exception e) {
+        System.err.println("Error reading marker.");
+        e.printStackTrace();
+      }
     }
-    return markers;
+    return mapLocations;
   }
 
-  /** Stores a marker in Datastore. */
-  public void storeMarker(Marker marker) {
-    Entity markerEntity = new Entity("Marker");
-    markerEntity.setProperty("lat", marker.getLat());
-    markerEntity.setProperty("lng", marker.getLng());
-    markerEntity.setProperty("content", marker.getContent());
+  /**
+   * Converts message entity to {@link Message}.
+   */
+  public MapLocation convertMarkerFromEntity(Entity entity) {
+    double lat = (double) entity.getProperty("lat");
+    double lng = (double) entity.getProperty("lng");
+    String location = (String) entity.getProperty("location");
+    List<UUID> messageIds = Util.convertStringsToUuids(
+        (List<String>) entity.getProperty("messageIds"));
 
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    MapLocation mapLocation = new MapLocation(location, lat, lng, messageIds);
+
+    return mapLocation;
+  }
+
+  /** Stores a mapLocation in Datastore. */
+  public void storeMarker(MapLocation mapLocation, UUID messageId) {
+    Entity markerEntity;
+    try {
+      markerEntity = datastore.get(KeyFactory.createKey("MapLocation", mapLocation.getLocation()));
+      List<String> messageIds = (List<String>) markerEntity.getProperty("messageIds");
+      messageIds.add(messageId.toString());
+      markerEntity.setProperty("messageIds", messageIds);
+
+    } catch (EntityNotFoundException e) {
+      markerEntity = new Entity("MapLocation", mapLocation.getLocation());
+      markerEntity.setProperty("location", mapLocation.getLocation());
+      markerEntity.setProperty("lat", mapLocation.getLat());
+      markerEntity.setProperty("lng", mapLocation.getLng());
+
+      List<String> messageIds = Arrays.asList(messageId.toString());
+      markerEntity.setProperty("messageIds", messageIds);
+
+    }
+
     datastore.put(markerEntity);
   }
 }

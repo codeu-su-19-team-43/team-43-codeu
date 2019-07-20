@@ -5,9 +5,6 @@ import com.google.appengine.api.blobstore.BlobInfoFactory;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
@@ -23,7 +20,7 @@ import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.codeu.Util;
 import com.google.codeu.data.Datastore;
-import com.google.codeu.data.Marker;
+import com.google.codeu.data.MapLocation;
 import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
@@ -112,7 +109,7 @@ public class UserMessageServlet extends HttpServlet {
       String imageUrl = getUploadedFileUrl(blobKey);
       message.setImageUrl(imageUrl);
 
-      String imageLandmark;
+      String imageLocation;
       double imageLat;
       double imageLong;
 
@@ -125,28 +122,28 @@ public class UserMessageServlet extends HttpServlet {
       message.setImageLabels(imageLabelsList);
 
       //Get the Location entered by the user
-      imageLandmark = request.getParameter("mapLocation");
-      if (! imageLandmark.isEmpty()) {
+      imageLocation = request.getParameter("mapLocation");
+      if (! imageLocation.isEmpty()) {
         //convert the landmark to lat long
-        JSONObject loc = getCoordinates(imageLandmark);
+        JSONObject loc = getCoordinates(imageLocation);
         imageLat = loc.getDouble("lat");
         imageLong = loc.getDouble("lng");
-        message.setImageLandmark(imageLandmark);
+        message.setImageLandmark(imageLocation);
         message.setImageLat(imageLat);
         message.setImageLong(imageLong);
-        Marker marker = new Marker(imageLat, imageLong, imageLandmark);
-        datastore.storeMarker(marker);
+        MapLocation mapLocation = new MapLocation(imageLocation, imageLat, imageLong);
+        datastore.storeMarker(mapLocation, message.getId());
       } else {
         List<EntityAnnotation> imageLandmarks = getImageLandmarks(blobBytes);
         if (imageLandmarks != null && imageLandmarks.size() != 0) {
-          imageLandmark = imageLandmarks.get(0).getDescription();
+          imageLocation = imageLandmarks.get(0).getDescription();
           imageLat = imageLandmarks.get(0).getLocations(0).getLatLng().getLatitude();
           imageLong = imageLandmarks.get(0).getLocations(0).getLatLng().getLongitude();
-          message.setImageLandmark(imageLandmark);
+          message.setImageLandmark(imageLocation);
           message.setImageLat(imageLat);
           message.setImageLong(imageLong);
-          Marker marker = new Marker(imageLat, imageLong, imageLandmark);
-          datastore.storeMarker(marker);
+          MapLocation mapLocation = new MapLocation(imageLocation, imageLat, imageLong);
+          datastore.storeMarker(mapLocation, message.getId());
         }
       }      
     }
