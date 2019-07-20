@@ -758,11 +758,11 @@ function fetchAllMessages() {
 
 /** Fetches messages for given image labels and add them to the page. */
 // eslint-disable-next-line no-unused-vars
-function fetchMessagesByImageLabels(imageLabels) {
+function fetchMessagesBySearchLabels(searchLabels) {
   let url = '/feed?';
-  imageLabels.forEach((imageLabel, index) => {
-    url += `imageLabel=${imageLabel}`;
-    if (index !== imageLabels.length - 1) {
+  searchLabels.forEach((searchLabel, index) => {
+    url += `searchLabel=${searchLabel}`;
+    if (index !== searchLabels.length - 1) {
       url += '&';
     }
   });

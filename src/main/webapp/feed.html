@@ -8,16 +8,15 @@
     <link rel="stylesheet" href="/css/navigation-bar.css" />
     <link rel="stylesheet" href="/css/message.css" />
     <link rel="stylesheet" href="/css/feed-page.css" />
-
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.14/lodash.min.js"></script>
     <script type="text/javascript" src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/yall-js@3.1.2/dist/yall.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-
     <script type="text/javascript" src="js/navigation-loader.js"></script>
     <script type="text/javascript" src="js/feed-page-loader.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&libraries=places&callback=initMap" async defer></script>
     <script>
       function js_Load() {
         document.body.style.visibility = "visible";
@@ -28,30 +27,38 @@
         return windowLocation.replace("\?&", "?").replace(/\?$/, "");
       }
 
-      function checkUniqueImageLabel(imageLabel) {
-        const parameterImageLabels = urlParams.getAll("imageLabel");
-        if (parameterImageLabels.indexOf(imageLabel) > -1) {
+      function checkUniqueSearchLabel(label) {
+        const parameterSearchLabels = urlParams.getAll("searchLabel");
+        if (parameterSearchLabels.indexOf(label) > -1) {
           return false;
         }
         return true;
       }
 
       function onClickSearchButton() {
-        const imageLabel = document.getElementById("search-input").value.toLowerCase();
-        if (checkUniqueImageLabel(imageLabel)) {
+        const searchLabel = document.getElementById("search-input").value.toLowerCase();
+        if (checkUniqueSearchLabel(searchLabel)) {
           let redirectLocation = window.location.href;
-          const parameterImageLabels = urlParams.getAll("imageLabel");
+          const parameterLabels = urlParams.getAll("searchLabel");
           redirectLocation += redirectLocation.includes("?") ? "&" : "?";
-          redirectLocation += `imageLabel=${imageLabel}`;
+          redirectLocation += `searchLabel=${searchLabel}`;
           window.location.replace(cleanWindowLocation(redirectLocation));
         } else {
           document.getElementById("search-input").value = "";
         }
       }
 
-      function onClickImageLabelCancelButton(imageLabel) {
-        let redirectLocation = cleanWindowLocation(window.location.href.replace(new RegExp(`&?imageLabel=${imageLabel}`, "g"), ""));
+      function onClickSearchLabelCancelButton(searchLabel) {
+        let redirectLocation = cleanWindowLocation(window.location.href.replace(new RegExp(`&?searchLabel=${searchLabel}`, "g"), ""));
         window.location.replace(redirectLocation);
+      }
+
+      function initMap() {
+        var input = document.getElementById("search-input");
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener("place_changed", function() {
+          var place = autocomplete.getPlace();
+        });
       }
     </script>
   </head>
@@ -69,9 +76,9 @@
           <input
             type="text"
             class="searchText font-weight-lighter"
-            placeholder="Search by image label"
+            placeholder="Search by image label or location"
             onfocus="this.placeholder = ''"
-            onblur="this.placeholder = 'Search by image label'"
+            onblur="this.placeholder = 'Search by image label or location'"
             id="search-input"
           />
           <button type="submit" class="searchButton" onclick="onClickSearchButton()">
