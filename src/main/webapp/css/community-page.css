@@ -59,6 +59,10 @@ body > .page-header {
   word-break: break-all;
 }
 
+.username:hover {
+  color: rgb(21, 85, 184);
+}
+
 .user-detail {
   font-size: 0.77em;
 }
