@@ -1,86 +1,114 @@
-let map;
-let marker;
-let google;
-// let editMarker; // Editable marker that displays when a user clicks in the map
-
-function toggleBounce() {
+function toggleBounce(marker) {
   if (marker.getAnimation() !== null) {
     marker.setAnimation(null);
   } else {
+    // eslint-disable-next-line no-undef
     marker.setAnimation(google.maps.Animation.BOUNCE);
   }
 }
 
-// Creates a marker that shows a read-only info window when clicked
-function createMarkerForDisplay(lat, lng, content) {
-  // eslint-disable-next-line no-undef
-  const marker = new google.maps.Marker({
-    position: {
-      lat,
-      lng,
-    },
-    map,
-    // eslint-disable-next-line no-undef
-    animation: google.maps.Animation.DROP,
-  });
+function buildMapImage() {
+  return `<div class="map-image-container">
+            <img id="map-image" 
+                 class="lazy map-image border" 
+                 src="images/landing-carousel/singapore.jpg" />
+          </div>`;
+}
 
+// Builds and returns HTML elements that show an editable textbox and a submit button
+function buildInfoWindowInput(location, messagIds) {
+  const containerDiv = document.createElement('div');
+
+  const messageId = messagIds[0];
+  containerDiv.innerHTML = buildMapImage();
+  containerDiv.innerHTML += `<p class="text-center">${location}</p>`;
+  return containerDiv;
+}
+
+// Creates a marker that shows a read-only info window when clicked
+function createInfoWindows(map, lat, lng, location, messagIds) {
   // eslint-disable-next-line no-undef
   const infoWindow = new google.maps.InfoWindow({
-    content,
+    content: buildInfoWindowInput(location, messagIds),
   });
+  infoWindow.setPosition({ lat, lng });
+  infoWindow.open(map);
 
-  marker.addListener('click', () => {
-    infoWindow.open(map, marker);
-  });
+  // marker.addListener('click', () => {
+  //   infoWindow.open(map, marker);
+  // });
 
-  marker.addListener('click', toggleBounce);
+  // marker.addListener('click', () => {
+  //   toggleBounce(marker);
+  // });
 }
 
 // Fetches markers from the backend and adds them to the map
-function fetchMarkers() {
-  fetch('/markers')
+function fetchLocations(map) {
+  fetch('/mapLocations')
     .then(response => response.json())
-    .then((markers) => {
-      markers.forEach((marker) => {
-        createMarkerForDisplay(marker.lat, marker.lng, marker.content);
+    .then((locations) => {
+      locations.forEach((location) => {
+        createInfoWindows(map, location.lat, location.lng,
+          location.location, location.messageIds);
       });
     });
 }
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+function handleLocationError(map, browserHasGeolocation, infoWindow, pos) {
   infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation ? 'Error: The Geolocation service failed.' : "Error: Your browser doesn't support geolocation.");
+  infoWindow.setContent(browserHasGeolocation
+    ? 'Error: The Geolocation service failed.'
+    : "Error: Your browser doesn't support geolocation.");
   infoWindow.open(map);
 }
 
-// // Sends the marker at the backend for saving
-// function postMarker(lat, lng, content) {
-//   const params = new URLSearchParams();
-//   params.append('lat', lat);
-//   params.append('lng', lng);
-//   params.append('content', content);
-//   fetch('/markers', {
-//     method: 'POST',
-//     body: params,
-//   });
-// }
+function centerMap(map) {
+  // eslint-disable-next-line no-undef
+  const infoWindow = new google.maps.InfoWindow();
 
-// // Builds and returns HTML elements that show an editable textbox and a submit button
-// function buildInfoWindowInput(lat, lng) {
-//   const textBox = document.createElement('textarea');
-//   const button = document.createElement('button');
-//   button.appendChild(document.createTextNode('Submit'));
-//   button.onclick = () => {
-//     createMarkerForDisplay(lat, lng, textBox.value);
-//     // postMarker(lat, lng, textBox.value);
-//     editMarker.setMap(null);
-//   };
-//   const containerDiv = document.createElement('div');
-//   containerDiv.appendChild(textBox);
-//   containerDiv.appendChild(document.createElement('br'));
-//   containerDiv.appendChild(button);
-//   return containerDiv;
-// }
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        map.setCenter(pos);
+      },
+      () => {
+        handleLocationError(map, true, infoWindow, map.getCenter());
+      },
+    );
+  } else {
+    // Browser doesn't support Geolocation
+    handleLocationError(false, infoWindow, map.getCenter());
+  }
+}
+
+function createMap() {
+  // eslint-disable-next-line no-undef
+  const map = new google.maps.Map(document.getElementById('map'), {
+    center: {
+      lat: 1.3483,
+      lng: 103.681,
+    },
+    zoom: 6,
+  });
+
+  centerMap(map);
+
+  fetchLocations(map);
+}
+
+// eslint-disable-next-line no-unused-vars
+function buildUI() {
+  createMap();
+}
+
+
+
 
 // // Creates a marker that shows a textbox the user can edit
 // function createMarkerForEdit(lat, lng) {
@@ -100,7 +128,7 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 //   });
 
 //   const infoWindow = new google.maps.InfoWindow({
-//     content: buildInfoWindowInput(lat, lng),
+//     description: buildInfoWindowInput(lat, lng),
 //   });
 
 //   editMarker.addListener('click', () => {
@@ -117,56 +145,3 @@ function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 
 //   infoWindow.open(map, editMarker);
 // }
-
-function createMap() {
-  // eslint-disable-next-line no-undef
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: {
-      lat: 1.3483,
-      lng: 103.681,
-    },
-    zoom: 4,
-  });
-
-  // eslint-disable-next-line no-undef
-  const infoWindow = new google.maps.InfoWindow();
-
-  // Try HTML5 geolocation.
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        map.setCenter(pos);
-      },
-      () => {
-        handleLocationError(true, infoWindow, map.getCenter());
-      },
-    );
-  } else {
-    // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
-  }
-
-  // When the user clicks in the map, show a marker with a text box the user can edit
-  map.addListener('click', () => {
-    // Allows adding marker only if the user is logged in
-    fetch('/login-status')
-      .then(response => response.json())
-      .then((userStatus) => {
-        if (userStatus.isLoggedIn === false) {
-          $('#instructUserToLoginModal').modal('show');
-        } else {
-          // createMarkerForEdit(event.latLng.lat(), event.latLng.lng());
-        }
-      });
-  });
-  fetchMarkers();
-}
-
-// eslint-disable-next-line no-unused-vars
-function buildUI() {
-  createMap();
-}
