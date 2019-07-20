@@ -1,17 +1,8 @@
-function toggleBounce(marker) {
-  if (marker.getAnimation() !== null) {
-    marker.setAnimation(null);
-  } else {
-    // eslint-disable-next-line no-undef
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-  }
-}
-
-function buildMapImage() {
+function buildMapImage(messageId) {
   return `<div class="map-image-container">
-            <img id="map-image" 
-                 class="lazy map-image border" 
-                 src="images/landing-carousel/singapore.jpg" />
+            <img id="map-image-${messageId}" 
+                 class="map-image border" 
+                 src="images//images/placeholder.png" />
           </div>`;
 }
 
@@ -20,8 +11,8 @@ function buildInfoWindowInput(location, messagIds) {
   const containerDiv = document.createElement('div');
 
   const messageId = messagIds[0];
-  containerDiv.innerHTML = buildMapImage();
-  containerDiv.innerHTML += `<p class="text-center">${location}</p>`;
+  containerDiv.innerHTML = buildMapImage(messageId);
+  containerDiv.innerHTML += `<p class="text-center mt-2 mb-0">${location}</p>`;
   return containerDiv;
 }
 
@@ -30,6 +21,7 @@ function createInfoWindows(map, lat, lng, location, messagIds) {
   // eslint-disable-next-line no-undef
   const infoWindow = new google.maps.InfoWindow({
     content: buildInfoWindowInput(location, messagIds),
+    disableAutoPan: true,
   });
   infoWindow.setPosition({ lat, lng });
   infoWindow.open(map);
@@ -94,7 +86,7 @@ function createMap() {
       lat: 1.3483,
       lng: 103.681,
     },
-    zoom: 6,
+    zoom: 4,
   });
 
   centerMap(map);
@@ -106,42 +98,3 @@ function createMap() {
 function buildUI() {
   createMap();
 }
-
-
-
-
-// // Creates a marker that shows a textbox the user can edit
-// function createMarkerForEdit(lat, lng) {
-//   // if we are already showing an editable marker, then remove it
-//   if (editMarker) {
-//     editMarker.setMap(null);
-//   }
-
-//   editMarker = new google.maps.Marker({
-//     position: {
-//       lat,
-//       lng,
-//     },
-//     map,
-//     draggable: true,
-//     animation: google.maps.Animation.DROP,
-//   });
-
-//   const infoWindow = new google.maps.InfoWindow({
-//     description: buildInfoWindowInput(lat, lng),
-//   });
-
-//   editMarker.addListener('click', () => {
-//     infowindow.open(map, editMarker);
-//   });
-
-//   editMarker.addListener('click', toggleBounce);
-
-
-//   // When the user closes the editable info window, close the marker
-//   google.maps.event.addListener(infoWindow, 'closeclick', () => {
-//     editMarker.setMap(null);
-//   });
-
-//   infoWindow.open(map, editMarker);
-// }
