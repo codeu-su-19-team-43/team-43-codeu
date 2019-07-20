@@ -46,4 +46,5 @@ function buildCarousel() {
 // eslint-disable-next-line no-unused-vars
 function buildUI() {
   buildCarousel();
+  document.getElementById('landing-overlay').classList.remove('hidden');
 }
