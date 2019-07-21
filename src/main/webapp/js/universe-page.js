@@ -22,7 +22,7 @@ function buildInfoWindowInput(location, imageUrl, infoWindow) {
   containerDiv.classList.add('infoWindow-content', 'p-3');
   // containerDiv.classList.add('d-inline-grid');
   containerDiv.innerHTML = buildMapImage(imageUrl, infoWindow);
-  containerDiv.innerHTML += `<div class="text-center mt-2 mb-0">
+  containerDiv.innerHTML += `<div class="text-center mt-2 mb-0 location-link-container">
                               <a class="location-link" href="/feed.html?searchLabel=${location.toLowerCase()}">
                                 ${location}
                               </a>
@@ -66,7 +66,7 @@ function createMap() {
   // eslint-disable-next-line no-undef
   map = new google.maps.Map(document.getElementById('map'), {
     center: {
-      lat: 15,
+      lat: 40,
       lng: 0,
     },
     zoom: 2,
