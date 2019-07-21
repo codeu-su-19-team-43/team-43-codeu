@@ -39,14 +39,17 @@ public class MessageFeedServlet extends HttpServlet {
     
     List<Message> messages = datastore.getAllMessages();
 
-    String[] imageLabels = request.getParameterValues("imageLabel");
+    String[] searchLabels = request.getParameterValues("searchLabel");
 
-    if (imageLabels != null && imageLabels.length > 0) {
+    if (searchLabels != null && searchLabels.length > 0) {
       messages = messages.stream()
           .filter(message -> message.getImageLabels() != null)
           .filter(message -> message.getImageLabels().stream()
-                  .anyMatch(imageLabel -> Arrays.asList(imageLabels)
-                            .contains(imageLabel.toLowerCase())))
+                  .anyMatch(imageLabel -> Arrays.asList(searchLabels)
+                            .contains(imageLabel.toLowerCase()))
+              | (message.getImageLandmark() != null
+              && Arrays.asList(searchLabels)
+              .contains(message.getImageLandmark().toLowerCase())))
           .collect(Collectors.toList());
     }
 

@@ -73,7 +73,7 @@ function drawAllTimeTopImageLabelsChart() {
         const selected = allTimeTopImageLabelsChart.getSelection();
         if (selected) {
           const imageLabelToFilterBy = rawAllTimeTopImageLabelsData[selected[0].row + 1][0];
-          window.location.href = `/feed.html?imageLabel=${encodeURI(imageLabelToFilterBy.toLowerCase())}`;
+          window.location.href = `/feed.html?searchLabel=${encodeURI(imageLabelToFilterBy.toLowerCase())}`;
         }
       });
     })

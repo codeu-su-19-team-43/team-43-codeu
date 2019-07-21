@@ -1,15 +1,15 @@
 const urlParams = new URLSearchParams(window.location.search);
-const parameterImageLabels = urlParams.getAll('imageLabel');
+const parameterSearchLabels = urlParams.getAll('searchLabel');
 
-function fetchImageLabels() {
-  if (parameterImageLabels != null) {
-    parameterImageLabels.forEach((parameterImageLabel) => {
+function fetchSearchLabels() {
+  if (parameterSearchLabels != null) {
+    parameterSearchLabels.forEach((parameterSearchLabel) => {
       const searchTagContainer = document.getElementById('search-tag-container');
       const imageLabelButton = document.createElement('div');
-      const uriEncodedParameterImageLabel = encodeURIComponent(parameterImageLabel);
-      imageLabelButton.innerHTML = `<button type="button" class="btn btn-info btn-sm mr-2 mb-2 pr-1 imageLabelButton">
-                                      <span class="mr-1">${parameterImageLabel}</span>  
-                                      <span onClick="onClickImageLabelCancelButton('${uriEncodedParameterImageLabel}')">
+      const uriEncodedParameterSearchLabel = encodeURIComponent(parameterSearchLabel);
+      imageLabelButton.innerHTML = `<button type="button" class="btn btn-info btn-sm mr-2 mb-2 pr-1 image-label-button">
+                                      <span class="mr-1">${parameterSearchLabel}</span>  
+                                      <span onClick="onClickSearchLabelCancelButton('${uriEncodedParameterSearchLabel}')">
                                         <i class="fas fa-times-circle"></i>
                                       </span>
                                     </button>`;
@@ -21,11 +21,11 @@ function fetchImageLabels() {
 // Fetch data and populate the UI of the page.
 // eslint-disable-next-line no-unused-vars
 function buildUI() {
-  fetchImageLabels();
+  fetchSearchLabels();
   $.getScript('/js/message-loader.js', () => {
-    if (parameterImageLabels != null && parameterImageLabels.length > 0) {
+    if (parameterSearchLabels != null && parameterSearchLabels.length > 0) {
       // eslint-disable-next-line no-undef
-      fetchMessagesByImageLabels(parameterImageLabels);
+      fetchMessagesBySearchLabels(parameterSearchLabels);
     } else {
       // eslint-disable-next-line no-undef
       fetchAllMessages();

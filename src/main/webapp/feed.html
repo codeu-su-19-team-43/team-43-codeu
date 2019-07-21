@@ -8,16 +8,15 @@
     <link rel="stylesheet" href="/css/navigation-bar.css" />
     <link rel="stylesheet" href="/css/message.css" />
     <link rel="stylesheet" href="/css/feed-page.css" />
-
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript" src="js/moment.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/lodash@4.17.14/lodash.min.js"></script>
     <script type="text/javascript" src="https://polyfill.io/v2/polyfill.min.js?features=IntersectionObserver"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/yall-js@3.1.2/dist/yall.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
-
     <script type="text/javascript" src="js/navigation-loader.js"></script>
     <script type="text/javascript" src="js/feed-page-loader.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&libraries=places&callback=initMap" async defer></script>
     <script>
       function js_Load() {
         document.body.style.visibility = "visible";
@@ -28,30 +27,38 @@
         return windowLocation.replace("\?&", "?").replace(/\?$/, "");
       }
 
-      function checkUniqueImageLabel(imageLabel) {
-        const parameterImageLabels = urlParams.getAll("imageLabel");
-        if (parameterImageLabels.indexOf(imageLabel) > -1) {
+      function checkUniqueSearchLabel(label) {
+        const parameterSearchLabels = urlParams.getAll("searchLabel");
+        if (parameterSearchLabels.indexOf(label) > -1) {
           return false;
         }
         return true;
       }
 
       function onClickSearchButton() {
-        const imageLabel = document.getElementById("search-input").value.toLowerCase();
-        if (checkUniqueImageLabel(imageLabel)) {
+        const searchLabel = document.getElementById("search-input").value.toLowerCase();
+        if (checkUniqueSearchLabel(searchLabel)) {
           let redirectLocation = window.location.href;
-          const parameterImageLabels = urlParams.getAll("imageLabel");
+          const parameterLabels = urlParams.getAll("searchLabel");
           redirectLocation += redirectLocation.includes("?") ? "&" : "?";
-          redirectLocation += `imageLabel=${imageLabel}`;
+          redirectLocation += `searchLabel=${searchLabel}`;
           window.location.replace(cleanWindowLocation(redirectLocation));
         } else {
           document.getElementById("search-input").value = "";
         }
       }
 
-      function onClickImageLabelCancelButton(imageLabel) {
-        let redirectLocation = cleanWindowLocation(window.location.href.replace(new RegExp(`&?imageLabel=${imageLabel}`, "g"), ""));
+      function onClickSearchLabelCancelButton(searchLabel) {
+        let redirectLocation = cleanWindowLocation(window.location.href.replace(new RegExp(`&?searchLabel=${searchLabel}`, "g"), ""));
         window.location.replace(redirectLocation);
+      }
+
+      function initMap() {
+        var input = document.getElementById("search-input");
+        var autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener("place_changed", function() {
+          var place = autocomplete.getPlace();
+        });
       }
     </script>
   </head>
@@ -63,24 +70,27 @@
         See all messages posted by the PhotoBook community here!
       </p>
     </div>
-
     <div id="content-container" class="px-5">
-      <div class="search-sort-container border-bottom pb-4 mb-5">
-        <div class="d-flex justify-content-between">
-          <div class="search-bar mb-3">
-            <input
-              type="text"
-              class="searchText font-weight-lighter"
-              placeholder="Search by image label"
-              onfocus="this.placeholder = ''"
-              onblur="this.placeholder = 'Search by image label'"
-              id="search-input"
-            />
-            <button type="submit" class="searchButton" onclick="onClickSearchButton()">
-              <i class="fa fa-search"></i>
-            </button>
-          </div>
-          <div class="sort-menu input-group mb-3">
+      <div class="search-container border-bottom pb-4 mb-3">
+        <div class="search-bar mx-auto mb-3 d-flex justify-content-center">
+          <input
+            type="text"
+            class="searchText font-weight-lighter"
+            placeholder="Search by image label or location"
+            onfocus="this.placeholder = ''"
+            onblur="this.placeholder = 'Search by image label or location'"
+            id="search-input"
+          />
+          <button type="submit" class="searchButton" onclick="onClickSearchButton()">
+            <i class="fa fa-search"></i>
+          </button>
+        </div>
+        <div class="search-tag-container d-flex flex-wrap mx-auto justify-content-center" id="search-tag-container"></div>
+      </div>
+
+      <div class="message-container mt-3">
+        <div class="sort-container d-flex mb-3">
+          <div class="sort-menu input-group ml-auto mr-2">
             <div class="input-group-prepend">
               <label class="input-group-text bg-info text-light sort-menu-label font-weight-lighter" for="sortCriteriaMenu">
                 Sort By
@@ -94,11 +104,7 @@
             </select>
           </div>
         </div>
-        <div class="search-tag-container d-flex flex-wrap" id="search-tag-container"></div>
-      </div>
-
-      <div class="message-container mt-5">
-        <div id="message-cards-container" class="card-columns">
+        <div id="message-cards-container" class="card-columns"></div>
       </div>
     </div>
 
@@ -131,7 +137,7 @@
         yall({
           observeChanges: true,
           events: {
-            load: function (event) {
+            load: function(event) {
               if (!event.target.classList.contains("lazy") && event.target.nodeName === "IMG") {
                 event.target.classList.add("yall-loaded");
               }

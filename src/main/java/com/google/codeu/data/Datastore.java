@@ -19,6 +19,7 @@ package com.google.codeu.data;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -29,8 +30,11 @@ import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.codeu.Util;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Provides access to the data stored in Datastore.
@@ -38,6 +42,7 @@ import java.util.UUID;
 public class Datastore {
 
   private DatastoreService datastore;
+  private static final int MAP_IMAGE_MIN_LIKE_FAV_COUNT = 1;
 
   public Datastore() {
     datastore = DatastoreServiceFactory.getDatastoreService();
@@ -503,5 +508,93 @@ public class Datastore {
     }
 
     return sentimentScores;
+  }
+
+  /** Fetches markers from Datastore for a given count. */
+  public List<MapLocation> getMapLocations(int count) {
+    List<MapLocation> allLocations = getMapLocations();
+    List<MapLocation> locations = new ArrayList<>();
+    while (locations.size() < Math.min(count, allLocations.size())) {
+      MapLocation newLocation = allLocations.get(new Random().nextInt(allLocations.size()));
+      List<UUID> newMessageIds = newLocation.getMessageIds();
+      Message newMessage = null;
+      try {
+        newMessage = getMessage(newMessageIds
+            .get(new Random().nextInt(newMessageIds.size())).toString());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      if (!locations.stream()
+          .map(MapLocation::getLocation)
+          .collect(Collectors.toList())
+          .contains(newLocation.getLocation())
+          &&
+          ((newMessage.getFavouritedUserEmails() != null
+          && newMessage.getFavouritedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT)
+          | (newMessage.getLikedUserEmails() != null
+          && newMessage.getLikedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT))) {
+        newLocation.setMessageIds(Arrays.asList(newMessage.getId()));
+        locations.add(newLocation);
+      }
+    }
+    return locations;
+  }
+
+  /** Fetches markers from Datastore. */
+  public List<MapLocation> getMapLocations() {
+    Query query = new Query("MapLocation");
+    PreparedQuery results = datastore.prepare(query);
+
+    List<MapLocation> mapLocations = new ArrayList<>();
+
+    for (Entity entity : results.asIterable()) {
+      try {
+        MapLocation mapLocation = convertMarkerFromEntity(entity);
+        mapLocations.add(mapLocation);
+      } catch (Exception e) {
+        System.err.println("Error reading marker.");
+        e.printStackTrace();
+      }
+    }
+    return mapLocations;
+  }
+
+  /**
+   * Converts message entity to {@link Message}.
+   */
+  public MapLocation convertMarkerFromEntity(Entity entity) {
+    double lat = (double) entity.getProperty("lat");
+    double lng = (double) entity.getProperty("lng");
+    String location = (String) entity.getProperty("location");
+    List<UUID> messageIds = Util.convertStringsToUuids(
+        (List<String>) entity.getProperty("messageIds"));
+
+    MapLocation mapLocation = new MapLocation(location, lat, lng, messageIds);
+
+    return mapLocation;
+  }
+
+  /** Stores a mapLocation in Datastore. */
+  public void storeMarker(MapLocation mapLocation, UUID messageId) {
+    Entity markerEntity;
+    try {
+      markerEntity = datastore.get(KeyFactory.createKey("MapLocation", mapLocation.getLocation()));
+      List<String> messageIds = (List<String>) markerEntity.getProperty("messageIds");
+      messageIds.add(messageId.toString());
+      markerEntity.setProperty("messageIds", messageIds);
+
+    } catch (EntityNotFoundException e) {
+      markerEntity = new Entity("MapLocation", mapLocation.getLocation());
+      markerEntity.setProperty("location", mapLocation.getLocation());
+      markerEntity.setProperty("lat", mapLocation.getLat());
+      markerEntity.setProperty("lng", mapLocation.getLng());
+
+      List<String> messageIds = Arrays.asList(messageId.toString());
+      markerEntity.setProperty("messageIds", messageIds);
+
+    }
+
+    datastore.put(markerEntity);
   }
 }

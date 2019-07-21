@@ -11,6 +11,17 @@ function fetchUserEmail() {
   $.ajaxSetup({ async: true });
 }
 
+function getUserProfileUrl(email) {
+  if (email === null || email === undefined || email === '') {
+    return Promise.resolve('./images/default-user-profile/1.jpg');
+  }
+
+  const url = `/user-profile?user=${email}`;
+  return fetch(url)
+    .then(response => response.json())
+    .then(user => user.profileImageUrl);
+}
+
 fetchUserEmail();
 
 function getUsername(email) {
@@ -166,16 +177,33 @@ function buildInfoDiv(message) {
   return { infoDiv, translateResult };
 }
 
-function buildUsernameDiv(message) {
-  const usernameDiv = document.createElement('h5');
-  usernameDiv.classList.add('card-title', 'mb-0');
-  usernameDiv.id = 'username';
+function buildUserNameLink(user) {
+  const usernameLink = document.createElement('a');
+  usernameLink.classList.add('username-link');
 
-  getUsername(message.user).then((username) => {
-    usernameDiv.innerHTML = username;
+  getUsername(user).then((username) => {
+    usernameLink.innerHTML = username;
+    usernameLink.href = `/user-page.html?user=${user}`;
   });
 
-  return usernameDiv;
+  return usernameLink;
+}
+
+function buildUserImage(user) {
+  const userImageLink = document.createElement('a', 'user-image-link');
+  userImageLink.classList.add('mr-2');
+
+  const userImage = document.createElement('img');
+  userImage.classList.add('user-image', 'rounded-circle');
+
+  getUserProfileUrl(user).then((userProfileImageUrl) => {
+    userImage.src = userProfileImageUrl;
+    userImageLink.href = `/user-page.html?user=${user}`;
+  });
+
+  userImageLink.appendChild(userImage);
+
+  return userImageLink;
 }
 
 function getHourDiffFromNow(timeStamp) {
@@ -194,25 +222,59 @@ function getTimeText(timestamp) {
       : moment(timestamp).format('ll');
 }
 
-function buildTimeDiv(timestamp) {
-  const timeDiv = document.createElement('p');
-  timeDiv.classList.add('card-text', 'mb-0');
-
-  const timeText = document.createElement('small');
+function buildTimeText(timestamp) {
+  const timeText = document.createElement('span');
   timeText.classList.add('text-muted');
 
   timeText.innerHTML = getTimeText(timestamp);
-
-  timeDiv.appendChild(timeText);
-  return timeDiv;
+  return timeText;
 }
 
-function buildLandmarkDiv(message) {
-  const landmarkDiv = document.createElement('div');
-  landmarkDiv.classList.add('mb-2', 'imageLandmark-container');
-  landmarkDiv.innerHTML = `<a href="#" class="card-text">${message.imageLandmark}</a>`;
-  return landmarkDiv;
+function buildLandmarkText(imageLandmark) {
+  const landmarkText = document.createElement('span');
+  landmarkText.classList.add('my-auto');
+
+  const dot = document.createElement('span');
+  dot.innerHTML = ' · ';
+
+  const landmarkLink = document.createElement('a');
+  landmarkLink.classList.add('landmark-link');
+  landmarkLink.href = `https://www.google.com/maps/place/${imageLandmark.toLowerCase()}`;
+  landmarkLink.innerHTML = imageLandmark;
+  landmarkLink.target = '_blank';
+
+  landmarkText.appendChild(dot);
+  landmarkText.appendChild(landmarkLink);
+  return landmarkText;
 }
+
+function buildTimeLocationDiv(message) {
+  const timeLocationDiv = document.createElement('small');
+  timeLocationDiv.classList.add('time-location-text', 'mb-0', 'd-block', 'mt-1');
+
+  timeLocationDiv.appendChild(buildTimeText(message.timestamp));
+
+  if (message.imageLandmark != null && message.imageLandmark !== '') {
+    timeLocationDiv.appendChild(buildLandmarkText(message.imageLandmark));
+  }
+
+  return timeLocationDiv;
+}
+
+function buildMessageHeaderDiv(message) {
+  const usernameDiv = document.createElement('li');
+  usernameDiv.classList.add('media', 'pb-3');
+
+  const mediaBody = document.createElement('div');
+  mediaBody.classList.add('media-body');
+  mediaBody.appendChild(buildUserNameLink(message.user));
+  mediaBody.appendChild(buildTimeLocationDiv(message));
+
+  usernameDiv.appendChild(buildUserImage(message.user));
+  usernameDiv.appendChild(mediaBody);
+  return usernameDiv;
+}
+
 
 function buildTextDiv(message) {
   const textDiv = document.createElement('p');
@@ -243,11 +305,11 @@ function buildImageDiv(message) {
   let labelHtml = '<div id="image-label-container" class="card-footer p-1 border-top-0 image-label-container hidden">';
   // eslint-disable-next-line no-return-assign
   message.imageLabels.map(imageLabel => labelHtml
-    += `<a href="/feed.html?imageLabel=${imageLabel.toLowerCase()}">
-            <button type="button" class="btn btn-outline-light m-1 p-1 font-weight-lighter tag-button">
-              ${imageLabel}
-            </button>
-          </a>`);
+    += `<a href="/feed.html?searchLabel=${imageLabel.toLowerCase()}">
+          <button type="button" class="btn btn-outline-light m-1 p-1 font-weight-lighter tag-button">
+            ${imageLabel}
+          </button>
+        </a>`);
   labelHtml += '</div>';
   imageDivHtml += labelHtml;
 
@@ -452,50 +514,39 @@ function enablePostButton(commentInputTextArea, messageId) {
   });
 }
 
-function getUserProfileUrl(email) {
-  if (email === null || email === undefined || email === '') {
-    return Promise.resolve('./images/default-user-profile/1.jpg');
-  }
-
-  const url = `/user-profile?user=${email}`;
-  return fetch(url)
-    .then(response => response.json())
-    .then(user => user.profileImageUrl);
-}
-
 function buildCommentInput(messageId) {
   return getUserProfileUrl(userEmail).then((userProfileImageUrl) => {
     const commentFormHtml = `<li class="media">
-                            <a class="mr-3 my-2" href="#">
-                              <img src="${userProfileImageUrl}" class="comment-image rounded-circle" alt="...">
-                            </a>
-                            <div class="media-body">
-                              <div id="comment-input-container" class="comment-input-container">
-                                <div class="input-group input-group-sm mt-2">
-                                  <textarea
-                                    name="comment-input-textarea-${messageId}"
-                                    id="comment-input-textarea-${messageId}"
-                                    class=form-control
-                                    type=text
-                                    placeholder="Add a comment"
-                                    onblur="this.placeholder='Add a comment'"
-                                    onfocus="this.placeholder=''"
-                                    onkeyup="autoGrow(this)"
-                                    oninput="enablePostButton(this, '${messageId}')"
-                                    ></textarea>
-                                  <div class="input-group-append">
-                                    <button class="btn btn-light comment-post-button border" 
-                                            disabled="true"
-                                            type="button" 
-                                            id="comment-post-button-${messageId}"
-                                            onclick="onClickCommentPostButton('${messageId}');">
-                                            Post
-                                    </button>
+                              <div class="mr-3 my-2">
+                                <img src="${userProfileImageUrl}" class="comment-image rounded-circle" alt="...">
+                              </div>
+                              <div class="media-body">
+                                <div id="comment-input-container" class="comment-input-container">
+                                  <div class="input-group input-group-sm mt-2">
+                                    <textarea
+                                      name="comment-input-textarea-${messageId}"
+                                      id="comment-input-textarea-${messageId}"
+                                      class=form-control
+                                      type=text
+                                      placeholder="Add a comment"
+                                      onblur="this.placeholder='Add a comment'"
+                                      onfocus="this.placeholder=''"
+                                      onkeyup="autoGrow(this)"
+                                      oninput="enablePostButton(this, '${messageId}')"
+                                      ></textarea>
+                                    <div class="input-group-append">
+                                      <button class="btn btn-light comment-post-button border" 
+                                              disabled="true"
+                                              type="button" 
+                                              id="comment-post-button-${messageId}"
+                                              onclick="onClickCommentPostButton('${messageId}');">
+                                              Post
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </li>`;
+                            </li>`;
     return commentFormHtml;
   });
 }
@@ -624,14 +675,9 @@ function buildCommentDiv(messageId) {
 
 function buildCardBodyDiv(message) {
   const cardBody = document.createElement('div');
-  cardBody.classList.add('card-body', 'pb-0', 'px-3');
+  cardBody.classList.add('card-body', 'pb-0', 'px-3', 'pt-3');
 
-  cardBody.appendChild(buildUsernameDiv(message));
-  cardBody.appendChild(buildTimeDiv(message.timestamp));
-
-  if (message.imageLandmark != null && message.imageLandmark !== '') {
-    cardBody.appendChild(buildLandmarkDiv(message));
-  }
+  cardBody.appendChild(buildMessageHeaderDiv(message));
 
   cardBody.appendChild(buildTextDiv(message));
 
@@ -736,7 +782,7 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderContent, sortCriteria
 
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
-async function fetchMessagesByUser(parameterUsername) {
+function fetchMessagesByUser(parameterUsername) {
   buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
     'Your gallery is empty. <br> Post your first photo and share about its story!');
   buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
@@ -758,11 +804,11 @@ function fetchAllMessages() {
 
 /** Fetches messages for given image labels and add them to the page. */
 // eslint-disable-next-line no-unused-vars
-function fetchMessagesByImageLabels(imageLabels) {
+function fetchMessagesBySearchLabels(searchLabels) {
   let url = '/feed?';
-  imageLabels.forEach((imageLabel, index) => {
-    url += `imageLabel=${imageLabel}`;
-    if (index !== imageLabels.length - 1) {
+  searchLabels.forEach((searchLabel, index) => {
+    url += `searchLabel=${searchLabel}`;
+    if (index !== searchLabels.length - 1) {
       url += '&';
     }
   });

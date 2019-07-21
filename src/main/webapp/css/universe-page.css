@@ -1,0 +1,57 @@
+.page-header {
+  margin: 7em 0 0 0;
+}
+
+.shuffle-button {
+  color: rgb(23, 162, 184);
+}
+
+.shuffle-button:hover {
+  color: rgb(15, 111, 126);
+  cursor: pointer;
+}
+
+#map {
+  display: block;
+  width: 100vw;
+  height: calc(100vh - 14em);
+  border: thin solid black;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.map-image {
+  object-fit: cover;
+  width: 200px;
+  height: 200px;
+}
+
+.location-link {
+  color: rgba(0, 0, 0, 0.8);
+}
+
+a.location-link:hover {
+  text-decoration: none;
+  font-weight: 700;
+  color: rgba(0, 0, 0, 1) !important;
+}
+
+.infoWindow-content:hover {
+  cursor: pointer;
+}
+
+.gm-style-iw {
+  padding: 0 !important;
+}
+
+.gm-style-iw-d {
+  display: contents !important;
+}
+
+.gm-style-iw > button {
+  display: none !important;
+}
+
+.location-link-container {
+  width: 200px;
+}

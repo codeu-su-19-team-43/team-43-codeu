@@ -58,8 +58,8 @@ function buildNavigationLinks() {
   const links = [
     createLinkListItem('/', 'Home'),
     createLinkListItem('/feed.html', 'Feed'),
+    createLinkListItem('/universe.html', 'Universe'),
     createLinkListItem('/community.html', 'Community'),
-    createLinkListItem('/google-map.html', 'Map'),
     createLinkListItem('/charts.html', 'Charts'),
     createLinkListItem('/aboutus.html', 'About Us'),
   ];
