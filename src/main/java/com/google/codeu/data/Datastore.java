@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 public class Datastore {
 
   private DatastoreService datastore;
+  private static final int MAP_IMAGE_MIN_LIKE_FAV_COUNT = 1;
 
   public Datastore() {
     datastore = DatastoreServiceFactory.getDatastoreService();
@@ -515,15 +516,26 @@ public class Datastore {
     List<MapLocation> locations = new ArrayList<>();
     while (locations.size() < Math.min(count, allLocations.size())) {
       MapLocation newLocation = allLocations.get(new Random().nextInt(allLocations.size()));
-      if (!locations.stream().map(MapLocation::getLocation).collect(Collectors.toList()).contains(newLocation.getLocation()))
+      List<UUID> newMessageIds = newLocation.getMessageIds();
+      Message newMessage = null;
+      try {
+        newMessage = getMessage(newMessageIds.get(new Random().nextInt(newMessageIds.size())).toString());
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
+      if (!locations.stream().map(MapLocation::getLocation).collect(Collectors.toList()).contains(newLocation.getLocation()) &&
+          ((newMessage.getFavouritedUserEmails() != null && newMessage.getFavouritedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT) |
+              (newMessage.getLikedUserEmails() != null && newMessage.getLikedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT))) {
+        newLocation.setMessageIds(Arrays.asList(newMessage.getId()));
         locations.add(newLocation);
+      }
     }
     return locations;
   }
 
   /** Fetches markers from Datastore. */
   public List<MapLocation> getMapLocations() {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query = new Query("MapLocation");
     PreparedQuery results = datastore.prepare(query);
 
