@@ -2,6 +2,31 @@
   display: none;
 }
 
+.user-image-link:hover {
+  text-decoration: none !important;
+}
+
+.user-image {
+  object-fit: cover;
+  width: 45px;
+  height: 45px;
+}
+
+a.username-link:hover {
+  text-decoration: none !important;
+  color: black;
+}
+
+.username-link {
+  color: rgba(0, 0, 0, 0.8);
+  font-size: 1.2em;
+  font-weight: 500;
+}
+
+.time-location-text {
+  line-height: 0.9em;
+}
+
 .card-footer > a > .tag-button {
   line-height: normal;
   font-size: small;
@@ -18,17 +43,6 @@
 .imageLandmark-container {
   line-height: 1em;
   font-size: 80%;
-}
-
-.card-body > a:hover {
-  text-decoration: none !important;
-  color: black;
-}
-
-.username-link {
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 1.2em;
-  font-weight: 500;
 }
 
 .comment-input-container {

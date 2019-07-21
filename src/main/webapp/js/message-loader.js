@@ -11,6 +11,17 @@ function fetchUserEmail() {
   $.ajaxSetup({ async: true });
 }
 
+async function getUserProfileUrl(email) {
+  if (email === null || email === undefined || email === '') {
+    return Promise.resolve('./images/default-user-profile/1.jpg');
+  }
+
+  const url = `/user-profile?user=${email}`;
+  return fetch(url)
+    .then(response => response.json())
+    .then(user => user.profileImageUrl);
+}
+
 fetchUserEmail();
 
 function getUsername(email) {
@@ -166,16 +177,33 @@ function buildInfoDiv(message) {
   return { infoDiv, translateResult };
 }
 
-function buildUsernameDiv(message) {
+function buildUserNameLink(user) {
   const usernameLink = document.createElement('a');
-  usernameLink.classList.add('card-title', 'mb-0', 'username-link');
-  usernameLink.id = 'username';
+  usernameLink.classList.add('username-link');
 
-  getUsername(message.user).then((username) => {
+  getUsername(user).then((username) => {
     usernameLink.innerHTML = username;
-    usernameLink.href = `/user-page.html?user=${username}`;
+    usernameLink.href = `/user-page.html?user=${user}`;
   });
+
   return usernameLink;
+}
+
+function buildUserImage(user) {
+  const userImageLink = document.createElement('a', 'user-image-link');
+  userImageLink.classList.add('mr-2');
+
+  const userImage = document.createElement('img');
+  userImage.classList.add('user-image', 'rounded-circle');
+
+  getUserProfileUrl(user).then((userProfileImageUrl) => {
+    userImage.src = userProfileImageUrl;
+    userImageLink.href = `/user-page.html?user=${user}`;
+  });
+
+  userImageLink.appendChild(userImage);
+
+  return userImageLink;
 }
 
 function getHourDiffFromNow(timeStamp) {
@@ -194,25 +222,58 @@ function getTimeText(timestamp) {
       : moment(timestamp).format('ll');
 }
 
-function buildTimeDiv(timestamp) {
-  const timeDiv = document.createElement('p');
-  timeDiv.classList.add('card-text', 'mb-0');
-
-  const timeText = document.createElement('small');
+function buildTimeText(timestamp) {
+  const timeText = document.createElement('span');
   timeText.classList.add('text-muted');
 
   timeText.innerHTML = getTimeText(timestamp);
-
-  timeDiv.appendChild(timeText);
-  return timeDiv;
+  return timeText;
 }
 
-function buildLandmarkDiv(message) {
-  const landmarkDiv = document.createElement('div');
-  landmarkDiv.classList.add('mb-2', 'imageLandmark-container');
-  landmarkDiv.innerHTML = `<a href="/feed.html?searchLabel=${message.imageLandmark.toLowerCase()}" class="card-text">${message.imageLandmark}</a>`;
-  return landmarkDiv;
+function buildLandmarkText(imageLandmark) {
+  const landmarkText = document.createElement('span');
+  landmarkText.classList.add('my-auto');
+
+  const dot = document.createElement('span');
+  dot.innerHTML = ' · ';
+
+  const landmarkLink = document.createElement('a');
+  landmarkLink.classList.add('landmark-link');
+  landmarkLink.href = `/feed.html?searchLabel=${imageLandmark.toLowerCase()}`;
+  landmarkLink.innerHTML = imageLandmark;
+
+  landmarkText.appendChild(dot);
+  landmarkText.appendChild(landmarkLink);
+  return landmarkText;
 }
+
+function buildTimeLocationDiv(message) {
+  const timeLocationDiv = document.createElement('small');
+  timeLocationDiv.classList.add('time-location-text', 'mb-0', 'd-block');
+
+  timeLocationDiv.appendChild(buildTimeText(message.timestamp));
+
+  if (message.imageLandmark != null && message.imageLandmark !== '') {
+    timeLocationDiv.appendChild(buildLandmarkText(message.imageLandmark));
+  }
+
+  return timeLocationDiv;
+}
+
+function buildMessageHeaderDiv(message) {
+  const usernameDiv = document.createElement('li');
+  usernameDiv.classList.add('media', 'pb-3');
+
+  const mediaBody = document.createElement('div');
+  mediaBody.classList.add('media-body');
+  mediaBody.appendChild(buildUserNameLink(message.user));
+  mediaBody.appendChild(buildTimeLocationDiv(message));
+
+  usernameDiv.appendChild(buildUserImage(message.user));
+  usernameDiv.appendChild(mediaBody);
+  return usernameDiv;
+}
+
 
 function buildTextDiv(message) {
   const textDiv = document.createElement('p');
@@ -452,21 +513,10 @@ function enablePostButton(commentInputTextArea, messageId) {
   });
 }
 
-function getUserProfileUrl(email) {
-  if (email === null || email === undefined || email === '') {
-    return Promise.resolve('./images/default-user-profile/1.jpg');
-  }
-
-  const url = `/user-profile?user=${email}`;
-  return fetch(url)
-    .then(response => response.json())
-    .then(user => user.profileImageUrl);
-}
-
 function buildCommentInput(messageId) {
   return getUserProfileUrl(userEmail).then((userProfileImageUrl) => {
     const commentFormHtml = `<li class="media">
-                              <div class="mr-3 my-2" href="#">
+                              <div class="mr-3 my-2">
                                 <img src="${userProfileImageUrl}" class="comment-image rounded-circle" alt="...">
                               </div>
                               <div class="media-body">
@@ -624,14 +674,9 @@ function buildCommentDiv(messageId) {
 
 function buildCardBodyDiv(message) {
   const cardBody = document.createElement('div');
-  cardBody.classList.add('card-body', 'pb-0', 'px-3');
+  cardBody.classList.add('card-body', 'pb-0', 'px-3', 'pt-3');
 
-  cardBody.appendChild(buildUsernameDiv(message));
-  cardBody.appendChild(buildTimeDiv(message.timestamp));
-
-  if (message.imageLandmark != null && message.imageLandmark !== '') {
-    cardBody.appendChild(buildLandmarkDiv(message));
-  }
+  cardBody.appendChild(buildMessageHeaderDiv(message));
 
   cardBody.appendChild(buildTextDiv(message));
 
