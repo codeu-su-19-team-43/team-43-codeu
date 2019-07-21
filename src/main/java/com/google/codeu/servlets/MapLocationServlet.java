@@ -31,7 +31,14 @@ public class MapLocationServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("application/json");
 
-    List<com.google.codeu.data.MapLocation> mapLocations = datastore.getMapLocations();
+    String count = request.getParameter("count");
+
+    List<com.google.codeu.data.MapLocation> mapLocations;
+    if (count == null) {
+      mapLocations = datastore.getMapLocations();
+    } else {
+      mapLocations = datastore.getMapLocations(Integer.parseInt(count));
+    }
     Gson gson = new Gson();
     String json = gson.toJson(mapLocations);
 

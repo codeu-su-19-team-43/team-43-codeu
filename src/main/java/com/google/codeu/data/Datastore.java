@@ -32,7 +32,9 @@ import com.google.codeu.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Provides access to the data stored in Datastore.
@@ -505,6 +507,18 @@ public class Datastore {
     }
 
     return sentimentScores;
+  }
+
+  /** Fetches markers from Datastore for a given count. */
+  public List<MapLocation> getMapLocations(int count) {
+    List<MapLocation> allLocations = getMapLocations();
+    List<MapLocation> locations = new ArrayList<>();
+    while (locations.size() < Math.min(count, allLocations.size())) {
+      MapLocation newLocation = allLocations.get(new Random().nextInt(allLocations.size()));
+      if (!locations.stream().map(MapLocation::getLocation).collect(Collectors.toList()).contains(newLocation.getLocation()))
+        locations.add(newLocation);
+    }
+    return locations;
   }
 
   /** Fetches markers from Datastore. */
