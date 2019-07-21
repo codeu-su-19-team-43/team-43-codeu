@@ -26,3 +26,7 @@ a:hover {
   font-weight: 500;
   color: rgba(0, 0, 0, 1) !important;
 }
+
+.infoWindow-content:hover {
+  cursor: pointer;
+}

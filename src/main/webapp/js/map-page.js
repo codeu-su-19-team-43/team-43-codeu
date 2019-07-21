@@ -1,3 +1,5 @@
+let infoWindowZIndex = 10;
+
 async function fetchImageUrl(messageId) {
   return fetch(`/message?messageId=${messageId}`)
     .then(response => response.json())
@@ -14,6 +16,7 @@ function buildMapImage(imageUrl, infoWindow, map) {
 // Builds and returns HTML elements that show an editable textbox and a submit button
 function buildInfoWindowInput(location, imageUrl, infoWindow, map) {
   const containerDiv = document.createElement('div');
+  containerDiv.classList.add('infoWindow-content');
   // containerDiv.classList.add('d-inline-grid');
   containerDiv.innerHTML = buildMapImage(imageUrl, infoWindow, map);
   containerDiv.innerHTML += `<div class="text-center mt-2 mb-0">
@@ -21,6 +24,11 @@ function buildInfoWindowInput(location, imageUrl, infoWindow, map) {
                                 ${location}
                               </a>
                             </div>`;
+
+  containerDiv.onclick = () => {
+    infoWindowZIndex += 1;
+    infoWindow.setZIndex(infoWindowZIndex);
+  };
   return containerDiv;
 }
 
@@ -28,11 +36,11 @@ function buildInfoWindowInput(location, imageUrl, infoWindow, map) {
 async function createInfoWindows(map, lat, lng, location, imageUrl) {
   // eslint-disable-next-line no-undef
   const infoWindow = new google.maps.InfoWindow({
-    // content: buildInfoWindowInput(location, imageUrl),
     disableAutoPan: true,
   });
   infoWindow.setContent(buildInfoWindowInput(location, imageUrl, infoWindow, map));
   infoWindow.setPosition({ lat, lng });
+
   return infoWindow;
 }
 
@@ -62,6 +70,7 @@ function centerMap(map) {
           lng: position.coords.longitude,
         };
         map.setCenter(pos);
+        map.setZoom(3);
       },
       () => {
         handleLocationError(map, true, infoWindow, map.getCenter());
@@ -80,14 +89,14 @@ function createMap() {
       lat: 1.3483,
       lng: 103.681,
     },
-    zoom: 4,
+    zoom: 3,
   });
 
   centerMap(map);
   fetchLocations().then((locations) => {
     locations.forEach((location) => {
       fetchImageUrl(location.messageIds[0])
-        .then(imageUrl => createInfoWindows(map, location.lat, 
+        .then(imageUrl => createInfoWindows(map, location.lat,
           location.lng, location.location, imageUrl));
     });
   });
