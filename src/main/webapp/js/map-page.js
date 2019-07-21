@@ -1,50 +1,44 @@
-function buildMapImage(messageId) {
-  return `<div class="map-image-container">
-            <img id="map-image-${messageId}" 
-                 class="map-image border" 
-                 src="images//images/placeholder.png" />
-          </div>`;
+async function fetchImageUrl(messageId) {
+  return fetch(`/message?messageId=${messageId}`)
+    .then(response => response.json())
+    .then(message => message.imageUrl);
+}
+
+function buildMapImage(imageUrl, infoWindow, map) {
+  return `<img
+            src=${imageUrl}
+            class="map-image border"
+            onload="${infoWindow.open(map)}"/>`;
 }
 
 // Builds and returns HTML elements that show an editable textbox and a submit button
-function buildInfoWindowInput(location, messagIds) {
+function buildInfoWindowInput(location, imageUrl, infoWindow, map) {
   const containerDiv = document.createElement('div');
-
-  const messageId = messagIds[0];
-  containerDiv.innerHTML = buildMapImage(messageId);
-  containerDiv.innerHTML += `<p class="text-center mt-2 mb-0">${location}</p>`;
+  // containerDiv.classList.add('d-inline-grid');
+  containerDiv.innerHTML = buildMapImage(imageUrl, infoWindow, map);
+  containerDiv.innerHTML += `<div class="text-center mt-2 mb-0">
+                              <a class="location-link" href="/feed.html?searchLabel=${location.toLowerCase()}">
+                                ${location}
+                              </a>
+                            </div>`;
   return containerDiv;
 }
 
 // Creates a marker that shows a read-only info window when clicked
-function createInfoWindows(map, lat, lng, location, messagIds) {
+async function createInfoWindows(map, lat, lng, location, imageUrl) {
   // eslint-disable-next-line no-undef
   const infoWindow = new google.maps.InfoWindow({
-    content: buildInfoWindowInput(location, messagIds),
+    // content: buildInfoWindowInput(location, imageUrl),
     disableAutoPan: true,
   });
+  infoWindow.setContent(buildInfoWindowInput(location, imageUrl, infoWindow, map));
   infoWindow.setPosition({ lat, lng });
-  infoWindow.open(map);
-
-  // marker.addListener('click', () => {
-  //   infoWindow.open(map, marker);
-  // });
-
-  // marker.addListener('click', () => {
-  //   toggleBounce(marker);
-  // });
+  return infoWindow;
 }
 
 // Fetches markers from the backend and adds them to the map
-function fetchLocations(map) {
-  fetch('/mapLocations')
-    .then(response => response.json())
-    .then((locations) => {
-      locations.forEach((location) => {
-        createInfoWindows(map, location.lat, location.lng,
-          location.location, location.messageIds);
-      });
-    });
+async function fetchLocations() {
+  return fetch('/mapLocations').then(response => response.json());
 }
 
 function handleLocationError(map, browserHasGeolocation, infoWindow, pos) {
@@ -90,8 +84,13 @@ function createMap() {
   });
 
   centerMap(map);
-
-  fetchLocations(map);
+  fetchLocations().then((locations) => {
+    locations.forEach((location) => {
+      fetchImageUrl(location.messageIds[0])
+        .then(imageUrl => createInfoWindows(map, location.lat, 
+          location.lng, location.location, imageUrl));
+    });
+  });
 }
 
 // eslint-disable-next-line no-unused-vars

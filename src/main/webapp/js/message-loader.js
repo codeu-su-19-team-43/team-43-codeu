@@ -210,7 +210,7 @@ function buildTimeDiv(timestamp) {
 function buildLandmarkDiv(message) {
   const landmarkDiv = document.createElement('div');
   landmarkDiv.classList.add('mb-2', 'imageLandmark-container');
-  landmarkDiv.innerHTML = `<a href="#" class="card-text">${message.imageLandmark}</a>`;
+  landmarkDiv.innerHTML = `<a href="/feed.html?searchLabel=${message.imageLandmark.toLowerCase()}" class="card-text">${message.imageLandmark}</a>`;
   return landmarkDiv;
 }
 
@@ -243,7 +243,7 @@ function buildImageDiv(message) {
   let labelHtml = '<div id="image-label-container" class="card-footer p-1 border-top-0 image-label-container hidden">';
   // eslint-disable-next-line no-return-assign
   message.imageLabels.map(imageLabel => labelHtml
-    += `<a href="/feed.html?imageLabel=${imageLabel.toLowerCase()}">
+    += `<a href="/feed.html?searchLabel=${imageLabel.toLowerCase()}">
             <button type="button" class="btn btn-outline-light m-1 p-1 font-weight-lighter tag-button">
               ${imageLabel}
             </button>
