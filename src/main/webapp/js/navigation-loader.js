@@ -59,7 +59,7 @@ function buildNavigationLinks() {
     createLinkListItem('/', 'Home'),
     createLinkListItem('/feed.html', 'Feed'),
     createLinkListItem('/community.html', 'Community'),
-    createLinkListItem('/map.html', 'Map'),
+    createLinkListItem('/universe.html', 'Universe'),
     createLinkListItem('/charts.html', 'Charts'),
     createLinkListItem('/aboutus.html', 'About Us'),
   ];
