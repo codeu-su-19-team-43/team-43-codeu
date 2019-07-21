@@ -8,9 +8,6 @@
 
 .shuffle-button:hover {
   color: rgb(15, 111, 126);
-}
-
-.shuffle-button:hover {
   cursor: pointer;
 }
 

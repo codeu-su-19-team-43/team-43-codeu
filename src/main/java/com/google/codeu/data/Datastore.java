@@ -519,14 +519,21 @@ public class Datastore {
       List<UUID> newMessageIds = newLocation.getMessageIds();
       Message newMessage = null;
       try {
-        newMessage = getMessage(newMessageIds.get(new Random().nextInt(newMessageIds.size())).toString());
+        newMessage = getMessage(newMessageIds
+            .get(new Random().nextInt(newMessageIds.size())).toString());
       } catch (Exception e) {
         e.printStackTrace();
       }
 
-      if (!locations.stream().map(MapLocation::getLocation).collect(Collectors.toList()).contains(newLocation.getLocation()) &&
-          ((newMessage.getFavouritedUserEmails() != null && newMessage.getFavouritedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT) |
-              (newMessage.getLikedUserEmails() != null && newMessage.getLikedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT))) {
+      if (!locations.stream()
+          .map(MapLocation::getLocation)
+          .collect(Collectors.toList())
+          .contains(newLocation.getLocation())
+          &&
+          ((newMessage.getFavouritedUserEmails() != null
+          && newMessage.getFavouritedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT)
+          | (newMessage.getLikedUserEmails() != null
+          && newMessage.getLikedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT))) {
         newLocation.setMessageIds(Arrays.asList(newMessage.getId()));
         locations.add(newLocation);
       }

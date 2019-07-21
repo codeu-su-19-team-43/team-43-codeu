@@ -21,7 +21,7 @@ public class MapLocation {
   private List<UUID> messageIds;
 
   /**
-   * Constructs a new {@link MapLocation}
+   * Constructs a new {@link MapLocation}.
    * Generates a random ID
    */
   public MapLocation(String location, double lat, double lng) {

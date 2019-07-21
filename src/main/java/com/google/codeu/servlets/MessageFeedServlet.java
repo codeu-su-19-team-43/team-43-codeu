@@ -46,11 +46,10 @@ public class MessageFeedServlet extends HttpServlet {
           .filter(message -> message.getImageLabels() != null)
           .filter(message -> message.getImageLabels().stream()
                   .anyMatch(imageLabel -> Arrays.asList(searchLabels)
-                            .contains(imageLabel.toLowerCase())) |
-                  (
-                      message.getImageLandmark() != null
-                          && Arrays.asList(searchLabels)
-                              .contains(message.getImageLandmark().toLowerCase())))
+                            .contains(imageLabel.toLowerCase()))
+              | (message.getImageLandmark() != null
+              && Arrays.asList(searchLabels)
+              .contains(message.getImageLandmark().toLowerCase())))
           .collect(Collectors.toList());
     }
 
