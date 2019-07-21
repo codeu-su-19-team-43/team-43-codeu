@@ -167,15 +167,15 @@ function buildInfoDiv(message) {
 }
 
 function buildUsernameDiv(message) {
-  const usernameDiv = document.createElement('h5');
-  usernameDiv.classList.add('card-title', 'mb-0');
-  usernameDiv.id = 'username';
+  const usernameLink = document.createElement('a');
+  usernameLink.classList.add('card-title', 'mb-0', 'username-link');
+  usernameLink.id = 'username';
 
   getUsername(message.user).then((username) => {
-    usernameDiv.innerHTML = username;
+    usernameLink.innerHTML = username;
+    usernameLink.href = `/user-page.html?user=${username}`;
   });
-
-  return usernameDiv;
+  return usernameLink;
 }
 
 function getHourDiffFromNow(timeStamp) {
@@ -244,10 +244,10 @@ function buildImageDiv(message) {
   // eslint-disable-next-line no-return-assign
   message.imageLabels.map(imageLabel => labelHtml
     += `<a href="/feed.html?searchLabel=${imageLabel.toLowerCase()}">
-            <button type="button" class="btn btn-outline-light m-1 p-1 font-weight-lighter tag-button">
-              ${imageLabel}
-            </button>
-          </a>`);
+          <button type="button" class="btn btn-outline-light m-1 p-1 font-weight-lighter tag-button">
+            ${imageLabel}
+          </button>
+        </a>`);
   labelHtml += '</div>';
   imageDivHtml += labelHtml;
 
@@ -466,36 +466,36 @@ function getUserProfileUrl(email) {
 function buildCommentInput(messageId) {
   return getUserProfileUrl(userEmail).then((userProfileImageUrl) => {
     const commentFormHtml = `<li class="media">
-                            <a class="mr-3 my-2" href="#">
-                              <img src="${userProfileImageUrl}" class="comment-image rounded-circle" alt="...">
-                            </a>
-                            <div class="media-body">
-                              <div id="comment-input-container" class="comment-input-container">
-                                <div class="input-group input-group-sm mt-2">
-                                  <textarea
-                                    name="comment-input-textarea-${messageId}"
-                                    id="comment-input-textarea-${messageId}"
-                                    class=form-control
-                                    type=text
-                                    placeholder="Add a comment"
-                                    onblur="this.placeholder='Add a comment'"
-                                    onfocus="this.placeholder=''"
-                                    onkeyup="autoGrow(this)"
-                                    oninput="enablePostButton(this, '${messageId}')"
-                                    ></textarea>
-                                  <div class="input-group-append">
-                                    <button class="btn btn-light comment-post-button border" 
-                                            disabled="true"
-                                            type="button" 
-                                            id="comment-post-button-${messageId}"
-                                            onclick="onClickCommentPostButton('${messageId}');">
-                                            Post
-                                    </button>
+                              <div class="mr-3 my-2" href="#">
+                                <img src="${userProfileImageUrl}" class="comment-image rounded-circle" alt="...">
+                              </div>
+                              <div class="media-body">
+                                <div id="comment-input-container" class="comment-input-container">
+                                  <div class="input-group input-group-sm mt-2">
+                                    <textarea
+                                      name="comment-input-textarea-${messageId}"
+                                      id="comment-input-textarea-${messageId}"
+                                      class=form-control
+                                      type=text
+                                      placeholder="Add a comment"
+                                      onblur="this.placeholder='Add a comment'"
+                                      onfocus="this.placeholder=''"
+                                      onkeyup="autoGrow(this)"
+                                      oninput="enablePostButton(this, '${messageId}')"
+                                      ></textarea>
+                                    <div class="input-group-append">
+                                      <button class="btn btn-light comment-post-button border" 
+                                              disabled="true"
+                                              type="button" 
+                                              id="comment-post-button-${messageId}"
+                                              onclick="onClickCommentPostButton('${messageId}');">
+                                              Post
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
-                            </div>
-                          </li>`;
+                            </li>`;
     return commentFormHtml;
   });
 }
@@ -520,7 +520,7 @@ function buildCommentSentimentIndicator(sentimentScore) {
           </span>`;
 }
 
-function buildCommentItem(comment) {
+async function buildCommentItem(comment) {
   return getUsername(comment.user).then(username => getUserProfileUrl(comment.user)
     .then((userProfileUrl) => {
       const commentHtml = `<li class="media">
@@ -545,7 +545,7 @@ function buildCommentItem(comment) {
     }));
 }
 
-function buildCommentHtml(messageId) {
+async function buildCommentHtml(messageId) {
   let commentHtml = `<ul class="list-unstyled comment-list mb-0" id="comment-list-${messageId}">`;
 
   return buildCommentInput(messageId).then((commentInput) => {
