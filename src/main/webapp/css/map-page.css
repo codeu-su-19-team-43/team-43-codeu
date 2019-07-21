@@ -7,6 +7,10 @@
 }
 
 .shuffle-button:hover {
+  color: rgb(15, 111, 126);
+}
+
+.shuffle-button:hover {
   cursor: pointer;
 }
 
@@ -25,16 +29,28 @@
   height: 200px;
 }
 
-.location-link{
+.location-link {
   color: rgba(0, 0, 0, 0.8);
 }
 
 a:hover {
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 700;
   color: rgba(0, 0, 0, 1) !important;
 }
 
 .infoWindow-content:hover {
   cursor: pointer;
+}
+
+.gm-style-iw {
+  padding: 0 !important;
+}
+
+.gm-style-iw-d {
+  display: contents !important;
+}
+
+.gm-style-iw > button {
+  display: none !important;
 }

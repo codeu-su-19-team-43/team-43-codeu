@@ -1,4 +1,4 @@
-const LOCATION_COUNT = 2;
+const LOCATION_COUNT = 5;
 let infoWindows = [];
 let infoWindowZIndex = 10;
 let map;
@@ -19,7 +19,7 @@ function buildMapImage(imageUrl, infoWindow) {
 // Builds and returns HTML elements that show an editable textbox and a submit button
 function buildInfoWindowInput(location, imageUrl, infoWindow) {
   const containerDiv = document.createElement('div');
-  containerDiv.classList.add('infoWindow-content');
+  containerDiv.classList.add('infoWindow-content', 'p-3');
   // containerDiv.classList.add('d-inline-grid');
   containerDiv.innerHTML = buildMapImage(imageUrl, infoWindow);
   containerDiv.innerHTML += `<div class="text-center mt-2 mb-0">
