@@ -54,3 +54,7 @@ a.location-link:hover {
 .gm-style-iw > button {
   display: none !important;
 }
+
+.location-link-container {
+  width: 200px;
+}
