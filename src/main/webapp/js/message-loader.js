@@ -11,7 +11,7 @@ function fetchUserEmail() {
   $.ajaxSetup({ async: true });
 }
 
-async function getUserProfileUrl(email) {
+function getUserProfileUrl(email) {
   if (email === null || email === undefined || email === '') {
     return Promise.resolve('./images/default-user-profile/1.jpg');
   }
@@ -571,7 +571,7 @@ function buildCommentSentimentIndicator(sentimentScore) {
           </span>`;
 }
 
-async function buildCommentItem(comment) {
+function buildCommentItem(comment) {
   return getUsername(comment.user).then(username => getUserProfileUrl(comment.user)
     .then((userProfileUrl) => {
       const commentHtml = `<li class="media">
@@ -596,7 +596,7 @@ async function buildCommentItem(comment) {
     }));
 }
 
-async function buildCommentHtml(messageId) {
+function buildCommentHtml(messageId) {
   let commentHtml = `<ul class="list-unstyled comment-list mb-0" id="comment-list-${messageId}">`;
 
   return buildCommentInput(messageId).then((commentInput) => {
@@ -782,7 +782,7 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderContent, sortCriteria
 
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
-async function fetchMessagesByUser(parameterUsername) {
+function fetchMessagesByUser(parameterUsername) {
   buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
     'Your gallery is empty. <br> Post your first photo and share about its story!');
   buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
