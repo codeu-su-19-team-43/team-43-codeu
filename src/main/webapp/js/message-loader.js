@@ -239,8 +239,9 @@ function buildLandmarkText(imageLandmark) {
 
   const landmarkLink = document.createElement('a');
   landmarkLink.classList.add('landmark-link');
-  landmarkLink.href = `/feed.html?searchLabel=${imageLandmark.toLowerCase()}`;
+  landmarkLink.href = `https://www.google.com/maps/place/${imageLandmark.toLowerCase()}`;
   landmarkLink.innerHTML = imageLandmark;
+  landmarkLink.target = '_blank';
 
   landmarkText.appendChild(dot);
   landmarkText.appendChild(landmarkLink);
@@ -249,7 +250,7 @@ function buildLandmarkText(imageLandmark) {
 
 function buildTimeLocationDiv(message) {
   const timeLocationDiv = document.createElement('small');
-  timeLocationDiv.classList.add('time-location-text', 'mb-0', 'd-block');
+  timeLocationDiv.classList.add('time-location-text', 'mb-0', 'd-block', 'mt-1');
 
   timeLocationDiv.appendChild(buildTimeText(message.timestamp));
 
