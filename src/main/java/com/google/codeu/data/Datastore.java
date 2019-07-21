@@ -164,14 +164,20 @@ public class Datastore {
       message.setCommentIds(Util.convertStringsToUuids(
               (List<String>) entity.getProperty("commentIdsAsStrings")
       ));
+    } else {
+      message.setCommentIds(new ArrayList<>());
     }
 
     if (entity.hasProperty("favouritedUserEmails")) {
       message.setFavouritedUserEmails((List<String>) entity.getProperty("favouritedUserEmails"));
+    } else {
+      message.setFavouritedUserEmails(new ArrayList<>());
     }
 
     if (entity.hasProperty("likedUserEmails")) {
       message.setLikedUserEmails((List<String>) entity.getProperty("likedUserEmails"));
+    } else {
+      message.setLikedUserEmails(new ArrayList<>());
     }
 
     return message;
