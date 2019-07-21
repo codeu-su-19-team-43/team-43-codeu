@@ -1,4 +1,7 @@
+const LOCATION_COUNT = 2;
+let infoWindows = [];
 let infoWindowZIndex = 10;
+let map;
 
 async function fetchImageUrl(messageId) {
   return fetch(`/message?messageId=${messageId}`)
@@ -6,7 +9,7 @@ async function fetchImageUrl(messageId) {
     .then(message => message.imageUrl);
 }
 
-function buildMapImage(imageUrl, infoWindow, map) {
+function buildMapImage(imageUrl, infoWindow) {
   return `<img
             src=${imageUrl}
             class="map-image border"
@@ -14,11 +17,11 @@ function buildMapImage(imageUrl, infoWindow, map) {
 }
 
 // Builds and returns HTML elements that show an editable textbox and a submit button
-function buildInfoWindowInput(location, imageUrl, infoWindow, map) {
+function buildInfoWindowInput(location, imageUrl, infoWindow) {
   const containerDiv = document.createElement('div');
   containerDiv.classList.add('infoWindow-content');
   // containerDiv.classList.add('d-inline-grid');
-  containerDiv.innerHTML = buildMapImage(imageUrl, infoWindow, map);
+  containerDiv.innerHTML = buildMapImage(imageUrl, infoWindow);
   containerDiv.innerHTML += `<div class="text-center mt-2 mb-0">
                               <a class="location-link" href="/feed.html?searchLabel=${location.toLowerCase()}">
                                 ${location}
@@ -33,12 +36,12 @@ function buildInfoWindowInput(location, imageUrl, infoWindow, map) {
 }
 
 // Creates a marker that shows a read-only info window when clicked
-async function createInfoWindows(map, lat, lng, location, imageUrl) {
+function createInfoWindows(lat, lng, location, imageUrl) {
   // eslint-disable-next-line no-undef
   const infoWindow = new google.maps.InfoWindow({
     disableAutoPan: true,
   });
-  infoWindow.setContent(buildInfoWindowInput(location, imageUrl, infoWindow, map));
+  infoWindow.setContent(buildInfoWindowInput(location, imageUrl, infoWindow));
   infoWindow.setPosition({ lat, lng });
 
   return infoWindow;
@@ -46,60 +49,40 @@ async function createInfoWindows(map, lat, lng, location, imageUrl) {
 
 // Fetches markers from the backend and adds them to the map
 async function fetchLocations() {
-  return fetch('/mapLocations').then(response => response.json());
+  return fetch(`/mapLocations?count=${LOCATION_COUNT}`).then(response => response.json());
 }
 
-function handleLocationError(map, browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation
-    ? 'Error: The Geolocation service failed.'
-    : "Error: Your browser doesn't support geolocation.");
-  infoWindow.open(map);
-}
-
-function centerMap(map) {
-  // eslint-disable-next-line no-undef
-  const infoWindow = new google.maps.InfoWindow();
-
-  // Try HTML5 geolocation.
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const pos = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        };
-        map.setCenter(pos);
-        map.setZoom(3);
-      },
-      () => {
-        handleLocationError(map, true, infoWindow, map.getCenter());
-      },
-    );
-  } else {
-    // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
-  }
+function displayLocations() {
+  fetchLocations().then((locations) => {
+    locations.forEach((location) => {
+      fetchImageUrl(location.messageIds[0])
+        .then(imageUrl => infoWindows.push(createInfoWindows(location.lat,
+          location.lng, location.location, imageUrl)));
+    });
+  });
 }
 
 function createMap() {
   // eslint-disable-next-line no-undef
-  const map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById('map'), {
     center: {
-      lat: 1.3483,
-      lng: 103.681,
+      lat: 15,
+      lng: 0,
     },
-    zoom: 3,
+    zoom: 2,
   });
 
-  centerMap(map);
-  fetchLocations().then((locations) => {
-    locations.forEach((location) => {
-      fetchImageUrl(location.messageIds[0])
-        .then(imageUrl => createInfoWindows(map, location.lat,
-          location.lng, location.location, imageUrl));
-    });
-  });
+  displayLocations();
+}
+
+async function removeInfowindows() {
+  infoWindows.forEach(info => info.close());
+  infoWindows = [];
+}
+
+// eslint-disable-next-line no-unused-vars
+function onClickShuffleButton() {
+  removeInfowindows().then(displayLocations());
 }
 
 // eslint-disable-next-line no-unused-vars
