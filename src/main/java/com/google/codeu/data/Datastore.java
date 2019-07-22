@@ -523,12 +523,13 @@ public class Datastore {
     while (locations.size() < Math.min(count, allLocations.size())) {
       MapLocation newLocation = allLocations.get(new Random().nextInt(allLocations.size()));
       List<UUID> newMessageIds = newLocation.getMessageIds();
-      Message newMessage = null;
+      Message newMessage;
       try {
         newMessage = getMessage(newMessageIds
             .get(new Random().nextInt(newMessageIds.size())).toString());
       } catch (Exception e) {
         e.printStackTrace();
+        continue;
       }
 
       if (!locations.stream()
