@@ -18,47 +18,16 @@
     <script type="text/javascript" src="js/feed-page-loader.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrMAbbdB_aWldH5uEIQ6Nu2SdPjPWFNo8&libraries=places&callback=initMap" async defer></script>
     <script>
-      function js_Load() {
-        document.body.style.visibility = "visible";
-      }
-    </script>
-    <script>
-      function cleanWindowLocation(windowLocation) {
-        return windowLocation.replace("\?&", "?").replace(/\?$/, "");
-      }
-
-      function checkUniqueSearchLabel(label) {
-        const parameterSearchLabels = urlParams.getAll("searchLabel");
-        if (parameterSearchLabels.indexOf(label) > -1) {
-          return false;
-        }
-        return true;
-      }
-
-      function onClickSearchButton() {
-        const searchLabel = document.getElementById("search-input").value.toLowerCase();
-        if (checkUniqueSearchLabel(searchLabel)) {
-          let redirectLocation = window.location.href;
-          const parameterLabels = urlParams.getAll("searchLabel");
-          redirectLocation += redirectLocation.includes("?") ? "&" : "?";
-          redirectLocation += `searchLabel=${searchLabel}`;
-          window.location.replace(cleanWindowLocation(redirectLocation));
-        } else {
-          document.getElementById("search-input").value = "";
-        }
-      }
-
-      function onClickSearchLabelCancelButton(searchLabel) {
-        let redirectLocation = cleanWindowLocation(window.location.href.replace(new RegExp(`&?searchLabel=${searchLabel}`, "g"), ""));
-        window.location.replace(redirectLocation);
-      }
-
       function initMap() {
         var input = document.getElementById("search-input");
         var autocomplete = new google.maps.places.Autocomplete(input);
         autocomplete.addListener("place_changed", function() {
           var place = autocomplete.getPlace();
         });
+      }
+      
+      function js_Load() {
+        document.body.style.visibility = "visible";
       }
     </script>
   </head>
