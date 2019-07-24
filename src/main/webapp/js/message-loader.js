@@ -782,7 +782,7 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderContent, sortCriteria
 
 /** Fetches messages by user of current page  add them to the page. */
 // eslint-disable-next-line no-unused-vars
-async function fetchMessagesByUser(parameterUsername) {
+function fetchMessagesByUser(parameterUsername) {
   buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
     'Your gallery is empty. <br> Post your first photo and share about its story!');
   buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
