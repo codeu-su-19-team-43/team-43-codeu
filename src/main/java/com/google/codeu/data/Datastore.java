@@ -542,7 +542,9 @@ public class Datastore {
         count -= 1;
       }
 
-      if (count == 0) break;
+      if (count == 0) {
+        break;
+      }
     }
 
     return locations;
