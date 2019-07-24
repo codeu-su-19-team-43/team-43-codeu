@@ -180,23 +180,15 @@ function fetchProfileImage() {
     });
 }
 
-async function buildInputTextEditor() {
-  const config = {
-    removePlugins: ['ImageUpload', 'Heading'],
-    toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|'],
-  };
-
-  // eslint-disable-next-line no-undef
-  ClassicEditor.create(document.getElementById('message-input'), config);
-}
-
 // eslint-disable-next-line no-unused-vars
 function fetchBlobstoreUrlAndShowMessageForm() {
   fetch('/blobstore-upload-url?form=user-messages')
     .then(response => response.text())
     .then((imageUploadUrl) => {
-      document.getElementById('message-form').action = imageUploadUrl;
-    }).then(buildInputTextEditor().then(document.getElementById('message-form').classList.remove('hidden')));
+      const messageForm = document.getElementById('message-form');
+      messageForm.action = imageUploadUrl;
+      messageForm.classList.remove('hidden');
+    });
 }
 
 /**
@@ -268,6 +260,16 @@ function fetchUserProfile() {
   });
 }
 
+function buildInputTextEditor() {
+  const config = {
+    removePlugins: ['ImageUpload', 'Heading'],
+    toolbar: ['bold', '|', 'italic', '|', 'bulletedList', '|', 'numberedList', '|', 'blockQuote', '|', 'Link', '|', 'undo', '|', 'redo', '|'],
+  };
+
+  // eslint-disable-next-line no-undef
+  ClassicEditor.create(document.getElementById('message-input'), config);
+}
+
 /** Fetches data and populates the UI of the page. */
 // eslint-disable-next-line no-unused-vars
 function buildUI() {
@@ -275,7 +277,7 @@ function buildUI() {
   showMessageFormAndEditProfileButtonIfViewingSelf();
   $.getScript('/js/message-loader.js', () => {
     // eslint-disable-next-line no-undef
-    fetchMessagesByUser(parameterUsername);
+    fetchMessagesByUser(parameterUsername).then(buildInputTextEditor());
   });
   fetchProfileImage();
   fetchUserProfile();
