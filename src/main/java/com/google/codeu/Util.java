@@ -41,7 +41,14 @@ public class Util {
     if (uuidStrings == null) {
       return null;
     }
-    return uuidStrings.stream().map(UUID::fromString).collect(Collectors.toList());
+
+    List<UUID> uuids = new ArrayList<>();
+
+    uuidStrings.forEach(
+        string -> uuids.add(UUID.fromString(string))
+    );
+
+    return uuids;
   }
 
   /**
@@ -51,7 +58,14 @@ public class Util {
     if (uuids == null) {
       return null;
     }
-    return uuids.stream().map(UUID::toString).collect(Collectors.toList());
+
+    List<String> strings = new ArrayList<>();
+
+    uuids.forEach(
+        uuid -> strings.add(uuid.toString())
+    );
+
+    return strings;
   }
 
   /**

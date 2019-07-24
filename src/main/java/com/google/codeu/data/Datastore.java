@@ -31,10 +31,10 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.codeu.Util;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Provides access to the data stored in Datastore.
@@ -519,31 +519,34 @@ public class Datastore {
   /** Fetches markers from Datastore for a given count. */
   public List<MapLocation> getMapLocations(int count) {
     List<MapLocation> allLocations = getMapLocations();
+    Collections.shuffle(allLocations);
+
     List<MapLocation> locations = new ArrayList<>();
-    while (locations.size() < Math.min(count, allLocations.size())) {
-      MapLocation newLocation = allLocations.get(new Random().nextInt(allLocations.size()));
-      List<UUID> newMessageIds = newLocation.getMessageIds();
-      Message newMessage = null;
+    for (MapLocation location : allLocations) {
+      List<UUID> newMessageIds = location.getMessageIds();
+      Message newMessage;
       try {
         newMessage = getMessage(newMessageIds
             .get(new Random().nextInt(newMessageIds.size())).toString());
       } catch (Exception e) {
         e.printStackTrace();
+        continue;
       }
 
-      if (!locations.stream()
-          .map(MapLocation::getLocation)
-          .collect(Collectors.toList())
-          .contains(newLocation.getLocation())
-          &&
-          ((newMessage.getFavouritedUserEmails() != null
-          && newMessage.getFavouritedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT)
+      if (((newMessage.getFavouritedUserEmails() != null
+          && newMessage.getFavouritedUserEmails().size() >= MAP_IMAGE_MIN_LIKE_FAV_COUNT)
           | (newMessage.getLikedUserEmails() != null
-          && newMessage.getLikedUserEmails().size() > MAP_IMAGE_MIN_LIKE_FAV_COUNT))) {
-        newLocation.setMessageIds(Arrays.asList(newMessage.getId()));
-        locations.add(newLocation);
+          && newMessage.getLikedUserEmails().size() >= MAP_IMAGE_MIN_LIKE_FAV_COUNT))) {
+        location.setMessageIds(Arrays.asList(newMessage.getId()));
+        locations.add(location);
+        count -= 1;
+      }
+
+      if (count == 0) {
+        break;
       }
     }
+
     return locations;
   }
 
