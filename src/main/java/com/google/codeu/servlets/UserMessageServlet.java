@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -117,8 +116,11 @@ public class UserMessageServlet extends HttpServlet {
       byte[] blobBytes = getBlobBytes(blobKey);
 
       List<EntityAnnotation> imageLabels = getImageLabels(blobBytes);
-      List<String> imageLabelsList = imageLabels.stream()
-            .map(label -> label.getDescription()).collect(Collectors.toList());
+      List<String> imageLabelsList = new ArrayList<>();
+      for (EntityAnnotation label : imageLabels) {
+        String description = label.getDescription();
+        imageLabelsList.add(description);
+      }
       message.setImageLabels(imageLabelsList);
 
       //Get the Location entered by the user
