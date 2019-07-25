@@ -59,7 +59,7 @@ function onClickSearchLabelCancelButton(searchLabel) {
 // eslint-disable-next-line no-unused-vars
 function buildUI() {
   buildSearchLabels();
-  $.getScript('/js/message-loader.js', () => {
+  $.getScript('/js/messages-loader.js', () => {
     if (parameterSearchLabels != null && parameterSearchLabels.length > 0) {
       // eslint-disable-next-line no-undef
       fetchMessagesBySearchLabels(parameterSearchLabels);
