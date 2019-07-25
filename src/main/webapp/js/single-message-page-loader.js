@@ -4,7 +4,7 @@ const messageIdParam = urlParams.getAll('messageId');
 // Set message page header text.
 function buildMessagePageHeader(message) {
   const messagePageHeaderEl = document.getElementById('message-page-header');
-  messagePageHeaderEl.innerText = `Viewing message posted by ${message.user}`;
+  messagePageHeaderEl.innerText = `Viewing photograph posted by ${message.user}`;
 }
 
 // Fetch data and populate the UI of the page.
