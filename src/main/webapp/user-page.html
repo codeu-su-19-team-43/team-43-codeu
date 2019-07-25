@@ -76,7 +76,7 @@ limitations under the License.
         document.querySelectorAll("[id^=translateCollapseDiv-]").forEach(div => {
           const id = div.id;
           const messageId = id.replace("translateCollapseDiv-", "");
-          $.getScript("/js/message-loader.js", () => {
+          $.getScript("/js/messages-loader.js", () => {
             const selectedLangCode = document.getElementById("language-for-translation-menu").value;
             const langCode = selectedLangCode === "" ? "es" : selectedLangCode;
             getTranslatedText(document.getElementById(`text-${messageId}`).innerHTML, langCode).then(translatedText => {
@@ -89,7 +89,7 @@ limitations under the License.
       function rebuildUsername() {
         const usernameContainers = document.querySelectorAll(`[id='username']`);
         usernameContainers.forEach(div => {
-          $.getScript("/js/message-loader.js", () => {
+          $.getScript("/js/messages-loader.js", () => {
             this.getUsername(new URLSearchParams(window.location.search).get("user")).then((username) => {
               div.innerHTML = username;
             });

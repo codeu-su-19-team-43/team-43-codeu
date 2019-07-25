@@ -36,10 +36,6 @@ a.username-link:hover {
   text-decoration: none;
 }
 
-.sentiment-score-icon {
-  padding-right: 0.5em;
-}
-
 .imageLandmark-container {
   line-height: 1em;
   font-size: 80%;

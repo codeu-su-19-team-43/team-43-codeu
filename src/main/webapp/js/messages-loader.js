@@ -140,6 +140,18 @@ function buildInfoDiv(message) {
   infoDiv.appendChild(sentimentScoreDiv);
 
   const iconGroupDiv = document.createElement('div');
+
+  const viewSingleMessageIcon = document.createElement('i');
+  viewSingleMessageIcon.id = `view-single-message-${message.id}`;
+  viewSingleMessageIcon.classList.add('fas', 'fa-expand-arrows-alt', 'view-single-message-icon', 'mr-2');
+
+  // listen for click event
+  viewSingleMessageIcon.addEventListener('click', () => {
+    window.location.href = `/message.html?messageId=${message.id}`;
+  });
+
+  iconGroupDiv.appendChild(viewSingleMessageIcon);
+
   const textToSpeechIcon = document.createElement('i');
   textToSpeechIcon.id = `text-to-speech-icon-${message.id}`;
   textToSpeechIcon.classList.add('fas', 'fa-volume-up', 'text-to-speech-icon', 'mr-2');
@@ -784,7 +796,7 @@ function buildMessagesDivFromUrl(url, parentId, emptyHolderContent, sortCriteria
 // eslint-disable-next-line no-unused-vars
 async function fetchMessagesByUser(parameterUsername) {
   buildMessagesDivFromUrl(`/user-messages?user=${parameterUsername}`, 'user-gallery-container',
-    'Your gallery is empty. <br> Post your first photo and share about its story!');
+    'Your gallery is empty. <br> Post your first photo and share its story!');
   buildMessagesDivFromUrl(`/favourite?userEmail=${parameterUsername}`, 'favourite-messages-container',
     `<p class="text-muted ml-3 mt-4 position-absolute font-weight-lighter">
       Your favourite collection is empty. Mark a photo as your favourite to view it here!

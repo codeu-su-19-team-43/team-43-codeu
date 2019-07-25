@@ -34,7 +34,7 @@ public class MessageServlet extends HttpServlet {
     try {
       message = datastore.getMessage(messageId);
     } catch (Exception e) {
-      System.err.println("Error adding user to message.");
+      System.err.println("Error getting message with id: " + messageId);
       e.printStackTrace();
     }
 

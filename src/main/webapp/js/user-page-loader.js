@@ -275,7 +275,7 @@ function buildInputTextEditor() {
 function buildUI() {
   setPageTitle();
   showMessageFormAndEditProfileButtonIfViewingSelf();
-  $.getScript('/js/message-loader.js', () => {
+  $.getScript('/js/messages-loader.js', () => {
     // eslint-disable-next-line no-undef
     fetchMessagesByUser(parameterUsername).then(buildInputTextEditor());
   });
