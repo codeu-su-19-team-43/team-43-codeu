@@ -31,7 +31,7 @@ function buildCarouselItem(item) {
   carouselItem.innerHTML = `<img src="${item.imageUrl}" class="d-block w-100 carousel-image"/>
                             <div class="carousel-caption d-md-block">
                               <i class="fas fa-map-marker-alt location-icon"></i>
-                              <div class="d-inline-block ml-2"><p class="location-text">${item.location}</p></div>
+                              <div class="d-inline-block ml-2"><p class="location-text"><a href="https://www.google.com.sg/maps/place/${item.location}">${item.location}</a></p></div>
                             </div>`;
   return carouselItem;
 }
